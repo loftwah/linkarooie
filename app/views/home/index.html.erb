@@ -6,6 +6,17 @@
         <div class="card mt-4">
           <div class="card-body">
             <h5 class="card-title">Frequently Used:</h5>
+            <ul class="list-group">
+              <% @links.each do |link| %>
+                <li class="list-group-item">
+                  <% if link.links_enabled %>
+                    <a href="<%= link.links_url %>">
+                      <i class="<%= link.links_icon %>"></i> <%= link.links_display_name %>
+                    </a>
+                  <% end %>
+                </li>
+              <% end %>
+            </ul>
             <p class="card-text">Link would go here</p>
             </div>
         </div>

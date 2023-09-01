@@ -1,0 +1,31 @@
+<h1>Links</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Group</th>
+      <th>URL</th>
+      <th>Display Name</th>
+      <th>Icon</th>
+      <th>Enabled</th>
+      <th>Pinned</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @links.each do |link| %>
+      <tr>
+        <td><%= link.links_group %></td>
+        <td><%= link.links_url %></td>
+        <td><%= link.links_display_name %></td>
+        <td><i class="<%= link.links_icon %>"></i></td>
+        <td><%= link.links_enabled %></td>
+        <td><%= link.links_pinned %></td>
+        <td>
+          <%= link_to 'Edit', edit_link_path(link) %>
+          <%= link_to 'Delete', link, method: :delete, data: { confirm: 'Are you sure?' } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= link_to 'New Link', new_link_path %>

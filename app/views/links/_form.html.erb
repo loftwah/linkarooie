@@ -1,0 +1,29 @@
+<%= form_with(model: link) do |form| %>
+  <div>
+    <%= form.label :links_group %>
+    <%= form.text_field :links_group %>
+  </div>
+  <div>
+    <%= form.label :links_url %>
+    <%= form.text_field :links_url %>
+  </div>
+  <div>
+    <%= form.label :links_display_name %>
+    <%= form.text_field :links_display_name %>
+  </div>
+  <div>
+    <%= form.label :links_icon %>
+    <%= form.text_field :links_icon %>
+  </div>
+  <div>
+    <%= form.label :links_enabled %>
+    <%= form.check_box :links_enabled %>
+  </div>
+  <div>
+    <%= form.label :links_pinned %>
+    <%= form.check_box :links_pinned %>
+  </div>
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

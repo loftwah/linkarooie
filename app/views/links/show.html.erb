@@ -1,0 +1,8 @@
+<h1>Show Link</h1>
+<p><strong>Group:</strong> <%= @link.links_group %></p>
+<p><strong>URL:</strong> <%= @link.links_url %></p>
+<p><strong>Display Name:</strong> <%= @link.links_display_name %></p>
+<p><strong>Icon:</strong> <i class="<%= @link.links_icon %>"></i></p>
+<p><strong>Enabled:</strong> <%= @link.links_enabled %></p>
+<p><strong>Pinned:</strong> <%= @link.links_pinned %></p>
+<%= link_to 'Edit', edit_link_path(@link) %>

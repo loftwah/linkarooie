@@ -20,6 +20,9 @@
             <%= link_to 'Settings', edit_settings_path, class: 'nav-link' %>
           </li>
           <li class="nav-item">
+          <%= link_to 'Links', links_path, class: 'nav-link' %>
+          </li>
+          <li class="nav-item">
             <%= link_to 'Sign out', destroy_user_session_path, method: :delete, class: 'nav-link' %>
           </li>
         <% else %>
