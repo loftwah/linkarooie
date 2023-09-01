@@ -1,24 +1,23 @@
-# README
+# Loftwah's Custom Dashboard
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a custom dashboard for my personal use.
 
-Things you may want to cover:
+## Usage
 
-* Ruby version
+Start up your Docker services (this assumes you've navigated to the directory containing your docker-compose.yml):
 
-* System dependencies
+`docker compose up`
 
-* Configuration
+This starts up the services defined in docker-compose.yml. You might want to run this command in a separate terminal window because it will occupy your terminal with logs.
 
-* Database creation
+Open a new terminal window and create the database:
 
-* Database initialization
+`docker compose run web rails db:create`
 
-* How to run the test suite
+Run the database migrations:
 
-* Services (job queues, cache servers, search engines, etc.)
+`docker compose run web rails db:migrate`
 
-* Deployment instructions
+(Optional) If you have seed data, run:
 
-* ...
+`docker compose run web rails db:seed`

@@ -1,9 +1,10 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  username: loftwah
-  password: password
+  username: <%= ENV['POSTGRES_USER'] %>
+  password: <%= ENV['POSTGRES_PASSWORD'] %>
   pool: 5
+  url: <%= ENV['DATABASE_URL'] %>
 
 development:
   <<: *default
