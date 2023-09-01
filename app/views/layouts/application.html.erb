@@ -1,23 +1,41 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>CustomDashboard</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+<head>
+  <title>CustomDashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">CustomDashboard</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <% if user_signed_in? %>
+          <li class="nav-item">
+            <%= link_to 'Sign out', destroy_user_session_path, method: :delete, class: 'nav-link' %>
+          </li>
+        <% else %>
+          <li class="nav-item">
+            <%= link_to 'Sign in', new_user_session_path, class: 'nav-link' %> |
+          </li>
+          <li class="nav-item">
+            <%= link_to 'Sign up', new_user_registration_path, class: 'nav-link' %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </nav>
 
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-  </head>
-
-  <body>
-  <nav>
-  <% if user_signed_in? %>
-    <%= link_to 'Sign out', destroy_user_session_path, method: :delete %>
-  <% else %>
-    <%= link_to 'Sign in', new_user_session_path %> |
-    <%= link_to 'Sign up', new_user_registration_path %>
-  <% end %>
-</nav>
+  <div class="container">
     <%= yield %>
-  </body>
+  </div>
+
+  <!-- Your additional placeholders like username, Google search bar, application icons etc. will go here -->
+
+</body>
 </html>
