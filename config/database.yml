@@ -1,11 +1,8 @@
 default: &default
-  adapter: postgresql
-  encoding: unicode
-  username: <%= ENV['POSTGRES_USER'] %>
-  password: <%= ENV['POSTGRES_PASSWORD'] %>
-  pool: 5
-  url: <%= ENV['DATABASE_URL'] %>
+  adapter: sqlite3
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
 
 development:
   <<: *default
-  database: loftwah_dashboard_development
+  database: db/development.sqlite3
