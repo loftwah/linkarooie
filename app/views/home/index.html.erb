@@ -14,18 +14,30 @@
         
         <div class="card mt-4">
           <div class="card-body">
-            <ul class="list-group">
-              <% @links.each do |link| %>
-                <li class="list-group-item">
-                  <% if link.links_enabled %>
-                    <a href="<%= link.links_url %>">
-                      <i class="<%= link.links_icon %>"></i> <%= link.links_display_name %>
-                    </a>
-                  <% end %>
-                </li>
+          <div class="row">
+            <% @links.each_with_index do |link, index| %>
+              <div class="col-3 d-flex justify-content-center align-items-center" style="height: 100px;"> <!-- Set height and center vertically -->
+                <ul class="list-group w-100"> <!-- Full width -->
+                  <li class="list-group-item d-flex justify-content-center align-items-center" style="height: 100%;"> <!-- Full height and center -->
+                    <% if link.links_enabled %>
+                      <a href="<%= link.links_url %>" class="d-flex justify-content-center align-items-center w-100 h-100"> <!-- Full width and height -->
+                        <i class="<%= link.links_icon %>" style="margin-right: 8px;"></i>
+                        <span><%= link.links_display_name %></span>
+                      </a>
+                    <% end %>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Break to next row after every 4 items -->
+              <% if (index + 1) % 4 == 0 %>
+                </div><div class="row">
               <% end %>
-            </ul>
+
+            <% end %>
           </div>
+        </div>
+
         </div>
       <% else %>
         <h1 class="display-4">Welcome to Loftwah's Dashboard</h1>
