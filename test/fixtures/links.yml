@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  url: MyString
+  display_name: MyString
+  icon: MyString
+  enabled: false
+  pinned: false
+  group: MyString
+
+two:
+  user: two
+  url: MyString
+  display_name: MyString
+  icon: MyString
+  enabled: false
+  pinned: false
+  group: MyString

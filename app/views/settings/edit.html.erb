@@ -1,0 +1,4 @@
+<%= form_with(model: @user, url: settings_path, local: true) do |f| %>
+  <%= render 'shared/user_fields', f: f %>
+  <%= f.submit 'Update Settings' %>
+<% end %>

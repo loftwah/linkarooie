@@ -3,6 +3,15 @@
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
   <%= render "devise/shared/error_messages", resource: resource %>
 
+  <!-- app/views/devise/registrations/edit.html.erb -->
+
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+    <%= render 'shared/user_fields', f: f %>
+    <div class="actions">
+      <%= f.submit "Update" %>
+    </div>
+  <% end %>
+
   <div class="field">
     <%= f.label :email %><br />
     <%= f.email_field :email, autofocus: true, autocomplete: "email" %>

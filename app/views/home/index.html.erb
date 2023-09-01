@@ -1,2 +1,21 @@
-<h1>Home#index</h1>
-<p>Find me in app/views/home/index.html.erb</p>
+<div class="container mt-5">
+  <div class="row">
+    <div class="col">
+      <% if @user %>
+        <h1 class="display-4">Welcome <%= @user.username %></h1>
+        <div class="card mt-4">
+          <div class="card-body">
+            <h5 class="card-title">Your Settings:</h5>
+            <p class="card-text">First name: <%= @user.first_name %></p>
+            <p class="card-text">Last name: <%= @user.last_name %></p>
+            <p class="card-text">Short Description: <%= @user.short_description %></p>
+            <p class="card-text">Tags: <%= @user.tags %></p>
+          </div>
+        </div>
+      <% else %>
+        <h1 class="display-4">Welcome to Loftwah's Dashboard</h1>
+        <p class="lead mt-4">Please sign in to see your personalized settings.</p>
+      <% end %>
+    </div>
+  </div>
+</div>
