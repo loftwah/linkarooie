@@ -20,7 +20,7 @@
                 <ul class="list-group w-100"> <!-- Full width -->
                   <li class="list-group-item d-flex justify-content-center align-items-center" style="height: 100%;"> <!-- Full height and center -->
                     <% if link.links_enabled %>
-                      <a href="<%= link.links_url %>" class="d-flex justify-content-center align-items-center w-100 h-100"> <!-- Full width and height -->
+                      <a href="<%= link.links_url %>" class="d-flex justify-content-center align-items-center w-100 h-100" target="_blank" rel="noopener noreferrer"> <!-- Full width and height, open in new window -->
                         <i class="<%= link.links_icon %>" style="margin-right: 8px;"></i>
                         <span><%= link.links_display_name %></span>
                       </a>
