@@ -1,4 +1,6 @@
-<%= form_with(model: @user, url: settings_path, local: true) do |f| %>
+<%= form_with(model: @user, url: settings_path, local: true, html: { class: 'needs-validation', novalidate: '' }) do |f| %>
   <%= render 'shared/user_fields', f: f %>
-  <%= f.submit 'Update Settings' %>
+  <div class="form-group">
+    <%= f.submit 'Update Settings', class: 'btn btn-primary' %>
+  </div>
 <% end %>

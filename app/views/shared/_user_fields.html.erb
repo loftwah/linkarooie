@@ -1,26 +1,26 @@
 <!-- app/views/shared/_user_fields.html.erb -->
 
-<div class="field">
-  <%= f.label :username %><br />
-  <%= f.text_field :username %>
+<div class="form-group">
+  <%= f.label :username %>
+  <%= f.text_field :username, class: 'form-control' %>
 </div>
 
-<div class="field">
-  <%= f.label :first_name %><br />
-  <%= f.text_field :first_name %>
+<div class="form-group">
+  <%= f.label :first_name %>
+  <%= f.text_field :first_name, class: 'form-control' %>
 </div>
 
-<div class="field">
-  <%= f.label :last_name %><br />
-  <%= f.text_field :last_name %>
+<div class="form-group">
+  <%= f.label :last_name %>
+  <%= f.text_field :last_name, class: 'form-control' %>
 </div>
 
-<div class="field">
-  <%= f.label :short_description %><br />
-  <%= f.text_area :short_description %>
+<div class="form-group">
+  <%= f.label :short_description %>
+  <%= f.text_area :short_description, class: 'form-control' %>
 </div>
 
-<div class="field">
-  <%= f.label :tags %><br />
-  <%= f.text_field :tags %>
+<div class="form-group">
+  <%= f.label :tags %>
+  <%= f.text_field :tags, class: 'form-control' %>
 </div>

@@ -2,46 +2,61 @@
 <html>
 <head>
   <title>Loftwah's Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light p-3">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light px-3">
+  <% if user_signed_in? %>
+    <a href="/"><img src="https://github.com/<%= current_user.username %>.png" class="rounded-circle" width="30" height="30" style="margin-right: 10px;"></a>
+  <% end %>
     <a class="navbar-brand" href="/">Loftwah's Dashboard</a>
+
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarNav">
+      <!-- Left-aligned items -->
+      <ul class="navbar-nav mr-auto">
+        <!-- Any left-aligned items would go here -->
+      </ul>
+
+      <!-- Center-aligned items -->
+      <ul class="navbar-nav mx-auto">
+        <% if user_signed_in? %>
+          <li class="nav-item px-2">
+            <span>@<%= current_user.username %></span>
+          </li>
+        <% end %>
+      </ul>
+
+      <!-- Right-aligned items -->
       <ul class="navbar-nav ml-auto">
         <% if user_signed_in? %>
-          <li class="nav-item">
+          <li class="nav-item px-2">
             <%= link_to 'Settings', edit_settings_path, class: 'nav-link' %>
           </li>
-          <li class="nav-item">
-          <%= link_to 'Links', links_path, class: 'nav-link' %>
+          <li class="nav-item px-2">
+            <%= link_to 'Links', links_path, class: 'nav-link' %>
           </li>
-          <li class="nav-item">
+          <li class="nav-item px-2">
             <%= link_to 'Sign out', destroy_user_session_path, method: :delete, class: 'nav-link' %>
           </li>
         <% else %>
-          <li class="nav-item">
-            <%= link_to 'Sign in', new_user_session_path, class: 'nav-link' %> |
+          <li class="nav-item px-2">
+            <%= link_to 'Sign in', new_user_session_path, class: 'nav-link' %>
           </li>
-          <li class="nav-item">
+          <li class="nav-item px-2">
             <%= link_to 'Sign up', new_user_registration_path, class: 'nav-link' %>
           </li>
         <% end %>
       </ul>
     </div>
   </nav>
-
   <div class="container">
     <%= yield %>
   </div>
-
-  <!-- Your additional placeholders like username, Google search bar, application icons etc. will go here -->
-
 </body>
 </html>

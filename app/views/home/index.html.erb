@@ -2,10 +2,18 @@
   <div class="row">
     <div class="col">
       <% if @user %>
-        <h1 class="display-4">Welcome <%= @user.username %></h1>
+        <div class="container mt-5 text-center">  <!-- Added text-center -->
+          <!-- Image -->
+          <%= image_tag 'banner.jpg', alt: 'User Banner', class: 'img-fluid mb-4 mx-auto d-block', style: 'width: 50%; border-radius: 4px;' %>
+          
+          <!-- Google search bar -->
+          <form action="https://www.google.com/search" class="form-inline justify-content-center" method="get"> <!-- Added justify-content-center -->
+            <input type="text" name="q" class="form-control mr-2" placeholder="Search Google">
+          </form>
+        </div>
+        
         <div class="card mt-4">
           <div class="card-body">
-            <h5 class="card-title">Frequently Used:</h5>
             <ul class="list-group">
               <% @links.each do |link| %>
                 <li class="list-group-item">
@@ -17,8 +25,7 @@
                 </li>
               <% end %>
             </ul>
-            <p class="card-text">Link would go here</p>
-            </div>
+          </div>
         </div>
       <% else %>
         <h1 class="display-4">Welcome to Loftwah's Dashboard</h1>
