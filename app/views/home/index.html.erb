@@ -1,47 +1,44 @@
-<div class="container mt-5">
+<div id="contentArea" class="container mt-5 text-dark">
   <div class="row">
     <div class="col">
       <% if @user %>
-        <div class="container mt-5 text-center">  <!-- Added text-center -->
+        <div class="container mt-5 text-center text-dark"> <!-- Added text-dark -->
           <!-- Image -->
           <%= image_tag 'banner.jpg', alt: 'User Banner', class: 'img-fluid mb-4 mx-auto d-block', style: 'width: 50%; border-radius: 4px;' %>
           
           <!-- Google search bar -->
-          <form action="https://www.google.com/search" class="form-inline justify-content-center" method="get"> <!-- Added justify-content-center -->
-            <input type="text" name="q" class="form-control mr-2" placeholder="Search Google">
+          <form action="https://www.google.com/search" class="form-inline justify-content-center bg-dark text-light" method="get">
+            <input type="text" name="q" class="form-control mr-2 bg-dark text-light" placeholder="Search Google">
           </form>
         </div>
         
-        <div class="card mt-4">
-          <div class="card-body">
-          <div class="row">
-            <% @links.each_with_index do |link, index| %>
-              <div class="col-3 d-flex justify-content-center align-items-center" style="height: 100px;"> <!-- Set height and center vertically -->
-                <ul class="list-group w-100"> <!-- Full width -->
-                  <li class="list-group-item d-flex justify-content-center align-items-center" style="height: 100%;"> <!-- Full height and center -->
-                    <% if link.links_enabled %>
-                      <a href="<%= link.links_url %>" class="d-flex justify-content-center align-items-center w-100 h-100" target="_blank" rel="noopener noreferrer"> <!-- Full width and height, open in new window -->
-                        <i class="<%= link.links_icon %>" style="margin-right: 8px;"></i>
-                        <span><%= link.links_display_name %></span>
-                      </a>
-                    <% end %>
-                  </li>
-                </ul>
-              </div>
-
-              <!-- Break to next row after every 4 items -->
-              <% if (index + 1) % 4 == 0 %>
-                </div><div class="row">
+        <div class="card mt-4 text-dark"> <!-- Added text-dark -->
+          <div class="card-body text-dark"> <!-- Added text-dark -->
+            <div class="row">
+              <% @links.each_with_index do |link, index| %>
+                <div class="col-3 d-flex justify-content-center align-items-center text-dark" style="height: 100px;"> <!-- Added text-dark -->
+                  <ul class="list-group w-100"> <!-- Full width -->
+                    <li class="list-group-item d-flex justify-content-center align-items-center text-dark" style="height: 100%;"> <!-- Added text-dark -->
+                      <% if link.links_enabled %>
+                        <a href="<%= link.links_url %>" class="d-flex justify-content-center align-items-center w-100 h-100 text-dark" target="_blank" rel="noopener noreferrer"> <!-- Added text-dark -->
+                          <i class="<%= link.links_icon %>" style="margin-right: 8px;"></i>
+                          <span><%= link.links_display_name %></span>
+                        </a>
+                      <% end %>
+                    </li>
+                  </ul>
+                </div>
+                <!-- Break to next row after every 4 items -->
+                <% if (index + 1) % 4 == 0 %>
+                  </div><div class="row">
+                <% end %>
               <% end %>
-
-            <% end %>
+            </div>
           </div>
         </div>
-
-        </div>
       <% else %>
-        <h1 class="display-4">Welcome to Loftwah's Dashboard</h1>
-        <p class="lead mt-4">Please sign in to see your personalized settings.</p>
+        <h1 id="welcomeHeader" class="display-4 text-dark">Welcome to Loftwah's Dashboard</h1> <!-- Added id and text-dark -->
+        <p class="lead mt-4 text-dark">Please sign in to see your personalized settings.</p> <!-- Added text-dark -->
       <% end %>
     </div>
   </div>

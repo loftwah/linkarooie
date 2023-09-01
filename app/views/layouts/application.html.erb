@@ -6,6 +6,11 @@
   <%= csp_meta_tag %>
   <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
+  <style>
+    input.form-control.dark-placeholder::placeholder {
+      color: #ffffff; /* Set the placeholder text to white */
+    }
+  </style>
 </head>
 <body class="bg-dark text-light">
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
@@ -55,18 +60,40 @@
   <div class="container">
     <%= yield %>
   </div>
-  <script>
-    document.getElementById('toggleButton').addEventListener('click', function() {
-      const body = document.body;
-      const nav = document.querySelector('.navbar');
+ <script>
+  document.getElementById('toggleButton').addEventListener('click', function() {
+    const body = document.body;
+    const nav = document.querySelector('.navbar');
+    const contentArea = document.getElementById('contentArea');
+    const form = document.querySelector('form.form-inline');  
+    const searchInput = document.querySelector('input.form-control');  
+    
+    body.classList.toggle('bg-dark');
+    body.classList.toggle('text-light');
+    nav.classList.toggle('bg-dark');
+    nav.classList.toggle('navbar-dark');
+    nav.classList.toggle('bg-light');
+    nav.classList.toggle('navbar-light');
+    contentArea.classList.toggle('text-dark');
+    contentArea.classList.toggle('text-light');
 
-      body.classList.toggle('bg-dark');
-      body.classList.toggle('text-light');
-      nav.classList.toggle('bg-dark');
-      nav.classList.toggle('navbar-dark');
-      nav.classList.toggle('bg-light');
-      nav.classList.toggle('navbar-light');
-    });
-  </script>
+    form.classList.toggle('bg-dark');
+    form.classList.toggle('bg-light');
+    form.classList.toggle('text-light');
+    form.classList.toggle('text-dark');
+    
+    searchInput.classList.toggle('bg-dark');
+    searchInput.classList.toggle('bg-light');
+    searchInput.classList.toggle('text-light');
+    searchInput.classList.toggle('text-dark');
+    
+    // Toggle custom class for placeholder text
+    if (searchInput.classList.contains('text-light')) {
+      searchInput.classList.add('dark-placeholder');
+    } else {
+      searchInput.classList.remove('dark-placeholder');
+    }
+  });
+</script>
 </body>
 </html>
