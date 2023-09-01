@@ -32,6 +32,8 @@ gem "jbuilder"
 gem 'devise'
 gem 'bootstrap', '~> 5.0', '>= 5.0.2'
 gem 'sassc'
+gem 'webpacker', '~> 5.x'
+
 
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"
