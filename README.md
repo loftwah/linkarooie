@@ -34,30 +34,30 @@ This custom dashboard is a Ruby on Rails application developed for personal use 
 
 1. Clone the repository.
 
-`git clone https://github.com/loftwah/custom-dashboard.git`
+`   git clone https://github.com/loftwah/custom-dashboard.git`
 
 2. Navigate to the project directory.
 
-`cd custom-dashboard`
+`   cd custom-dashboard`
 
 3. Install dependencies.
 
-```bash
-bundle install
-yarn install
-```
+    ```bash
+    bundle install
+    yarn install
+    ```
 
 4. Create and migrate the database.
 
-```bash
-rails db:create db:migrate
-```
+    ```bash
+    rails db:create db:migrate
+    ```
 
 5. Start the Rails server.
 
-```bash
-rails s
-```
+    ```bash
+    rails s
+    ```
 
 Visit `http://localhost:3000` to view your custom dashboard.
 
