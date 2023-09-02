@@ -16,7 +16,7 @@
 <body 
   class="<%= (current_user&.background_color.present? || (current_user&.background_image&.attached?)) ? '' : 'bg-dark text-light' %>"
   style="<%= 'background-image: url(' + url_for(current_user.background_image) + ');' if current_user&.background_image&.attached? %>
-       <%= 'background-color:' + current_user.background_color + ';' if current_user&.background_color.present? %>"
+       <%= 'background-color:' + current_user.background_color + ';' if current_user&.background_color.present? %>">
  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm px-3">
     <div class="d-flex align-items-center">
         <% if user_signed_in? %>
