@@ -22,8 +22,12 @@
                   <% @links.each_with_index do |link, index| %>
                     <div class="col-3 d-flex flex-column justify-content-center align-items-center">
                       <% if link.links_enabled %>
-                        <a href="<%= link.links_url %>" class="text-center text-dark" target="_blank" rel="noopener noreferrer"> <!-- Added text-dark class -->
-                          <i class="<%= link.links_icon %> fa-2x mb-2 text-dark"></i> <!-- Added text-dark class -->
+                        <a href="<%= link.links_url %>" class="text-center text-dark" target="_blank" rel="noopener noreferrer">
+                        <img src="https://www.google.com/s2/favicons?domain=<%= URI.parse(link.links_url).host.split('.').last(2).join('.') %>" 
+                            alt="favicon" 
+                            class="fa-2x mb-2 text-dark" 
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                        <i class="<%= link.links_icon %> fa-2x mb-2 text-dark" style="display:none;"></i>
                           <span class="d-block text-dark"><%= link.links_display_name %></span> <!-- Added text-dark class -->
                         </a>
                       <% end %>
