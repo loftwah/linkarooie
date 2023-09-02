@@ -1,0 +1,16 @@
+/* To make placeholder text white */
+.custom-placeholder::placeholder {
+    color: white;
+    opacity: 1; /* Firefox */
+  }
+  
+  /* For Internet Explorer */
+  .custom-placeholder:-ms-input-placeholder {
+    color: white;
+  }
+  
+  /* For Microsoft Edge */
+  .custom-placeholder::-ms-input-placeholder {
+    color: white;
+  }
+  
