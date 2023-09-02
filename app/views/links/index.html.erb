@@ -1,18 +1,19 @@
 <div class="container-fluid h-100 d-flex flex-column">
   <div class="row flex-grow-1 overflow-auto">
     <div class="col">
-      <div class="container mt-5"> <!-- Add some top margin -->
-        <h1 class="display-4 mb-4">Links</h1> <!-- Add some bottom margin -->
-        <div class="table-responsive"> <!-- Make the table responsive -->
+      <div class="container mt-5">
+        <h1 class="display-4 mb-4">Links</h1>
+        <div class="table-responsive">
           <table class="table table-hover table-bordered table-app-drawer">
             <thead class="thead-dark">
               <tr>
                 <th>Group</th>
                 <th>URL</th>
                 <th>Display Name</th>
-                <th class="text-center">Icon</th> <!-- Center align the header -->
+                <th class="text-center">Icon</th>
                 <th>Enabled</th>
                 <th>Pinned</th>
+                <th>Position</th> <!-- New column header -->
                 <th>Actions</th>
               </tr>
             </thead>
@@ -22,13 +23,14 @@
                   <td><%= link.links_group %></td>
                   <td><%= link.links_url %></td>
                   <td><%= link.links_display_name %></td>
-                  <td class="text-center"><i class="<%= link.links_icon %>"></i></td> <!-- Center align the icon -->
+                  <td class="text-center"><i class="<%= link.links_icon %>"></i></td>
                   <td class="<%= link.links_enabled ? 'text-success' : 'text-danger' %>">
                     <%= link.links_enabled ? 'Enabled' : 'Disabled' %>
                   </td>
                   <td class="<%= link.links_pinned ? 'text-primary' : '' %>">
                     <%= link.links_pinned ? 'Pinned' : 'Not Pinned' %>
                   </td>
+                  <td><%= link.position %></td> <!-- New column data -->
                   <td>
                     <%= link_to edit_link_path(link), class: 'btn btn-primary btn-sm' do %>
                       <i class="fas fa-edit"></i> Edit

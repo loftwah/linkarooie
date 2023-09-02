@@ -30,6 +30,12 @@
     </div>
   </div>
   <div class="row">
+    <div class="col-md-6 mb-3">
+      <%= form.label :position, class: 'form-label' %>
+      <%= form.number_field :position, class: 'form-control', placeholder: 'Position' %>
+    </div>
+  </div>
+  <div class="row">
     <div class="col-12">
       <%= form.submit 'Save', class: 'btn btn-primary mb-3' %>
     </div>

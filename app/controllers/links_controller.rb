@@ -5,7 +5,7 @@ class LinksController < ApplicationController
     before_action :set_link, only: [:show, :edit, :update, :destroy]
   
     def index
-      @links = current_user.links.order(:links_group, :links_pinned)
+      @links = current_user.links.order(:links_group, :links_pinned, :position)
     end
   
     def new
@@ -47,7 +47,7 @@ class LinksController < ApplicationController
     end
   
     def link_params
-      params.require(:link).permit(:links_group, :links_url, :links_display_name, :links_icon, :links_enabled, :links_pinned)
+      params.require(:link).permit(:links_group, :links_url, :links_display_name, :links_icon, :links_enabled, :links_pinned, :position)
     end
   end
   

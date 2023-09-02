@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_01_103051) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_02_064912) do
   create_table "links", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "url"
@@ -27,6 +27,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_01_103051) do
     t.string "links_icon"
     t.boolean "links_enabled"
     t.boolean "links_pinned"
+    t.integer "position"
     t.index ["user_id"], name: "index_links_on_user_id"
   end
 
