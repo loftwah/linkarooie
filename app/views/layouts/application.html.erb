@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Loftwah's Dashboard</title>
+  <title>Linkaroo</title>
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
   <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
@@ -22,7 +22,7 @@
         <% if user_signed_in? %>
         <a href="/"><img src="https://github.com/<%= current_user.username %>.png" class="rounded-circle" width="30" height="30" style="margin-right: 15px;"></a>
         <% end %>
-        <a class="navbar-brand" href="/">Loftwah's Dashboard</a>
+        <a class="navbar-brand" href="/">Linkaroo</a>
     </div>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
