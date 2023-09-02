@@ -2,6 +2,7 @@ name: Linkaroo CI/CD
 on: [push, pull_request]
 env:
   AWS_REGION: ap-southeast-2
+  RAILS_ENV: test
 
 jobs:
   build:
@@ -9,7 +10,7 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v2
-      
+
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
@@ -18,6 +19,12 @@ jobs:
     - name: Install Dependencies
       run: |
         bundle install
+
+    # Setup database
+    - name: Setup Test Database
+      run: |
+        bundle exec rails db:create
+        bundle exec rails db:migrate
 
     - name: Run Tests
       run: bundle exec rspec
