@@ -6,6 +6,8 @@
 
 This custom dashboard is a Ruby on Rails application developed for personal use and serves as a learning platform for Ruby on Rails. The dashboard is designed to be the default page that opens up in your web browser. It features the capability to manage links and customize the look and feel to match your preferences.
 
+![Screenshot of Linkaroo](https://github.com/loftwah/linkaroo/assets/19922556/47925835-0236-438b-b1a1-c4d09395cf15)
+
 ### Built With
 
 * Ruby 3.2.2
