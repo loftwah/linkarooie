@@ -9,7 +9,7 @@
               <%= image_tag 'banner.jpg', alt: 'User Banner', class: 'img-fluid mb-4 rounded', style: 'width: 50%;' %>
               <form action="https://www.google.com/search" class="d-flex justify-content-center mb-4 bg-dark rounded p-2" method="get">
                 <div class="input-group" style="width: 80%;">
-                  <input type="text" name="q" class="form-control bg-dark text-light rounded custom-placeholder" placeholder="Google Search" style="margin-right: 8px;">
+                  <input type="text" name="q" class="form-control bg-dark text-light rounded custom-placeholder" placeholder="Search Google or type a URL" style="margin-right: 8px;">
                   <div class="input-group-append">
                     <button type="submit" class="btn btn-light"><i class="fas fa-search"></i> Search</button>
                   </div>
@@ -20,22 +20,23 @@
                 <div class="card-body">
                   <div class="row">
                     <% @links.each_with_index do |link, index| %>
-                      <div class="col-3 d-flex flex-column justify-content-center align-items-center">
-                        <% if link.links_enabled %>
-                          <a href="<%= link.links_url %>" class="text-center text-light" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">  <!-- Change text-dark to text-light -->
-                            <img src="https://www.google.com/s2/favicons?domain=<%= URI.parse(link.links_url).host.split('.').last(2).join('.') %>" 
-                            alt="favicon" 
-                            class="fa-2x mb-2 text-light" 
-                            onerror="this.alt=''; this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
-                            <i class="<%= link.links_icon %> fa-2x mb-2 text-light" style="display:none;"></i> <!-- Change text-dark to text-light -->
-                            <span class="d-block text-light"><%= link.links_display_name %></span> <!-- Change text-dark to text-light -->
-                          </a>
-                        <% end %>
-                      </div>
-                      <% if (index + 1) % 4 == 0 %>
-                        </div><div class="row mt-4">
+                    <div class="col-3 d-flex flex-column justify-content-center align-items-center">
+                      <% if link.links_enabled %>
+                        <!-- Add the 'pinned' class conditionally -->
+                        <a href="<%= link.links_url %>" class="text-center text-light <%= 'pinned' if link.links_pinned %>" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                          <img src="https://www.google.com/s2/favicons?domain=<%= URI.parse(link.links_url).host.split('.').last(2).join('.') %>" 
+                          alt="favicon" 
+                          class="fa-2x mb-2 text-light"
+                          onerror="this.alt=''; this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                          <i class="<%= link.links_icon %> fa-2x mb-2 text-light" style="display:none;"></i>
+                          <span class="d-block text-light"><%= link.links_display_name %></span>
+                        </a>
                       <% end %>
+                    </div>
+                    <% if (index + 1) % 4 == 0 %>
+                      </div><div class="row mt-4">
                     <% end %>
+                  <% end %>
                   </div>
                 </div>
               </div>

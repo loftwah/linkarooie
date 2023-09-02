@@ -14,3 +14,10 @@
     color: white;
   }
   
+  /* Style for pinned links */
+.pinned {
+    border: 2px solid gold;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: rgba(255, 215, 0, 0.2); /* light gold background */
+  }  
