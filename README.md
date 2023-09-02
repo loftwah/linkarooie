@@ -1,23 +1,91 @@
 # Loftwah's Custom Dashboard
 
-This is a custom dashboard for my personal use.
+## Overview
+
+This custom dashboard is a Ruby on Rails application developed for personal use and serves as a learning platform for Ruby on Rails. The dashboard is designed to be the default page that opens up in your web browser. It features the capability to manage links and customize the look and feel to match your preferences.
+
+### Built With
+
+* Ruby 3.2.2
+* Ruby on Rails
+* SQLite Database (PostgreSQL in production coming soon)
+* AWS Services (coming soon)
+* GitHub Actions (coming soon)
+* Ubuntu 22.04
+
+## Features
+
+* **Add Links**: Easily add links to your dashboard that open in a new window.
+* **Pin Links**: Highlight essential links for easy access.
+* **Customization**: Change the background color and add a background image to personalize your dashboard.
+* **User Management**: Sign up and manage your customized dashboard settings.
+
+## Getting Started
+
+### Prerequisites
+
+* Ruby 3.2.2
+* Ruby on Rails
+* SQLite
+* NodeJS
+* Yarn
+
+### Installation
+
+1. Clone the repository.
+
+`git clone https://github.com/loftwah/custom-dashboard.git`
+
+2. Navigate to the project directory.
+
+`cd custom-dashboard`
+
+3. Install dependencies.
+
+```bash
+bundle install
+yarn install
+```
+
+4. Create and migrate the database.
+
+```bash
+rails db:create db:migrate
+```
+
+5. Start the Rails server.
+
+```bash
+rails s
+```
+
+Visit `http://localhost:3000` to view your custom dashboard.
 
 ## Usage
 
-Start up your Docker services (this assumes you've navigated to the directory containing your docker-compose.yml):
+To add links, sign up and navigate to your dashboard settings. Here, you can manage and pin links, as well as customize your dashboard's appearance.
 
-`docker compose up`
+## AWS Services Used (coming soon)
 
-This starts up the services defined in docker-compose.yml. You might want to run this command in a separate terminal window because it will occupy your terminal with logs.
+* S3
+* EC2
+* ECS
+* RDS
+* Elasticache
+* SNS
+* SQS
+* SES
+* Twilio
+* Cloudflare
 
-Open a new terminal window and create the database:
+## GitHub Actions Workflow (coming soon)
 
-`docker compose run web rails db:create`
+All code changes are automatically tested using GitHub Actions, focusing on region-specific AWS integration tests.
 
-Run the database migrations:
+## Contributing
 
-`docker compose run web rails db:migrate`
+This project is for personal use and learning. Feel free to fork and use it as a base for your custom dashboard.
 
-(Optional) If you have seed data, run:
+## License
 
-`docker compose run web rails db:seed`
+MIT License. See `LICENSE` for more information.
