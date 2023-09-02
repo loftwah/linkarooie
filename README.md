@@ -1,12 +1,12 @@
 # Linkarooie
 
-![Linkaroo](https://github.com/loftwah/linkarooie/assets/19922556/82607b81-2a75-4f79-bc16-803eca08f612)
+![Linkarooie](https://github.com/loftwah/linkarooie/assets/19922556/82607b81-2a75-4f79-bc16-803eca08f612)
 
 ## Overview
 
 This custom dashboard is a Ruby on Rails application developed for personal use and serves as a learning platform for Ruby on Rails. The dashboard is designed to be the default page that opens up in your web browser. It features the capability to manage links and customize the look and feel to match your preferences.
 
-![Screenshot of Linkaroo](https://github.com/loftwah/linkaroo/assets/19922556/47925835-0236-438b-b1a1-c4d09395cf15)
+![Screenshot of Linkarooie](https://github.com/loftwah/linkarooie/assets/19922556/c2e91925-cd1c-444e-9b21-77fb8ae41f6d)
 
 ### Built With
 
