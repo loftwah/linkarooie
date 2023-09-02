@@ -1,0 +1,23 @@
+name: Linkaroo CI/CD
+on: [push, pull_request]
+env:
+  AWS_REGION: ap-southeast-2
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+      
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.2.2
+
+    - name: Install Dependencies
+      run: |
+        bundle install
+
+    - name: Run Tests
+      run: bundle exec rspec

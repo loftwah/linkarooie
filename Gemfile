@@ -33,6 +33,8 @@ gem 'devise'
 gem 'bootstrap', '~> 5.0', '>= 5.0.2'
 gem 'sassc'
 gem 'webpacker', '~> 5.x'
+gem 'aws-sdk', '~> 3'
+
 
 
 # Use Redis adapter to run Action Cable in production
