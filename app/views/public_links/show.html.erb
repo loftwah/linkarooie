@@ -1,0 +1,36 @@
+<!-- Add this in a new view file or an existing one based on your decision -->
+<div class="container mt-5">
+  <h1 class="display-4 mb-4 text-light">Public Links</h1>
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered table-app-drawer">
+      <thead class="thead-dark">
+        <tr>
+          <th>Group</th>
+          <th>URL</th>
+          <th>Display Name</th>
+          <th class="text-center">Icon</th>
+          <th>Enabled</th>
+          <th>Pinned</th>
+          <th>Position</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @public_links.each do |link| %>
+          <tr>
+            <td><%= link.links_group %></td>
+            <td><%= link.links_url %></td>
+            <td><%= link.links_display_name %></td>
+            <td class="text-center"><i class="<%= link.links_icon %>"></i></td>
+            <td class="<%= link.links_enabled ? 'text-success' : 'text-danger' %>">
+              <%= link.links_enabled ? 'Enabled' : 'Disabled' %>
+            </td>
+            <td class="<%= link.links_pinned ? 'text-primary' : '' %>">
+              <%= link.links_pinned ? 'Pinned' : 'Not Pinned' %>
+            </td>
+            <td><%= link.position %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -4,4 +4,6 @@ Rails.application.routes.draw do
   resource :settings, only: [:edit, :update]
   resources :links
   root to: "home#index"
+
+  get 'public_links/:user_id', to: 'public_links#show', as: 'user_public_links'
 end

@@ -7,6 +7,10 @@ class LinksController < ApplicationController
     def index
       @links = current_user.links.order(:links_group, :links_pinned, :position)
     end
+
+    def public_links
+      @public_links = Link.where(user_id: params[:user_id], public: true)
+    end
   
     def new
       @link = current_user.links.build
@@ -47,7 +51,7 @@ class LinksController < ApplicationController
     end
   
     def link_params
-      params.require(:link).permit(:links_group, :links_url, :links_display_name, :links_icon, :links_enabled, :links_pinned, :position)
+      params.require(:link).permit(:links_group, :links_url, :links_display_name, :links_icon, :links_enabled, :links_pinned, :position, :public)
     end
   end
   
