@@ -17,7 +17,7 @@ class SettingsController < ApplicationController
     private
   
     def settings_params
-      params.require(:user).permit(:username, :first_name, :last_name, :short_description, :tags, :background_color, :background_image)
+      params.require(:user).permit(:username, :first_name, :last_name, :short_description, :tags, :background_color, :background_image, :remove_background_image, :clear_background_color)
     end
   end
   
