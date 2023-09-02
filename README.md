@@ -1,4 +1,6 @@
-# Loftwah's Custom Dashboard
+# Linkaroo
+
+![Linkaroo](https://github.com/loftwah/linkaroo/assets/19922556/6c2b9201-db97-42ed-aeae-d75e3117da95)
 
 ## Overview
 
