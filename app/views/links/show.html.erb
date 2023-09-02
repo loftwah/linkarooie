@@ -1,24 +1,32 @@
-<div class="container">
-  <h1 class="display-4">Show Link</h1>
+<div class="container mt-4">
+  <h1 class="display-4 mb-4">Show Link</h1>
   <div class="list-group">
-    <div class="list-group-item">
-      <strong>Group:</strong> <%= @link.links_group %>
+    <div class="list-group-item d-flex justify-content-between align-items-center">
+      <span class="fw-bold">Group:</span>
+      <span><%= @link.links_group %></span>
     </div>
-    <div class="list-group-item">
-      <strong>URL:</strong> <%= @link.links_url %>
+    <div class="list-group-item d-flex justify-content-between align-items-center">
+      <span class="fw-bold">URL:</span>
+      <span><%= @link.links_url %></span>
     </div>
-    <div class="list-group-item">
-      <strong>Display Name:</strong> <%= @link.links_display_name %>
+    <div class="list-group-item d-flex justify-content-between align-items-center">
+      <span class="fw-bold">Display Name:</span>
+      <span><%= @link.links_display_name %></span>
     </div>
-    <div class="list-group-item">
-      <strong>Icon:</strong> <i class="<%= @link.links_icon %>"></i>
+    <div class="list-group-item d-flex justify-content-between align-items-center">
+      <span class="fw-bold">Icon:</span>
+      <span class="d-flex align-items-center">
+        <i class="<%= @link.links_icon %>"></i>
+      </span>
     </div>
-    <div class="list-group-item">
-      <strong>Enabled:</strong> <%= @link.links_enabled %>
+    <div class="list-group-item d-flex justify-content-between align-items-center">
+      <span class="fw-bold">Enabled:</span>
+      <span><%= @link.links_enabled %></span>
     </div>
-    <div class="list-group-item">
-      <strong>Pinned:</strong> <%= @link.links_pinned %>
+    <div class="list-group-item d-flex justify-content-between align-items-center">
+      <span class="fw-bold">Pinned:</span>
+      <span><%= @link.links_pinned %></span>
     </div>
   </div>
-  <%= link_to 'Edit', edit_link_path(@link), class: 'btn btn-primary mt-3' %>
+  <a href="<%= edit_link_path(@link) %>" class="btn btn-primary mt-4">Edit</a>
 </div>

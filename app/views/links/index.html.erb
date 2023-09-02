@@ -1,33 +1,51 @@
-<div class="container">
-  <h1 class="display-4">Links</h1>
-  <table class="table table-hover table-bordered">
-    <thead class="thead-dark">
-      <tr>
-        <th>Group</th>
-        <th>URL</th>
-        <th>Display Name</th>
-        <th>Icon</th>
-        <th>Enabled</th>
-        <th>Pinned</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @links.each do |link| %>
-        <tr>
-          <td><%= link.links_group %></td>
-          <td><%= link.links_url %></td>
-          <td><%= link.links_display_name %></td>
-          <td><i class="<%= link.links_icon %>"></i></td>
-          <td><%= link.links_enabled %></td>
-          <td><%= link.links_pinned %></td>
-          <td>
-            <%= link_to 'Edit', edit_link_path(link), class: 'btn btn-primary btn-sm' %>
-            <%= link_to 'Delete', link, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <%= link_to 'New Link', new_link_path, class: 'btn btn-success' %>
+<div class="container-fluid h-100 d-flex flex-column">
+  <div class="row flex-grow-1 overflow-auto">
+    <div class="col">
+      <div class="container mt-5"> <!-- Add some top margin -->
+        <h1 class="display-4 mb-4">Links</h1> <!-- Add some bottom margin -->
+        <div class="table-responsive"> <!-- Make the table responsive -->
+          <table class="table table-hover table-bordered table-app-drawer">
+            <thead class="thead-dark">
+              <tr>
+                <th>Group</th>
+                <th>URL</th>
+                <th>Display Name</th>
+                <th class="text-center">Icon</th> <!-- Center align the header -->
+                <th>Enabled</th>
+                <th>Pinned</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @links.each do |link| %>
+                <tr>
+                  <td><%= link.links_group %></td>
+                  <td><%= link.links_url %></td>
+                  <td><%= link.links_display_name %></td>
+                  <td class="text-center"><i class="<%= link.links_icon %>"></i></td> <!-- Center align the icon -->
+                  <td class="<%= link.links_enabled ? 'text-success' : 'text-danger' %>">
+                    <%= link.links_enabled ? 'Enabled' : 'Disabled' %>
+                  </td>
+                  <td class="<%= link.links_pinned ? 'text-primary' : '' %>">
+                    <%= link.links_pinned ? 'Pinned' : 'Not Pinned' %>
+                  </td>
+                  <td>
+                    <%= link_to edit_link_path(link), class: 'btn btn-primary btn-sm' do %>
+                      <i class="fas fa-edit"></i> Edit
+                    <% end %>
+                    <%= link_to link, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' do %>
+                      <i class="fas fa-trash"></i> Delete
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+        <%= link_to new_link_path, class: 'btn btn-success btn-lg' do %>
+          <i class="fas fa-plus"></i> New Link
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>

@@ -9,16 +9,18 @@
   <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload', defer: true %>
   <style>
     input.form-control.dark-placeholder::placeholder {
-      color: #ffffff; /* Set the placeholder text to white */
+      color: #ffffff;
     }
   </style>
 </head>
 <body class="bg-dark text-light">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
-    <% if user_signed_in? %>
-      <a href="/"><img src="https://github.com/<%= current_user.username %>.png" class="rounded-circle" width="30" height="30" style="margin-right: 10px;"></a>
-    <% end %>
-    <a class="navbar-brand" href="/">Loftwah's Dashboard</a>
+ <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm px-3">
+    <div class="d-flex align-items-center">
+        <% if user_signed_in? %>
+        <a href="/"><img src="https://github.com/<%= current_user.username %>.png" class="rounded-circle" width="30" height="30" style="margin-right: 15px;"></a>
+        <% end %>
+        <a class="navbar-brand" href="/">Loftwah's Dashboard</a>
+    </div>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -29,7 +31,7 @@
       <ul class="navbar-nav mx-auto">
         <% if user_signed_in? %>
           <li class="nav-item px-2">
-            <span>@<%= current_user.username %></span>
+            <span class="badge badge-secondary">@<%= current_user.username %></span>
           </li>
         <% end %>
       </ul>
@@ -52,49 +54,11 @@
             <%= link_to 'Sign up', new_user_registration_path, class: 'nav-link' %>
           </li>
         <% end %>
-        <li class="nav-item px-2">
-          <a id="toggleButton" class="nav-link"><i class="fas fa-lightbulb"></i></a>
-        </li>
       </ul>
     </div>
   </nav>
-  <div class="container">
+  <div class="container-fluid h-100 mt-4 d-flex flex-column">
     <%= yield %>
-  </div>
- <script>
-  document.getElementById('toggleButton').addEventListener('click', function() {
-    const body = document.body;
-    const nav = document.querySelector('.navbar');
-    const contentArea = document.getElementById('contentArea');
-    const form = document.querySelector('form.form-inline');  
-    const searchInput = document.querySelector('input.form-control');  
-    
-    body.classList.toggle('bg-dark');
-    body.classList.toggle('text-light');
-    nav.classList.toggle('bg-dark');
-    nav.classList.toggle('navbar-dark');
-    nav.classList.toggle('bg-light');
-    nav.classList.toggle('navbar-light');
-    contentArea.classList.toggle('text-dark');
-    contentArea.classList.toggle('text-light');
-
-    form.classList.toggle('bg-dark');
-    form.classList.toggle('bg-light');
-    form.classList.toggle('text-light');
-    form.classList.toggle('text-dark');
-    
-    searchInput.classList.toggle('bg-dark');
-    searchInput.classList.toggle('bg-light');
-    searchInput.classList.toggle('text-light');
-    searchInput.classList.toggle('text-dark');
-    
-    // Toggle custom class for placeholder text
-    if (searchInput.classList.contains('text-light')) {
-      searchInput.classList.add('dark-placeholder');
-    } else {
-      searchInput.classList.remove('dark-placeholder');
-    }
-  });
-</script>
+</div>
 </body>
 </html>
