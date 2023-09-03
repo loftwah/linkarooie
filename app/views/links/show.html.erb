@@ -16,7 +16,12 @@
     <div class="list-group-item d-flex justify-content-between align-items-center">
       <span class="fw-bold">Icon:</span>
       <span class="d-flex align-items-center">
-        <i class="<%= @link.links_icon %>"></i>
+        <img 
+          src="https://www.google.com/s2/favicons?domain=<%= URI.parse(link.links_url).host.split('.').last(2).join('.') %>" 
+          alt="favicon" 
+          class="fa-2x text-light"
+          onerror="this.alt=''; this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+        <i class="<%= link.links_icon %> fa-2x text-light" style="display:none;"></i>
       </span>
     </div>
     <div class="list-group-item d-flex justify-content-between align-items-center">
