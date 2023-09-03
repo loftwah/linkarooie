@@ -5,5 +5,5 @@ Rails.application.routes.draw do
   resources :links
   root to: "home#index"
 
-  get 'public_links/:username', to: 'public_links#show', as: 'user_public_links'
+  get '/:username', to: 'public_links#show', as: 'user_public_links'
 end
