@@ -13,7 +13,8 @@
                 <th class="text-center">Icon</th>
                 <th>Enabled</th>
                 <th>Pinned</th>
-                <th>Position</th> <!-- New column header -->
+                <th>Position</th>
+                <th>Public</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -37,7 +38,10 @@
                   <td class="<%= link.links_pinned ? 'text-primary' : '' %>">
                     <%= link.links_pinned ? 'Pinned' : 'Not Pinned' %>
                   </td>
-                  <td><%= link.position %></td> <!-- New column data -->
+                  <td><%= link.position %></td>
+                  <td class="<%= link.public ? 'text-success' : 'text-danger' %>">
+                    <%= link.public ? 'Public' : 'Private' %>
+                  </td>
                   <td>
                     <%= link_to edit_link_path(link), class: 'btn btn-primary btn-sm' do %>
                       <i class="fas fa-edit"></i> Edit

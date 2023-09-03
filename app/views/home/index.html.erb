@@ -1,49 +1,48 @@
 <div id="contentArea" class="container-fluid h-100 d-flex flex-column text-light bg-transparent">
   <div class="row flex-grow-1 overflow-hidden">
     <div class="col">
-      <div class="container mt-4 text-light bg-transparent"> <!-- Change text-dark to text-light, and add bg-dark -->
+      <div class="container mt-4 text-light bg-transparent">
         <div class="row">
           <div class="col">
             <% if @user %>
-            <div class="text-center">
-              <%= image_tag 'banner.png', alt: 'User Banner', class: 'img-fluid mb-4 rounded', style: 'width: 35%;' %>
-              <form action="https://www.google.com/search" class="d-flex justify-content-center mb-4 bg-transparent rounded p-2" method="get">
-                <div class="input-group" style="width: 80%;">
-                  <input type="text" name="q" class="form-control bg-dark text-light rounded custom-placeholder" placeholder="Search Google or type a URL" style="margin-right: 8px;">
-                  <div class="input-group-append">
-                    <button type="submit" class="btn btn-light"><i class="fas fa-search"></i> Search</button>
+              <div class="text-center">
+                <%= image_tag 'banner.png', alt: 'User Banner', class: 'img-fluid mb-4 rounded', style: 'width: 35%;' %>
+                <form action="https://www.google.com/search" class="d-flex justify-content-center mb-4 bg-transparent rounded p-2" method="get">
+                  <div class="input-group" style="width: 80%;">
+                    <input type="text" name="q" class="form-control bg-dark text-light rounded custom-placeholder" placeholder="Search Google or type a URL" style="margin-right: 8px;">
+                    <div class="input-group-append">
+                      <button type="submit" class="btn btn-light"><i class="fas fa-search"></i> Search</button>
+                    </div>
                   </div>
-                </div>
-              </form>
-            </div>
-              <div class="card bg-dark text-light shadow-lg"> <!-- Change text-dark to text-light, and add bg-dark -->
+                </form>
+              </div>
+              <div class="card bg-dark text-light shadow-lg">
                 <div class="card-body">
                   <div class="row">
                     <% @links.each_with_index do |link, index| %>
-                    <div class="col-3 d-flex flex-column justify-content-center align-items-center">
-                    <% if link.links_enabled %>
-                      <!-- Add the 'pinned' class conditionally -->
-                      <a href="<%= link.links_url %>" class="align-self-center text-center text-light  <%= 'pinned' if link.links_pinned %>" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
-                        <img src="https://www.google.com/s2/favicons?domain=<%= URI.parse(link.links_url).host.split('.').last(2).join('.') %>" 
-                        alt="favicon" 
-                        class="fa-2x text-light"
-                        onerror="this.alt=''; this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
-                        <i class="<%= link.links_icon %> fa-2x text-light" style="display:none;"></i>
-                        <span class="d-block text-light"><%= link.links_display_name %></span>
-                      </a>
-                    <% end %>
-                  </div>
-                    <% if (index + 1) % 4 == 0 %>
-                      </div><div class="row mt-4">
-                    <% end %>
-                  <% end %>
+                      <% if link.links_enabled && !link.public %>
+                        <div class="col-3 d-flex flex-column justify-content-center align-items-center">
+                          <a href="<%= link.links_url %>" class="align-self-center text-center text-light <%= 'pinned' if link.links_pinned %>" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                            <img src="https://www.google.com/s2/favicons?domain=<%= URI.parse(link.links_url).host.split('.').last(2).join('.') %>" 
+                            alt="favicon" 
+                            class="fa-2x text-light"
+                            onerror="this.alt=''; this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                            <i class="<%= link.links_icon %> fa-2x text-light" style="display:none;"></i>
+                            <span class="d-block text-light"><%= link.links_display_name %></span>
+                          </a>
+                        </div>
+                      <% end %>
+                      <% if (index + 1) % 4 == 0 %>
+                        </div><div class="row mt-4">
+                      <% end %>
+                    <% end %> <!-- This corresponds to @links.each_with_index -->
                   </div>
                 </div>
               </div>
             <% else %>
               <div class="text-center mt-4">
-                <h1 id="welcomeHeader" class="display-4 text-light">Welcome to Loftwah's Dashboard</h1> <!-- Change text-dark to text-light -->
-                <p class="lead mt-4 text-light">Please sign in to see your personalized settings.</p> <!-- Change text-dark to text-light -->
+                <h1 id="welcomeHeader" class="display-4 text-light">Welcome to Loftwah's Dashboard</h1>
+                <p class="lead mt-4 text-light">Please sign in to see your personalized settings.</p>
               </div>
             <% end %>
           </div>

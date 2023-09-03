@@ -1,36 +1,58 @@
-<!-- Add this in a new view file or an existing one based on your decision -->
-<div class="container mt-5">
-  <h1 class="display-4 mb-4 text-light">Public Links</h1>
-  <div class="table-responsive">
-    <table class="table table-hover table-bordered table-app-drawer">
-      <thead class="thead-dark">
-        <tr>
-          <th>Group</th>
-          <th>URL</th>
-          <th>Display Name</th>
-          <th class="text-center">Icon</th>
-          <th>Enabled</th>
-          <th>Pinned</th>
-          <th>Position</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @public_links.each do |link| %>
-          <tr>
-            <td><%= link.links_group %></td>
-            <td><%= link.links_url %></td>
-            <td><%= link.links_display_name %></td>
-            <td class="text-center"><i class="<%= link.links_icon %>"></i></td>
-            <td class="<%= link.links_enabled ? 'text-success' : 'text-danger' %>">
-              <%= link.links_enabled ? 'Enabled' : 'Disabled' %>
-            </td>
-            <td class="<%= link.links_pinned ? 'text-primary' : '' %>">
-              <%= link.links_pinned ? 'Pinned' : 'Not Pinned' %>
-            </td>
-            <td><%= link.position %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+<div class="container-fluid bg-dark text-light min-vh-100 d-flex flex-column align-items-center justify-content-center">
+  <!-- User Information -->
+  <div class="text-center mb-5">
+    <img src="https://github.com/<%= @user.username %>.png" alt="User Avatar" class="rounded-circle mb-3" width="150">
+    <h1 class="display-4"><%= @user.first_name %> <%= @user.last_name %></h1>
+    <p class="lead"><%= @user.username %></p>
+    <p class="text-light"><%= @user.short_description %></p>
+    <div class="d-inline-block">
+      <% @user.tags.split(",").each do |tag| %>
+        <span class="badge badge-light m-1 hoverable-tag"><%= tag.strip %></span>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Public Links -->
+  <div class="w-100">
+    <h2 class="text-center text-light mb-5">Public Links</h2>
+    <div class="row justify-content-center">
+      <% @public_links.each do |link| %>
+        <div class="col-md-8 mb-4">
+          <div class="card stylish-card">
+            <div class="card-body text-center d-flex flex-column align-items-center">
+              <img src="https://www.google.com/s2/favicons?domain=<%= URI.parse(link.links_url).host.split('.').last(2).join('.') %>" 
+              alt="favicon" 
+              class="mb-2"
+              onerror="this.alt=''; this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+              <i class="<%= link.links_icon %> mb-2" style="display:none;"></i>
+              <h5 class="card-title mb-0">
+                <a href="<%= link.links_url %>" class="text-dark text-decoration-none" target="_blank">
+                  <%= link.links_display_name %>
+                </a>
+              </h5>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
   </div>
 </div>
+
+<style>
+  .hoverable-tag:hover {
+    cursor: pointer;
+    opacity: 0.7;
+  }
+
+  .stylish-card {
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,.1);
+    transition: all .15s ease;
+  }
+
+  .stylish-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 10px rgba(0,0,0,.2);
+  }
+</style>
