@@ -3,7 +3,7 @@
   <div class="text-center mb-5">
     <img src="https://github.com/<%= @user.username %>.png" alt="User Avatar" class="rounded-circle mb-3" width="150">
     <h1 class="display-4"><%= @user.first_name %> <%= @user.last_name %></h1>
-    <p class="lead"><%= @user.username %></p>
+    <p class="lead">@<%= @user.username %></p>
     <p class="text-light"><%= @user.short_description %></p>
     <div class="d-inline-block">
       <% @user.tags.split(",").each do |tag| %>
