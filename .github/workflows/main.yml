@@ -1,4 +1,4 @@
-name: Linkaroo CI/CD
+name: Linkarooie CI/CD
 on: [push, pull_request]
 env:
   AWS_REGION: ap-southeast-2
