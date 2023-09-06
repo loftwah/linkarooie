@@ -43,6 +43,10 @@
         <% end %>
       </ul>
       <ul class="navbar-nav ml-auto">
+        <!-- GitHub Icon Link -->
+        <li class="nav-item px-2">
+          <%= link_to '<i class="fab fa-github"></i>'.html_safe, 'https://github.com/loftwah/linkarooie', class: 'nav-link', target: '_blank' %>
+        </li>
         <% if user_signed_in? %>
           <li class="nav-item px-2">
             <%= link_to 'Links', links_path, class: 'nav-link' %>
