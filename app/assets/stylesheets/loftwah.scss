@@ -36,4 +36,52 @@
     // max-width: 90%;  /* or whatever maximum width you'd like */
     margin: auto;
   }
+
+  @media (max-width: 992px) {
+    .navbar-nav {
+      justify-content: center;
+      width: 100%;
+    }
+    
+    .navbar-nav .nav-item {
+      padding: 0 10px;
+    }
   
+    /* Style for toggler */
+    .navbar-toggler {
+      border: 1px solid rgba(255, 255, 255, 0.3);  /* Lighter border */
+    }
+    
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(255, 255, 255, 0.5)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+    }
+
+    .navbar-toggler:focus, .navbar-toggler:active {
+      outline: none;
+      box-shadow: none;
+      border: 1px solid rgba(255, 255, 255, 0.3); /* You can adjust this */
+    }
+    
+    /* Add some background and padding to the expanded menu */
+    #navbarNav {
+      background: #0E0B1F;  /* Dark theme color */
+      padding: 1rem;
+    }
+    
+    /* Style individual nav items */
+    .nav-item {
+      background: rgba(255, 255, 255, 0.1); /* Slight white background */
+      margin: 0.25rem 0;
+      border-radius: 12px;
+    }
+  
+    /* Style the nav links */
+    .nav-link {
+      color: rgba(255, 255, 255, 0.7) !important;  /* Light grey */
+    }
+  
+    /* Add hover color */
+    .nav-link:hover {
+      color: rgba(255, 255, 255, 0.9) !important; /* Almost white */
+    }
+  }
