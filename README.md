@@ -54,7 +54,8 @@ This custom dashboard is a Ruby on Rails application developed for personal use 
 4. Create and migrate the database.
 
     ```bash
-    rails db:create db:migrate
+    rails db:create db:migrate db:seed
+    rails assets:precompile
     ```
 
 5. Start the Rails server.
@@ -64,6 +65,8 @@ This custom dashboard is a Ruby on Rails application developed for personal use 
     ```
 
 Visit `http://localhost:3000` to view your custom dashboard.
+
+- The default username is `loftwah@linkarooie.com` and the default password is `Password01`.
 
 ## Usage
 
