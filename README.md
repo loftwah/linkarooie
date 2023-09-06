@@ -63,6 +63,14 @@ We have exciting features planned for the future. Your input can help prioritize
 
     * Description: Display your Wakatime stats on your dashboard.
 
+9. **Sorting options for Links/Count how many times a link has been clicked**
+
+    * Description: Sort links by name, date added, or pinned status.
+
+10. **Display stats somewhere on the page**
+
+    * Description: Display stats such as the number of links, number of pinned links, and number of times a link has been clicked. This could be the same place as the weather information and Wakatime integration.
+
 #### How to Vote
 
 To vote, please visit our [Feature Voting Page (coming soon)](#).
