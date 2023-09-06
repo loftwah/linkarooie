@@ -25,3 +25,15 @@
   .bg-dark {
     background-color: #0E0B1F !important;
   }
+
+  .bg-translucent-dark {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+  
+  .custom-container {
+    // max-width: 90%;  /* or whatever maximum width you'd like */
+    margin: auto;
+  }
+  
