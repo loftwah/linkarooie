@@ -17,16 +17,16 @@
   class="<%= (current_user&.background_color.present? || (current_user&.background_image&.attached?)) ? '' : 'bg-dark text-light' %>"
   style="<%= 'background-image: url(' + url_for(current_user.background_image) + ');' if current_user&.background_image&.attached? %>
        <%= 'background-color:' + current_user.background_color + ';' if current_user&.background_color.present? %>">
- <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm px-3">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm px-3">
     <div class="d-flex align-items-center">
-        <% if user_signed_in? %>
+      <% if user_signed_in? %>
         <a href="/">
-          <img src="https://github.com/<%= current_user.username %>.png" 
-              onerror="this.onerror=null; this.src='https://via.placeholder.com/30';" 
-              class="rounded-circle" width="30" height="30" style="margin-right: 15px;">
+          <img src="https://github.com/<%= current_user.username %>.png"
+               onerror="this.onerror=null; this.src='https://via.placeholder.com/30';"
+               class="rounded-circle" width="30" height="30" style="margin-right: 15px;">
         </a>
-        <% end %>
-        <a class="navbar-brand" href="/">Linkarooie</a>
+      <% end %>
+      <a class="navbar-brand" href="/">Linkarooie</a>
     </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -43,18 +43,16 @@
         <% end %>
       </ul>
       <ul class="navbar-nav ml-auto">
-        <!-- GitHub Icon Link -->
-        <li class="nav-item px-2">
-          <%= link_to '<i class="fab fa-github"></i>'.html_safe, 'https://github.com/loftwah/linkarooie', class: 'nav-link', target: '_blank' %>
-        </li>
         <% if user_signed_in? %>
+          <!-- GitHub Icon Link -->
+          <li class="nav-item px-2">
+            <%= link_to '<i class="fab fa-github"></i>'.html_safe, 'https://github.com/loftwah/linkarooie', class: 'nav-link', target: '_blank' %>
+          </li>
           <li class="nav-item px-2">
             <%= link_to 'Links', links_path, class: 'nav-link' %>
           </li>
           <li class="nav-item px-2">
-            <% if current_user && current_user.username %>
-              <%= link_to 'Profile', user_public_links_path(current_user.username), class: 'nav-link' %>
-            <% end %>
+            <%= link_to 'Profile', user_public_links_path(current_user.username), class: 'nav-link' %>
           </li>
           <li class="nav-item px-2">
             <%= link_to 'Settings', edit_settings_path, class: 'nav-link' %>
@@ -75,6 +73,6 @@
   </nav>
   <div class="container-fluid h-100 mt-4 d-flex flex-column">
     <%= yield %>
-</div>
+  </div>
 </body>
 </html>
