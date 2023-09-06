@@ -59,6 +59,10 @@ We have exciting features planned for the future. Your input can help prioritize
 
 * Description: A collection of tools for programmers, such as a color picker, JSON formatter, and more.
 
+8. **Wakatime Integration**
+
+* Description: Display your Wakatime stats on your dashboard.
+
 #### How to Vote
 
 To vote, please visit our [Feature Voting Page (coming soon)](#).
