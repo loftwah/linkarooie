@@ -55,6 +55,10 @@ We have exciting features planned for the future. Your input can help prioritize
 
 * Description: Handle more than 12 icons on the main page through pagination or left and right navigation arrows.
 
+7. ** Programmer Tools **
+
+* Description: A collection of tools for programmers, such as a color picker, JSON formatter, and more.
+
 #### How to Vote
 
 To vote, please visit our [Feature Voting Page (coming soon)](#).
