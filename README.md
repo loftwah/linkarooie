@@ -89,9 +89,9 @@ To add links, sign up and navigate to your dashboard settings. Here, you can man
 * Twilio
 * Cloudflare
 
-## GitHub Actions Workflow (coming soon)
+## GitHub Actions Workflow
 
-All code changes are automatically tested using GitHub Actions, focusing on region-specific AWS integration tests.
+All code changes are automatically tested using GitHub Actions, focusing on region-specific AWS integration tests. So far basic RSpec tests have been implemented. More tests will be added in the future. Continuous deployment is also planned for the future.
 
 ## Contributing
 
