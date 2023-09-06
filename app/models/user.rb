@@ -2,6 +2,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  validates :username, uniqueness: { case_sensitive: false }
+
   has_many :links
   has_one_attached :background_image
 
