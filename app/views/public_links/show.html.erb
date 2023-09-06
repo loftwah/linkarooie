@@ -1,41 +1,67 @@
 <div class="container-fluid text-light min-vh-100 d-flex flex-column align-items-center justify-content-center">
   <div class="bg-translucent-dark custom-container">
-  <!-- User Information -->
-  <div class="text-center mb-5">
-    <img src="https://github.com/<%= @user.username %>.png" alt="User Avatar" class="rounded-circle mb-3" width="150">
-    <h1 class="display-4"><%= @user.first_name %> <%= @user.last_name %></h1>
-    <p class="lead">@<%= @user.username %></p>
-    <p class="text-light"><%= @user.short_description %></p>
-    <div class="d-inline-block">
-      <% @user.tags.split(",").each do |tag| %>
-        <span class="badge badge-light m-1 hoverable-tag"><%= tag.strip %></span>
-      <% end %>
+    <!-- User Information -->
+    <div class="text-center mb-5">
+      <div class="position-relative d-inline-block">
+        <img src="https://github.com/<%= @user.username %>.png" alt="User Avatar" class="rounded-circle mb-3" width="150">
+        <button type="button" class="btn btn-light position-absolute bottom-0 end-0 btn-icon" data-bs-toggle="modal" data-bs-target="#shareModal">
+          <i class="fas fa-share"></i>
+        </button>
+      </div>
+      <h1 class="display-4"><%= @user.first_name %> <%= @user.last_name %></h1>
+      <p class="lead">@<%= @user.username %></p>
+      <p class="text-light"><%= @user.short_description %></p>
+      <div class="d-inline-block">
+        <% @user.tags.split(",").each do |tag| %>
+          <span class="badge badge-light m-1 hoverable-tag"><%= tag.strip %></span>
+        <% end %>
+      </div>
     </div>
-  </div>
 
-  <!-- Public Links -->
-  <div class="w-100">
-    <div class="row justify-content-center">
-      <% @public_links.each do |link| %>
-        <div class="col-md-8 mb-4">
-          <div class="card stylish-card">
-            <div class="card-body text-center d-flex flex-column align-items-center">
-              <img src="https://www.google.com/s2/favicons?domain=<%= URI.parse(link.links_url).host.split('.').last(2).join('.') %>" 
-              alt="favicon" 
-              class="mb-2"
-              onerror="this.alt=''; this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
-              <i class="<%= link.links_icon %> mb-2" style="display:none;"></i>
-              <h5 class="card-title mb-0">
-                <a href="<%= link.links_url %>" class="text-dark text-decoration-none" target="_blank">
-                  <%= link.links_display_name %>
-                </a>
-              </h5>
+    <!-- Public Links -->
+    <div class="w-100">
+      <div class="row justify-content-center">
+        <% @public_links.each do |link| %>
+          <div class="col-md-8 mb-4">
+            <div class="card stylish-card">
+              <div class="card-body text-center d-flex flex-column align-items-center">
+                <img src="https://www.google.com/s2/favicons?domain=<%= URI.parse(link.links_url).host.split('.').last(2).join('.') %>" 
+                alt="favicon" 
+                class="mb-2"
+                onerror="this.alt=''; this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                <i class="<%= link.links_icon %> mb-2" style="display:none;"></i>
+                <h5 class="card-title mb-0">
+                  <a href="<%= link.links_url %>" class="text-dark text-decoration-none" target="_blank">
+                    <%= link.links_display_name %>
+                  </a>
+                </h5>
+              </div>
             </div>
           </div>
-        </div>
-      <% end %>
+        <% end %>
+      </div>
     </div>
-  </div>
+
+    <!-- Share Modal -->
+    <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="shareModalLabel">Share Profile</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <%= raw @qr.as_svg(offset: 0, color: '000',
+                                shape_rendering: 'crispEdges',
+                                module_size: 6) %>
+            <!-- You can add social sharing buttons here -->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -55,5 +81,14 @@
   .stylish-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 10px rgba(0,0,0,.2);
+  }
+
+  .btn-icon {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1.5rem;
+    opacity: 0.8;
   }
 </style>
