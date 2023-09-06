@@ -53,15 +53,15 @@ We have exciting features planned for the future. Your input can help prioritize
 
 6. **Extended Icon Support on Main Page**
 
-* Description: Handle more than 12 icons on the main page through pagination or left and right navigation arrows.
+    * Description: Handle more than 12 icons on the main page through pagination or left and right navigation arrows.
 
 7. **Programmer Tools**
 
-* Description: A collection of tools for programmers, such as a color picker, JSON formatter, and more.
+    * Description: A collection of tools for programmers, such as a color picker, JSON formatter, and more.
 
 8. **Wakatime Integration**
 
-* Description: Display your Wakatime stats on your dashboard.
+    * Description: Display your Wakatime stats on your dashboard.
 
 #### How to Vote
 
