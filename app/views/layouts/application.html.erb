@@ -20,11 +20,11 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm px-3 navbar-collapsed">
     <div class="d-flex align-items-center">
       <% if user_signed_in? %>
-        <a href="/">
+        <%= link_to user_public_links_path(current_user.username) do %>
           <img src="https://github.com/<%= current_user.username %>.png"
-               onerror="this.onerror=null; this.src='https://via.placeholder.com/30';"
-               class="rounded-circle" width="30" height="30" style="margin-right: 15px;">
-        </a>
+              onerror="this.onerror=null; this.src='https://via.placeholder.com/30';"
+              class="rounded-circle" width="30" height="30" style="margin-right: 15px;">
+        <% end %> 
       <% end %>
       <a class="navbar-brand" href="/">Linkarooie</a>
     </div>
