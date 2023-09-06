@@ -38,11 +38,11 @@ This custom dashboard is a Ruby on Rails application developed for personal use 
 
 1. Clone the repository.
 
-`git clone https://github.com/loftwah/linkarooie.git`
+    `git clone https://github.com/loftwah/linkarooie.git`
 
 2. Navigate to the project directory.
 
-`cd linkarooie`
+    `cd linkarooie`
 
 3. Install dependencies.
 
