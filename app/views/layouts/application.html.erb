@@ -27,6 +27,11 @@
         <% end %> 
       <% end %>
       <a class="navbar-brand" href="/">Linkarooie</a>
+      <% if user_signed_in? %>
+          <li class="nav-item px-2">
+            <span class="badge badge-secondary">@<%= current_user.username %></span>
+          </li>
+        <% end %>
     </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -36,11 +41,6 @@
         <!-- Left-aligned items go here -->
       </ul>
       <ul class="navbar-nav mx-auto">
-        <% if user_signed_in? %>
-          <li class="nav-item px-2">
-            <span class="badge badge-secondary">@<%= current_user.username %></span>
-          </li>
-        <% end %>
       </ul>
       <ul class="navbar-nav ml-auto">
         <% if user_signed_in? %>
