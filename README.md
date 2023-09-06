@@ -14,8 +14,9 @@ This custom dashboard is a Ruby on Rails application developed for personal use 
 * Ruby on Rails
 * SQLite Database (PostgreSQL in production coming soon)
 * AWS Services (coming soon)
-* GitHub Actions (coming soon)
+* GitHub Actions
 * Ubuntu 22.04
+* HTMX (coming soon)
 
 ## Features
 
@@ -75,19 +76,6 @@ Visit `http://localhost:3000` to view your custom dashboard.
 ## Usage
 
 To add links, sign up and navigate to your dashboard settings. Here, you can manage and pin links, as well as customize your dashboard's appearance.
-
-## AWS Services Used (coming soon)
-
-* S3
-* EC2
-* ECS
-* RDS
-* Elasticache
-* SNS
-* SQS
-* SES
-* Twilio
-* Cloudflare
 
 ## GitHub Actions Workflow
 
