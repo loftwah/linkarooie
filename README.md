@@ -25,31 +25,39 @@ This custom dashboard is a Ruby on Rails application developed for personal use 
 * **Customization**: Change the background color and add a background image to personalize your dashboard.
 * **User Management**: Sign up and manage your customized dashboard settings.
 
-### Upcoming Features
+### Roadmap
+
+We have exciting features planned for the future. Your input can help prioritize these features. Feel free to vote on what you'd like to see implemented first!
+
+#### Upcoming Features for Voting
 
 1. **MPC-Style Soundboard**
 
-   * 16 interactive buttons to trigger .wav or .mp3 samples.
-   * Ability to easily add new preset folders with sound files.
+   * Description: 16-button interactive soundboard to trigger .wav or .mp3 samples.
 
 2. **Notes Section**
 
-   * Create, Read, Update, and Delete (CRUD) functionality for personal notes.
+   * Description: A place to jot down personal notes with CRUD functionalities.
 
 3. **Todo-List**
 
-   * Task creation with CRUD operations.
-   * Toggle task status between completed and not completed.
+   * Description: Keep track of tasks with CRUD operations and status toggling.
 
 4. **Kanban Board**
 
-   * Create tasks and move them through customizable stages.
-   * Drag-and-drop interface for ease of use.
+   * Description: Manage tasks in a visual, drag-and-drop interface.
 
 5. **Weather Information**
 
-   * Fetch and display current weather based on user location settings.
-   * Utilize Redis to cache weather data and minimize API calls.
+   * Description: Fetch and display current weather based on user's location settings.
+
+6. **Extended Icon Support on Main Page**
+
+* Description: Handle more than 12 icons on the main page through pagination or left and right navigation arrows.
+
+#### How to Vote
+
+To vote, please visit our [Feature Voting Page (coming soon)](#).
 
 ## Getting Started
 
