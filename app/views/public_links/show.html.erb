@@ -42,28 +42,72 @@
       </div>
     </div>
 
-    <!-- Share Modal -->
-    <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="shareModalLabel">Share Profile</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <%= raw @qr.as_svg(offset: 0, color: '000',
-                                shape_rendering: 'crispEdges',
-                                module_size: 6) %>
-            <!-- You can add social sharing buttons here -->
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          </div>
+ <!-- Share Modal -->
+<div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="shareModalLabel">Share Your Profile</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <div id="qrCodeDiv">
+          <%= raw @qr.as_svg(id: 'qrCodeSVG', offset: 0, color: '000',
+                              shape_rendering: 'crispEdges',
+                              module_size: 6) %>
         </div>
+        <div class="mt-4 d-flex justify-content-between flex-wrap">
+          <button type="button" class="btn btn-secondary mb-2" id="saveImage">Save Image</button>
+          <%# <button type="button" class="btn btn-secondary mb-2" id="copyImage">Copy Image</button> %>
+          <a href="https://twitter.com/share?url=<%= request.original_url %>" class="btn btn-primary mb-2" target="_blank">
+            <i class="fab fa-twitter"></i> Twitter
+          </a>
+          <a href="https://www.facebook.com/sharer/sharer.php?u=<%= request.original_url %>" class="btn btn-primary mb-2" target="_blank">
+            <i class="fab fa-facebook-f"></i> Facebook
+          </a>
+          <a href="https://www.linkedin.com/shareArticle?mini=true&url=<%= request.original_url %>" class="btn btn-primary mb-2" target="_blank">
+            <i class="fab fa-linkedin-in"></i> LinkedIn
+          </a>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Save and Copy Image Script -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Save Image
+    document.getElementById('saveImage').addEventListener('click', function() {
+      let svg = document.querySelector('#qrCodeDiv svg');
+      let svgData = new XMLSerializer().serializeToString(svg);
+      let blob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+      let url = window.URL.createObjectURL(blob);
+      let a = document.createElement("a");
+      a.href = url;
+      a.download = "QRCode.svg";
+      a.click();
+    });
+
+    // Copy Image
+    document.getElementById('copyImage').addEventListener('click', function() {
+      let svg = document.querySelector('#qrCodeDiv svg');
+      let svgData = new XMLSerializer().serializeToString(svg);
+      let blob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+      let url = window.URL.createObjectURL(blob);
+      let tempInput = document.createElement('input');
+      document.body.appendChild(tempInput);
+      tempInput.value = url;
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+    });
+  });
+  
+</script>
 
 <style>
   .hoverable-tag:hover {
