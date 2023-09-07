@@ -57,7 +57,7 @@ We have exciting features planned for the future. Your input can help prioritize
 
 7. **Programmer Tools**
 
-    * Description: A collection of tools for programmers, such as a color picker, JSON formatter, and more.
+    * Description: A collection of tools for programmers, such as a color picker, JSON formatter, encoder/decoder, key generator, DNS lookup and WHOIS and more.
 
 8. **Wakatime Integration**
 
@@ -70,6 +70,18 @@ We have exciting features planned for the future. Your input can help prioritize
 10. **Display stats somewhere on the page**
 
     * Description: Display stats such as the number of links, number of pinned links, and number of times a link has been clicked. This could be the same place as the weather information and Wakatime integration.
+
+11. **Subnet Calculator**
+
+    * Description: A subnet calculator to calculate subnet masks, IP addresses, and more.
+
+12. **SAML/SSO Authentication**
+
+    * Description: Authenticate with SAML/SSO.
+
+13. **GitHub OAuth**
+
+    * Description: Authenticate with GitHub OAuth.
 
 #### How to Vote
 
