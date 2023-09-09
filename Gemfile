@@ -35,6 +35,7 @@ gem 'sassc'
 gem 'webpacker', '~> 5.x'
 gem 'aws-sdk', '~> 3'
 gem 'rqrcode'
+gem 'acts_as_list'
 
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"

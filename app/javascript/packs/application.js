@@ -1,5 +1,6 @@
 import '@popperjs/core';
 import 'bootstrap'
+import 'controllers'
 
 document.addEventListener("turbolinks:load", () => {
     const navbarToggle = document.getElementById("navbarToggle");
@@ -11,4 +12,4 @@ document.addEventListener("turbolinks:load", () => {
       });
     }
   });  
-  
+

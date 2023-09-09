@@ -1,0 +1,22 @@
+<h2>All Tasks</h2>
+
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th>Description</th>
+      <th>Status</th>
+      <th>Edit</th>
+      <th>Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tasks.each do |task| %>
+      <tr>
+        <td><%= task.description %></td>
+        <td><%= task.status %></td>
+        <td><%= link_to 'Edit', edit_task_path(task), class: 'btn btn-warning' %></td>
+        <td><%= link_to 'Delete', task_path(task), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

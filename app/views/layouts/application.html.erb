@@ -4,6 +4,7 @@
   <title>Linkarooie</title>
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
+  <meta name="csrf-token" content="<%= form_authenticity_token %>">
   <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
   <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload', defer: true %>

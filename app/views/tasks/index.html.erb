@@ -2,12 +2,13 @@
 
 <div class="container">
   <div class="row">
-    <% ['To-do', 'In-progress', 'Completed'].each do |status| %>
+    <% ['To Do', 'In Progress', 'Completed'].each do |status| %>
       <div class="col-4">
         <h3><%= status %></h3>
-        <div class="task-list" id="<%= status.parameterize %>" ondrop="drop(event, '<%= status %>')" ondragover="allowDrop(event)">
+        <!-- Connect with Stimulus controller -->
+        <div class="task-list" data-controller="sortable" id="<%= status.parameterize %>">
           <% @tasks.select { |task| task.status == status }.sort_by(&:priority).each do |task| %>
-            <div class="card" id="<%= task.id %>" draggable="true" ondragstart="drag(event)">
+            <div class="card" data-id="<%= task.id %>" draggable="true">
               <div class="card-body">
                 <p><%= task.description %></p>
                 <p><strong>Priority: </strong><%= task.priority %></p>
@@ -22,44 +23,3 @@
     <% end %>
   </div>
 </div>
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  function allowDrop(ev) {
-    ev.preventDefault();
-  }
-
-  function drag(ev) {
-    ev.dataTransfer.setData("text", ev.target.id);
-  }
-
-  function drop(ev, status) {
-    ev.preventDefault();
-    var data = ev.dataTransfer.getData("text");
-    ev.target.appendChild(document.getElementById(data));
-
-    fetch(`/tasks/${data}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': getMeta("csrf-token")
-      },
-      body: JSON.stringify({ status: status })
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log(data);
-    });
-  }
-
-  function getMeta(metaName) {
-    const metas = document.getElementsByTagName('meta');
-    for (let i = 0; i < metas.length; i++) {
-      if (metas[i].getAttribute('name') === metaName) {
-        return metas[i].getAttribute('content');
-      }
-    }
-    return '';
-  }
-});
-</script>
