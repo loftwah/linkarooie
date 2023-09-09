@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: 'registrations' }
   resource :settings, only: [:edit, :update]
   resources :links
+  resources :tasks
   root to: "home#index"
 
   get '/:username', to: 'public_links#show', as: 'user_public_links'

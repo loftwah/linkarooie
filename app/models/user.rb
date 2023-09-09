@@ -5,6 +5,7 @@ class User < ApplicationRecord
   validates :username, uniqueness: { case_sensitive: false }
 
   has_many :links
+  has_many :tasks
   has_one_attached :background_image
 
   attr_accessor :remove_background_image, :clear_background_color
