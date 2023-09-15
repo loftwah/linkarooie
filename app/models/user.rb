@@ -6,6 +6,7 @@ class User < ApplicationRecord
 
   has_many :links
   has_many :tasks
+  has_one :kanban
   has_one_attached :background_image
 
   attr_accessor :remove_background_image, :clear_background_color

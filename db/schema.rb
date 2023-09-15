@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_09_105837) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_15_072949) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -39,6 +39,33 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_09_105837) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "cards", force: :cascade do |t|
+    t.string "content"
+    t.integer "position"
+    t.integer "kanban_column_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["kanban_column_id"], name: "index_cards_on_kanban_column_id"
+  end
+
+  create_table "kanban_columns", force: :cascade do |t|
+    t.string "name"
+    t.integer "kanban_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["kanban_id"], name: "index_kanban_columns_on_kanban_id"
+  end
+
+  create_table "kanbans", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.text "cards"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id"], name: "index_kanbans_on_user_id"
+  end
+
   create_table "links", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "url"
@@ -58,17 +85,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_09_105837) do
     t.integer "position"
     t.boolean "public", default: false, null: false
     t.index ["user_id"], name: "index_links_on_user_id"
-  end
-
-  create_table "tasks", force: :cascade do |t|
-    t.string "description"
-    t.string "status"
-    t.integer "priority"
-    t.string "category"
-    t.integer "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "position"
   end
 
   create_table "users", force: :cascade do |t|
@@ -92,5 +108,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_09_105837) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "cards", "kanban_columns"
+  add_foreign_key "kanban_columns", "kanbans"
+  add_foreign_key "kanbans", "users"
   add_foreign_key "links", "users"
 end

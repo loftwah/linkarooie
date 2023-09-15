@@ -1,0 +1,12 @@
+<div class="kanban" data-id="<%= @kanban.id %>">
+  <% @kanban.kanban_columns.each do |column| %>
+    <ul class="kanban-col" data-col-id=<%= column.id %> >
+      <li class="kanban-col-name"><%= column.name %></li>
+      <% column.cards.sort_by{ |card| card.position}.each do |item| %>
+        <li class="kanban-col-item" data-item-id=<%= item.id %> >
+          <%= item.content %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>

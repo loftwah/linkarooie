@@ -13,3 +13,9 @@ document.addEventListener("turbolinks:load", () => {
     }
   });  
 
+  document.addEventListener('turbolinks:load', () => {
+    const kanbanUls = document.querySelectorAll(".kanban .kanban-col");
+    if (kanbanUls) {
+      initKanbanSortable(kanbanUls);
+    }
+  });

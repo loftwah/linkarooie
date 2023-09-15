@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Kanbans</h1>
+
+<div id="kanbans">
+  <% @kanbans.each do |kanban| %>
+    <%= render kanban %>
+    <p>
+      <%= link_to "Show this kanban", kanban %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New kanban", new_kanban_path %>
