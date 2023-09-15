@@ -85,37 +85,12 @@
       color: rgba(255, 255, 255, 0.9) !important; /* Almost white */
     }
   }
+
+  .kanban-col-item {
+    cursor: grab;
+  }
   
-  .sortable-chosen {
-    opacity: 0.6;
-}
-
-.sortable-over {
-    border: 2px solid #333;
-}
-
-.kanban {
-  display: flex;
-  margin: 24px;
-}
-.kanban-col {
-  list-style: none;
-  width: 160px;
-  padding: 0;
-  margin-left: 8px;
-}
-.kanban-col-name {
-  background-color: lightblue;
-  text-align: center;
-  margin-bottom: 16px;
-  padding: 16px;
-}
-.kanban-col-item {
-  background-color: white;
-  margin-bottom: 4px;
-  padding: 16px;
-  cursor: grab;
-}
-.kanban-col-item:active {
-  cursor: grabbing;
-}
+  .kanban-col-item:active {
+    cursor: grabbing;
+  }
+  

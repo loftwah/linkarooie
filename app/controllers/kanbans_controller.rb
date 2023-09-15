@@ -47,6 +47,23 @@ class KanbansController < ApplicationController
     end
   end
 
+  def move
+    begin
+      card = Card.find(params[:card_id])
+      new_column = KanbanColumn.find(params[:new_col_id])
+      kanban = Kanban.find(params[:id])
+  
+      if card && new_column && kanban && kanban.user == current_user
+        card.update!(kanban_column_id: new_column.id)
+        render json: { status: 'success' }, status: :ok
+      else
+        render json: { status: 'error', message: 'Invalid parameters or unauthorized action.' }, status: :unprocessable_entity
+      end
+    rescue => e
+      render json: { status: 'error', message: e.message }, status: :unprocessable_entity
+    end
+  end
+
   # DELETE /kanbans/1 or /kanbans/1.json
   def destroy
     @kanban.destroy
@@ -65,6 +82,6 @@ class KanbansController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def kanban_params
-      params.require(:kanban).permit(:name, :description, :cards)
+      params.require(:kanban).permit(:name, :description, kanban_columns_attributes: [:id, :name, :_destroy, cards_attributes: [:id, :name, :_destroy]])
     end
 end

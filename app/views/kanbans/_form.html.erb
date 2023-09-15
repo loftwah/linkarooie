@@ -1,32 +1,29 @@
 <%= form_with(model: kanban) do |form| %>
-  <% if kanban.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(kanban.errors.count, "error") %> prohibited this kanban from being saved:</h2>
+  <div class="mb-3">
+    <%= form.label :name %>
+    <%= form.text_field :name, class: "form-control" %>
+  </div>
 
-      <ul>
-        <% kanban.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+  <div class="mb-3">
+    <%= form.label :description %>
+    <%= form.text_area :description, class: "form-control" %>
+  </div>
+
+  <%= form.fields_for :kanban_columns do |column_form| %>
+    <div class="mb-3">
+      <%= column_form.label :name, 'Column Name' %>
+      <%= column_form.text_field :name, class: "form-control" %>
+
+      <%= column_form.fields_for :cards do |card_form| %>
+        <div class="mb-2">
+          <%= card_form.label :name, 'Card Name' %>
+          <%= card_form.text_field :name, class: "form-control" %>
+        </div>
+      <% end %>
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :name, style: "display: block" %>
-    <%= form.text_field :name %>
-  </div>
-
-  <div>
-    <%= form.label :description, style: "display: block" %>
-    <%= form.text_field :description %>
-  </div>
-
-  <div>
-    <%= form.label :cards, style: "display: block" %>
-    <%= form.text_area :cards %>
-  </div>
-
-  <div>
-    <%= form.submit %>
+  <div class="mt-3">
+    <%= form.submit class: "btn btn-primary" %>
   </div>
 <% end %>

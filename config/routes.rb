@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
-  resources :kanbans
+  resources :kanbans do
+    member do
+      patch :move
+    end
+  end
   get 'home/index'
   devise_for :users, controllers: { registrations: 'registrations' }
   resource :settings, only: [:edit, :update]

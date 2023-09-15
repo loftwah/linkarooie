@@ -5,7 +5,6 @@ class User < ApplicationRecord
   validates :username, uniqueness: { case_sensitive: false }
 
   has_many :links
-  has_many :tasks
   has_one :kanban
   has_one_attached :background_image
 
