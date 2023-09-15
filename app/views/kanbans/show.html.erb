@@ -1,28 +1,27 @@
-<!-- app/views/kanbans/show.html.erb -->
-<div class="container mt-4" data-controller="kanban" data-id="<%= @kanban.id %>">
-  <div class="row">
+<div class="container-fluid mt-4 custom-container" data-controller="kanban" data-id="<%= @kanban.id %>">
+  <div class="row justify-content-center">
     <% @kanban.kanban_columns.each do |column| %>
-      <div class="col-md-3">
-        <div class="card kanban-col" data-col-id="<%= column.id %>">
-          <div class="card-header text-white bg-primary kanban-col-name">
+      <div class="col-md-3 col-sm-12 p-1">
+        <div class="card kanban-col custom-card" data-col-id="<%= column.id %>">
+          <div class="card-header text-white custom-bg kanban-col-name">
             <%= column.name %>
           </div>
-          <div class="card-body p-0">
-            <ul class="list-group list-group-flush kanban-col-items">
+          <div class="card-body p-0 custom-card-body">
+            <ul class="list-group list-group-flush kanban-col-items custom-list-group">
               <% column.cards.sort_by { |card| card.position }.each do |item| %>
-                <li class="list-group-item kanban-col-item" data-item-id="<%= item.id %>">
+                <li class="list-group-item kanban-col-item custom-list-item" data-item-id="<%= item.id %>">
                   <%= item.content %>
-                  <%= link_to 'Edit', edit_kanban_kanban_column_card_path(@kanban, column, item), class: 'btn btn-sm btn-warning' %>
-                  <%= link_to 'Delete', kanban_kanban_column_card_path(@kanban, column, item), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %>
+                  <%= link_to 'Edit', edit_kanban_kanban_column_card_path(@kanban, column, item), class: 'btn btn-sm custom-btn-warning' %>
+                  <%= link_to 'Delete', kanban_kanban_column_card_path(@kanban, column, item), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm custom-btn-danger' %>
                 </li>
               <% end %>
             </ul>
           </div>
-          <div class="card-footer">
+          <div class="card-footer custom-card-footer">
             <%= form_with(model: [@kanban, column, Card.new], local: true) do |f| %>
               <div class="d-flex">
-                <%= f.text_field :content, class: 'form-control', placeholder: 'New card...' %>
-                <%= f.submit 'Add', class: 'btn btn-primary ml-2' %>
+                <%= f.text_field :content, class: 'form-control custom-form-control', placeholder: 'New card...' %>
+                <%= f.submit 'Add', class: 'btn custom-btn-primary ml-2' %>
               </div>
             <% end %>
           </div>
