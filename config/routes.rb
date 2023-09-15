@@ -14,4 +14,5 @@ Rails.application.routes.draw do
   root to: "home#index"
 
   get '/:username', to: 'public_links#show', as: 'user_public_links'
+  get '/:username/secret', to: 'public_links#show_secret', as: 'user_public_links_secret'
 end
