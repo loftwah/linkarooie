@@ -1,6 +1,6 @@
 # Linkarooie
 
-![Linkarooie](https://github.com/loftwah/linkarooie/assets/19922556/82607b81-2a75-4f79-bc16-803eca08f612)
+![Linkarooie](https://github.com/loftwah/linkarooie/assets/19922556/80761b49-752b-45dd-b910-e92c68411bc0)
 
 ## Overview
 
