@@ -52,15 +52,13 @@ class KanbansController < ApplicationController
       card = Card.find(params[:card_id])
       new_column = KanbanColumn.find(params[:new_col_id])
       kanban = Kanban.find(params[:id])
-      new_position = params[:new_position].to_i
+      new_position = params[:new_position].to_i + 1 # Adjusting for 1-based index in acts_as_list
   
       if card && new_column && kanban && kanban.user == current_user
         Card.transaction do
-          # Update all cards that have a position greater than or equal to the new position
-          new_column.cards.where("position >= ?", new_position).update_all("position = position + 1")
-  
-          # Update the position and column of the moved card
-          card.update!(kanban_column_id: new_column.id, position: new_position)
+          card.remove_from_list
+          card.update!(kanban_column_id: new_column.id)
+          card.insert_at(new_position)
         end
         render json: { status: 'success' }, status: :ok
       else
@@ -69,7 +67,7 @@ class KanbansController < ApplicationController
     rescue => e
       render json: { status: 'error', message: e.message }, status: :unprocessable_entity
     end
-  end  
+  end 
 
   # DELETE /kanbans/1 or /kanbans/1.json
   def destroy

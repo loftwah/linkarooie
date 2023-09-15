@@ -73,5 +73,5 @@ export default class extends Controller {
     .catch(err => {
       console.error("Fetch failed:", err); // Debugging
     });
-  }
+  }  
 }
