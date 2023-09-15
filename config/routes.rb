@@ -3,6 +3,9 @@ Rails.application.routes.draw do
     member do
       patch :move
     end
+    resources :kanban_columns do
+      resources :cards
+    end
   end
   get 'home/index'
   devise_for :users, controllers: { registrations: 'registrations' }

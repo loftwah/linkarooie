@@ -57,6 +57,10 @@ export default class extends Controller {
     console.log("Final column ID:", event.to.closest('.kanban-col').dataset.colId);  // Debugging
     console.log("Final item ID:", event.item.dataset.itemId);  // Debugging
     console.log("New Position:", newPosition); // Debugging
+    console.log("Started column Name:", event.from.closest('.kanban-col').dataset.colName); // Debugging
+    console.log("Sorted column Name:", event.to.closest('.kanban-col').dataset.colName); // Debugging
+    console.log("Final column Name:", event.to.closest('.kanban-col').dataset.colName);  // Debugging
+
   
     fetch(`/kanbans/${kanban_id}/move`, {
       method: 'PATCH',
