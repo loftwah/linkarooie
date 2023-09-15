@@ -86,6 +86,12 @@
     sudo apt-get install sqlite3 libsqlite3-dev -y
     ```
 
+#### Install Postgres
+
+```bash
+    sudo apt-get install postgresql postgresql-contrib libpq-dev -y
+```
+
 #### Set up the Linkarooie project
 
 12. Clone your Linkarooie repository:
