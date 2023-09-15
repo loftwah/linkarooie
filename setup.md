@@ -125,4 +125,4 @@
     rails s
     ```
 
-18. Visit <http://<your-ip:3000> to see your Linkarooie dashboard in action.
+18. Visit [http://<your-ip:3000](http://<your-ip:3000) to see your Linkarooie dashboard in action.
