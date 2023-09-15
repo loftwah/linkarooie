@@ -1,52 +1,60 @@
 # db/seeds.rb
 
+# Clear old data
 puts "Cleaning up old data"
 Card.destroy_all
 KanbanColumn.destroy_all
 Kanban.destroy_all
-# You may or may not want to destroy the User as well - consider this line carefully based on your needs:
-# User.destroy_all
+User.destroy_all  # Remove this line if you don't want to reset the User
 
+# Create default user
 puts "Creating user"
-default_user = User.find_or_create_by(email: 'loftwah@linkarooie.com') do |user|
-  user.password = 'Password01'
-  user.password_confirmation = 'Password01'
-  user.username = 'loftwah'
-  user.first_name = 'Dean'
-  user.last_name = 'Lofts'
-  user.short_description = 'DevOps Engineer, Proompter and a big fan of Open Source.'
-  user.tags = 'AWS,DevOps,GitHub,Open Source,Ruby,Ruby on Rails'
+default_user = User.create!(
+  email: 'loftwah@linkarooie.com',
+  password: 'Password01',
+  password_confirmation: 'Password01',
+  username: 'loftwah',
+  first_name: 'Dean',
+  last_name: 'Lofts',
+  short_description: 'DevOps Engineer, Proompter and a big fan of Open Source.',
+  tags: 'AWS,DevOps,GitHub,Open Source,Ruby,Ruby on Rails'
+)
+
+# Create Kanban Board
+puts "Creating demo Kanban Board"
+demo_kanban = Kanban.create!(
+  name: 'Linkarooie Project',
+  description: 'This is a demo board for Linkarooie application.',
+  user_id: default_user.id
+)
+
+# Create Kanban Columns and Cards
+puts "Creating Kanban Columns and Cards"
+['Backlog', 'In Progress', 'Completed'].each do |col_name|
+  column = demo_kanban.kanban_columns.create!(name: col_name)
+  
+  case col_name
+  when 'Backlog'
+    tasks = [
+      'Set up the initial Rails project',
+      'Create Models and Migrations',
+      'Install Devise for User Authentication'
+    ]
+  when 'In Progress'
+    tasks = [
+      'Develop CRUD operations for Links',
+      'Implement AWS S3 Storage'
+    ]
+  when 'Completed'
+    tasks = [
+      'Initial Project Setup',
+      'Setup GitHub Actions for CI/CD'
+    ]
+  end
+
+  tasks.each_with_index do |task, index|
+    column.cards.create!(content: task)
+  end
 end
 
-puts "Creating Kanban for default user"
-my_kanban = Kanban.create(
-  name: "Tech Enthusiast Projects",
-  description: "Tasks and projects related to my tech interests.",
-  user: default_user
-)
-
-puts "Creating columns and cards for the Kanban"
-backlog = KanbanColumn.create(
-  name: "Backlog",
-  kanban: my_kanban
-)
-Card.create(content: "Setup a new AWS EC2 instance for testing", position: 0, kanban_column: backlog)
-Card.create(content: "Contribute to an open-source Ruby gem", position: 1, kanban_column: backlog)
-Card.create(content: "Configure GitHub Actions for CI/CD", position: 2, kanban_column: backlog)
-
-todo = KanbanColumn.create(
-  name: "In Progress",
-  kanban: my_kanban
-)
-Card.create(content: "Create a new Rails 7 app with Hotwire", position: 0, kanban_column: todo)
-Card.create(content: "Study AWS Lambda for serverless functions", position: 1, kanban_column: todo)
-
-completed = KanbanColumn.create(
-  name: "Completed",
-  kanban: my_kanban
-)
-Card.create(content: "Completed DevOps certification", position: 0, kanban_column: completed)
-Card.create(content: "Migrated legacy Ruby app to the latest version", position: 1, kanban_column: completed)
-Card.create(content: "Held a workshop on Open Source contributions", position: 2, kanban_column: completed)
-
-puts "Seeding completed"
+puts "Seeding complete."
