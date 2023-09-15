@@ -11,7 +11,7 @@
               <% column.cards.sort_by { |card| card.position }.each do |item| %>
                 <li class="list-group-item kanban-col-item custom-list-item" data-item-id="<%= item.id %>">
                   <%= item.content %>
-                  <%= link_to 'Edit', edit_kanban_kanban_column_card_path(@kanban, column, item), class: 'btn btn-sm custom-btn-warning' %>
+                  <%= link_to 'Edit', edit_kanban_kanban_column_card_path(@kanban, column, item), class: 'btn btn-sm btn-light' %>
                   <%= link_to 'Delete', kanban_kanban_column_card_path(@kanban, column, item), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm custom-btn-danger' %>
                 </li>
               <% end %>

@@ -4,8 +4,8 @@
       <div class="container mt-5">
         <h1 class="display-4 mb-4 text-light">Links</h1>
         <div class="table-responsive">
-          <table class="table table-hover table-bordered table-app-drawer">
-            <thead class="thead-dark">
+          <table class="table table-hover table-dark table-bordered">
+            <thead class="thead-light">
               <tr>
                 <th>Group</th>
                 <th>URL</th>
@@ -21,9 +21,9 @@
             <tbody>
               <% @links.each do |link| %>
                 <tr>
-                  <td><%= link.links_group %></td>
-                  <td><%= link.links_url %></td>
-                  <td><%= link.links_display_name %></td>
+                  <td class="text-light"><%= link.links_group %></td>
+                  <td class="text-light"><%= link.links_url %></td>
+                  <td class="text-light"><%= link.links_display_name %></td>
                   <td class="text-center">
                     <img 
                       src="https://www.google.com/s2/favicons?domain=<%= URI.parse(link.links_url).host.split('.').last(2).join('.') %>" 
@@ -31,19 +31,19 @@
                       class="fa-2x text-light"
                       onerror="this.alt=''; this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
                     <i class="<%= link.links_icon %> fa-2x text-light" style="display:none;"></i>
-                </td>
+                  </td>
                   <td class="<%= link.links_enabled ? 'text-success' : 'text-danger' %>">
                     <%= link.links_enabled ? 'Enabled' : 'Disabled' %>
                   </td>
-                  <td class="<%= link.links_pinned ? 'text-primary' : '' %>">
+                  <td class="<%= link.links_pinned ? 'text-primary' : 'text-light' %>">
                     <%= link.links_pinned ? 'Pinned' : 'Not Pinned' %>
                   </td>
-                  <td><%= link.position %></td>
+                  <td class="text-light"><%= link.position %></td>
                   <td class="<%= link.public ? 'text-success' : 'text-danger' %>">
                     <%= link.public ? 'Public' : 'Private' %>
                   </td>
                   <td>
-                    <%= link_to edit_link_path(link), class: 'btn btn-primary btn-sm' do %>
+                    <%= link_to edit_link_path(link), class: 'btn btn-light btn-sm' do %>
                       <i class="fas fa-edit"></i> Edit
                     <% end %>
                     <%= link_to link, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' do %>
@@ -55,7 +55,7 @@
             </tbody>
           </table>
         </div>
-        <%= link_to new_link_path, class: 'btn btn-success btn-lg' do %>
+        <%= link_to new_link_path, class: 'btn btn-light btn-lg' do %>
           <i class="fas fa-plus"></i> New Link
         <% end %>
       </div>
