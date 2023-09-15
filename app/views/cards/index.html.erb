@@ -1,0 +1,3 @@
+<% @cards.each do |card| %>
+  <%= link_to card.name, kanban_kanban_column_card_path(@kanban, @kanban_column, card) %>
+<% end %>

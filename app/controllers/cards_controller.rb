@@ -8,7 +8,8 @@ class CardsController < ApplicationController
     end
   
     def show
-    end
+        @card = Card.find(params[:id])
+      end
   
     def new
       @card = @kanban_column.cards.new

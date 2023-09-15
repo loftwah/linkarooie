@@ -1,0 +1,3 @@
+<% @kanban_columns.each do |column| %>
+  <%= link_to column.name, kanban_kanban_column_path(@kanban, column) %>
+<% end %>
