@@ -75,7 +75,7 @@
 10. Install NodeJS and Yarn:
 
     ```bash
-    sudo apt-get install -y nodejs yarn
+    sudo apt-get install nodejs yarn -y
     ```
 
 #### Install SQLite3
@@ -83,7 +83,7 @@
 11. Install SQLite3 from the Ubuntu repositories:
 
     ```bash
-    sudo apt-get install -y sqlite3 libsqlite3-dev
+    sudo apt-get install sqlite3 libsqlite3-dev -y
     ```
 
 #### Set up the Linkarooie project

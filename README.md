@@ -39,51 +39,39 @@ We have exciting features planned for the future. Your input can help prioritize
 
    * Description: A place to jot down personal notes with CRUD functionalities.
 
-3. **Todo-List**
-
-   * Description: Keep track of tasks with CRUD operations and status toggling.
-
-4. **Kanban Board**
+3. **Kanban Board**
 
    * Description: Manage tasks in a visual, drag-and-drop interface.
 
-5. **Weather Information**
+4. **Weather Information**
 
    * Description: Fetch and display current weather based on user's location settings.
 
-6. **Extended Icon Support on Main Page**
+5. **Extended Icon Support on Main Page**
 
     * Description: Handle more than 12 icons on the main page through pagination or left and right navigation arrows.
 
-7. **Programmer Tools**
-
-    * Description: A collection of tools for programmers, such as a color picker, JSON formatter, encoder/decoder, key generator, DNS lookup and WHOIS and more.
-
-8. **Wakatime Integration**
+6. **Wakatime Integration**
 
     * Description: Display your Wakatime stats on your dashboard.
 
-9. **Sorting options for Links/Count how many times a link has been clicked**
+7. **Sorting options for Links/Count how many times a link has been clicked**
 
     * Description: Sort links by name, date added, or pinned status.
 
-10. **Display stats somewhere on the page**
+8. **Display stats somewhere on the page**
 
     * Description: Display stats such as the number of links, number of pinned links, and number of times a link has been clicked. This could be the same place as the weather information and Wakatime integration.
 
-11. **Subnet Calculator**
-
-    * Description: A subnet calculator to calculate subnet masks, IP addresses, and more.
-
-12. **SAML/SSO Authentication**
+9. **SAML/SSO Authentication**
 
     * Description: Authenticate with SAML/SSO.
 
-13. **GitHub OAuth**
+10. **GitHub OAuth**
 
     * Description: Authenticate with GitHub OAuth.
 
-14. **Twitter Stats Dashboard**
+11. **Twitter Stats Dashboard**
 
     * Description: Display key metrics from your Twitter account, including followers growth, tweet impressions, engagement rates, and a summary of recent posts. Features options for different time views (from 7 days to 1 year) and downloading sections as CSV. Integrates with Twitter via OAuth.
 
