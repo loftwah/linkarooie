@@ -55,7 +55,7 @@ class CardsController < ApplicationController
     end
   
     def card_params
-      params.require(:card).permit(:name, :description)
-    end
+      params.require(:card).permit(:content, :position, :kanban_column_id)
+    end    
   end
   

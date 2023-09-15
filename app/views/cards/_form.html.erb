@@ -1,7 +1,5 @@
 <%= form_with(model: [@kanban, @kanban_column, @card], local: true) do |form| %>
-  <%= form.label :name %>
-  <%= form.text_field :name %>
-  <%= form.label :description %>
-  <%= form.text_area :description %>
+  <%= form.label :content %>
+  <%= form.text_field :content %>
   <%= form.submit %>
 <% end %>
