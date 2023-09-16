@@ -9,14 +9,14 @@
                 <%= image_tag 'banner.png', alt: 'User Banner', class: 'img-fluid mb-4 rounded', style: 'width: 35%;' %>
                 <form action="https://www.google.com/search" class="d-flex justify-content-center mb-4 bg-transparent rounded p-2" method="get">
                   <div class="input-group" style="width: 80%;">
-                    <input type="text" name="q" class="form-control bg-dark text-light rounded custom-placeholder" placeholder="Search Google or type a URL" style="margin-right: 8px;">
+                    <input type="text" name="q" class="form-control bg-dark text-light rounded custom-placeholder" placeholder="Search Google" style="margin-right: 8px;">
                     <div class="input-group-append">
                       <button type="submit" class="btn btn-light"><i class="fas fa-search"></i> Search</button>
                     </div>
                   </div>
                 </form>
               </div>
-              <div class="card bg-dark text-light shadow-lg">
+              <div class="card text-light shadow-lg" style="background-color: rgba(0, 0, 0, 0.7);">
                 <div class="card-body">
                   <div class="row">
                     <% @links.each_with_index do |link, index| %>
