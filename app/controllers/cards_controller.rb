@@ -20,6 +20,7 @@ class CardsController < ApplicationController
       if @card.save
         redirect_to kanban_kanban_column_cards_url(@kanban, @kanban_column), notice: "Card was successfully created."
       else
+        flash.now[:alert] = @card.errors.full_messages.to_sentence
         render :new, status: :unprocessable_entity
       end
     end
@@ -31,6 +32,7 @@ class CardsController < ApplicationController
       if @card.update(card_params)
         redirect_to kanban_kanban_column_cards_url(@kanban, @kanban_column), notice: "Card was successfully updated."
       else
+        flash.now[:alert] = @card.errors.full_messages.to_sentence
         render :edit, status: :unprocessable_entity
       end
     end
