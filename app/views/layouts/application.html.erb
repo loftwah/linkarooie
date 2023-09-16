@@ -16,8 +16,7 @@
 </head>
 <body 
   class="<%= (@user&.background_color.present? || (@user&.background_image&.attached?)) ? '' : 'bg-dark text-light' %>"
-  style="<%= 'background-image: url(' + url_for(@user.background_image) + ');' if @user&.background_image&.attached? %>
-         <%= 'background-color:' + @user.background_color + ';' if @user&.background_color.present? %>">
+  style="<%= background_style(@user) %>">
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm px-3 navbar-collapsed">
     <div class="d-flex align-items-center">
       <% if user_signed_in? %>
