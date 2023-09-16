@@ -30,6 +30,7 @@ Whether you're a casual browser or a full-stack developer, Linkarooie offers you
 * **Pin Links**: Highlight essential links for easy access.
 * **Customization**: Change the background color and add a background image to personalize your dashboard.
 * **User Management**: Sign up and manage your customized dashboard settings.
+* **Kanban Board**: Manage tasks in a visual, drag-and-drop interface.
 
 ### Roadmap
 
@@ -45,39 +46,35 @@ We have exciting features planned for the future. Your input can help prioritize
 
    * Description: A place to jot down personal notes with CRUD functionalities.
 
-3. **Kanban Board**
-
-   * Description: Manage tasks in a visual, drag-and-drop interface.
-
-4. **Weather Information**
+3. **Weather Information**
 
    * Description: Fetch and display current weather based on user's location settings.
 
-5. **Extended Icon Support on Main Page**
+4. **Extended Icon Support on Main Page**
 
     * Description: Handle more than 12 icons on the main page through pagination or left and right navigation arrows.
 
-6. **Wakatime Integration**
+5. **Wakatime Integration**
 
     * Description: Display your Wakatime stats on your dashboard.
 
-7. **Sorting options for Links/Count how many times a link has been clicked**
+6. **Sorting options for Links/Count how many times a link has been clicked**
 
     * Description: Sort links by name, date added, or pinned status.
 
-8. **Display stats somewhere on the page**
+7. **Display stats somewhere on the page**
 
     * Description: Display stats such as the number of links, number of pinned links, and number of times a link has been clicked. This could be the same place as the weather information and Wakatime integration.
 
-9. **SAML/SSO Authentication**
+8. **SAML/SSO Authentication**
 
     * Description: Authenticate with SAML/SSO.
 
-10. **GitHub OAuth**
+9. **GitHub OAuth**
 
     * Description: Authenticate with GitHub OAuth.
 
-11. **Twitter Stats Dashboard**
+10. **Twitter Stats Dashboard**
 
     * Description: Display key metrics from your Twitter account, including followers growth, tweet impressions, engagement rates, and a summary of recent posts. Features options for different time views (from 7 days to 1 year) and downloading sections as CSV. Integrates with Twitter via OAuth.
 
