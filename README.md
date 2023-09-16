@@ -1,5 +1,7 @@
 # Linkarooie
 
+[Setup Guide](setup.md)
+
 ![Linkarooie](https://github.com/loftwah/linkarooie/assets/19922556/80761b49-752b-45dd-b910-e92c68411bc0)
 
 ## Overview
