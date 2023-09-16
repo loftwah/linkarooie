@@ -14,7 +14,9 @@
                     <div contenteditable="true" data-action="blur->kanban#saveChanges">
                       <%= item.content %>
                     </div>
-                    <%= link_to '<i class="fa fa-trash"></i>'.html_safe, kanban_kanban_column_card_path(@kanban, column, item), method: :delete, data: { confirm: 'Are you sure?' }, class: 'text-danger' %>
+                    <span data-action="click->kanban#deleteCard" class="text-danger" style="cursor: pointer;">
+                      <i class="fa fa-trash"></i>
+                    </span>
                   </div>
                 </li>
               <% end %>

@@ -66,6 +66,36 @@ export default class extends Controller {
     });
   }
 
+  // Function to handle deleting cards
+deleteCard(event) {
+  const itemElement = event.target.closest('.kanban-col-item');
+  const itemId = itemElement.dataset.itemId;
+  const colElement = itemElement.closest('.kanban-col');
+  const colId = colElement.dataset.colId;
+  const kanbanId = this.element.dataset.id;
+
+  if (!window.confirm('Are you sure?')) return;
+
+  fetch(`/kanbans/${kanbanId}/kanban_columns/${colId}/cards/${itemId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': document.querySelector("meta[name='csrf-token']").content
+    },
+  })
+  .then(response => {
+    if (response.ok) {
+      itemElement.remove();
+      console.log(`Successfully deleted card with ID ${itemId}`);
+    } else {
+      console.error(`Failed to delete card with ID ${itemId}`);
+    }
+  })
+  .catch(err => {
+    console.error("Fetch failed:", err);
+  });
+}
+
   end(event) {
     console.log("Drag and Drop event fired"); // Debugging
   
