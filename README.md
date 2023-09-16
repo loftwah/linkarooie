@@ -1,6 +1,6 @@
 # Linkarooie
 
-[Setup Guide](setup.md)
+[Setup Guide](setup.md) | [Developer Guide](developer_guide.md)
 
 ![Linkarooie](https://github.com/loftwah/linkarooie/assets/19922556/80761b49-752b-45dd-b910-e92c68411bc0)
 
