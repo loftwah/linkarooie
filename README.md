@@ -6,6 +6,10 @@
 
 Linkarooie is your go-to, Ruby on Rails-powered web dashboard, perfect for setting as your browser's homepage. Why settle for a standard, uninspiring start page when you can customize your own digital launchpad? From managing vital links to personalizing aesthetics, Linkarooie not only simplifies your web experience but also serves as an invaluable learning platform for Ruby on Rails enthusiasts.
 
+### Get Started with Linkarooie: Your Personalized Web Jump-Off Point
+
+Whether you're a casual browser or a full-stack developer, Linkarooie offers you a richer, more interactive starting point for your web ventures. Hop on board and hop your way through the web!
+
 ![Linkarooie Screenshot](https://github.com/loftwah/linkarooie/assets/19922556/f1a120cb-cb3c-4d4f-bbba-a00e8415289d)
 
 ### Built With
