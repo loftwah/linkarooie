@@ -10,9 +10,12 @@
             <ul class="list-group list-group-flush kanban-col-items custom-list-group">
               <% column.cards.sort_by { |card| card.position }.each do |item| %>
                 <li class="list-group-item kanban-col-item custom-list-item" data-item-id="<%= item.id %>">
-                  <%= item.content %>
-                  <%= link_to 'Edit', edit_kanban_kanban_column_card_path(@kanban, column, item), class: 'btn btn-sm btn-light' %>
-                  <%= link_to 'Delete', kanban_kanban_column_card_path(@kanban, column, item), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm custom-btn-danger' %>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div contenteditable="true" data-action="blur->kanban#saveChanges">
+                      <%= item.content %>
+                    </div>
+                    <%= link_to '<i class="fa fa-trash"></i>'.html_safe, kanban_kanban_column_card_path(@kanban, column, item), method: :delete, data: { confirm: 'Are you sure?' }, class: 'text-danger' %>
+                  </div>
                 </li>
               <% end %>
             </ul>

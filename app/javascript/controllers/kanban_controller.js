@@ -39,6 +39,33 @@ export default class extends Controller {
     console.log("Sortable instances created"); // Debugging
   }
 
+  // Function to handle saving changes for inline editing
+  saveChanges(event) {
+    const itemElement = event.target.closest('.kanban-col-item');
+    const content = event.target.innerText;
+    const itemId = itemElement.dataset.itemId;
+    const colElement = itemElement.closest('.kanban-col');
+    const colId = colElement.dataset.colId;
+    const kanbanId = this.element.dataset.id;
+
+    // Trigger API call to save changes
+    fetch(`/kanbans/${kanbanId}/kanban_columns/${colId}/cards/${itemId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector("meta[name='csrf-token']").content
+      },
+      body: JSON.stringify({ content: content })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log("Server responded with:", data);
+    })
+    .catch(err => {
+      console.error("Fetch failed:", err);
+    });
+  }
+
   end(event) {
     console.log("Drag and Drop event fired"); // Debugging
   
@@ -60,7 +87,6 @@ export default class extends Controller {
     console.log("Started column Name:", event.from.closest('.kanban-col').dataset.colName); // Debugging
     console.log("Sorted column Name:", event.to.closest('.kanban-col').dataset.colName); // Debugging
     console.log("Final column Name:", event.to.closest('.kanban-col').dataset.colName);  // Debugging
-
   
     fetch(`/kanbans/${kanban_id}/move`, {
       method: 'PATCH',
@@ -77,5 +103,5 @@ export default class extends Controller {
     .catch(err => {
       console.error("Fetch failed:", err); // Debugging
     });
-  }  
+  }
 }
