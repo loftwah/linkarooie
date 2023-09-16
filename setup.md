@@ -83,52 +83,54 @@
 11. Install SQLite3 from the Ubuntu repositories:
 
     ```bash
-    sudo apt-get install sqlite3 libsqlite3-dev -y
+    sudo apt-get install sqlite3 libsqlite3-dev -y 
     ```
 
 #### Install Postgres
 
-```bash
+12. Install Postgres from the Ubuntu repositories:
+
+    ```bash
     sudo apt-get install postgresql postgresql-contrib libpq-dev -y
-```
+    ```
 
 #### Set up the Linkarooie project
 
-12. Clone your Linkarooie repository:
+13. Clone your Linkarooie repository:
 
     ```bash
     git clone https://github.com/loftwah/linkarooie.git
     ```
 
-13. Navigate to the project directory:
+14. Navigate to the project directory:
 
     ```bash
     cd linkarooie
     ```
 
-14. Install project dependencies:
+15. Install project dependencies:
 
     ```bash
     bundle install
     yarn install
     ```
 
-15. Create and migrate the SQLite3 database:
+16. Create and migrate the SQLite3 database:
 
     ```bash
     rails db:create db:migrate db:seed
     ```
 
-16. Precompile assets:
+17. Precompile assets:
 
     ```bash
     rails assets:precompile
     ```
 
-17. Start the Rails server:
+18. Start the Rails server:
 
     ```bash
     rails s
     ```
 
-18. Visit [http://<your-ip:3000](http://<your-ip:3000) to see your Linkarooie dashboard in action.
+19. Visit [http://<your-ip:3000](http://<your-ip:3000) to see your Linkarooie dashboard in action.
