@@ -12,6 +12,16 @@ Linkarooie is your go-to, Ruby on Rails-powered web dashboard, perfect for setti
 
 Whether you're a casual browser or a full-stack developer, Linkarooie offers you a richer, more interactive starting point for your web ventures. Hop on board and hop your way through the web!
 
+### What is it though?
+
+Imagine your computer's web browser is like a magic carpet that can take you to all sorts of places on the internet. But every time you get on that carpet, it starts at a very plain and boring spot, like an empty room.
+
+Linkarooie changes that. It's like decorating that empty room with all your favorite things. You can add shortcuts to your favorite websites, like a treasure chest that holds maps to your favorite places. You can even change how the room looks by picking your favorite colors or putting up a cool picture.
+
+So, every time you start your magic carpet (web browser), you'll see this awesome room (Linkarooie dashboard) first. It makes going on internet adventures way more fun and easy!
+
+And the coolest part? Linkarooie is like a toy you can build and change yourself because it's made with something called Ruby on Rails, which is a set of building blocks for making websites. So, you can learn how to add more cool stuff to your room while you use it!
+
 ![Linkarooie Screenshot](https://github.com/loftwah/linkarooie/assets/19922556/f1a120cb-cb3c-4d4f-bbba-a00e8415289d)
 
 ### Built With
