@@ -4,7 +4,7 @@
 
 ## Overview
 
-This custom dashboard is a Ruby on Rails application developed for personal use and serves as a learning platform for Ruby on Rails. The dashboard is designed to be the default page that opens up in your web browser. It features the capability to manage links and customize the look and feel to match your preferences.
+Linkarooie is your go-to, Ruby on Rails-powered web dashboard, perfect for setting as your browser's homepage. Why settle for a standard, uninspiring start page when you can customize your own digital launchpad? From managing vital links to personalizing aesthetics, Linkarooie not only simplifies your web experience but also serves as an invaluable learning platform for Ruby on Rails enthusiasts.
 
 ![Linkarooie Screenshot](https://github.com/loftwah/linkarooie/assets/19922556/f1a120cb-cb3c-4d4f-bbba-a00e8415289d)
 
