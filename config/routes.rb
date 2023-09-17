@@ -15,4 +15,5 @@ Rails.application.routes.draw do
 
   get '/:username', to: 'public_links#show', as: 'user_public_links'
   get '/:username/secret', to: 'public_links#show_secret', as: 'user_public_links_secret'
+  get '/:username/90s', to: 'public_links#show_90s', as: 'user_public_links_90s'
 end
