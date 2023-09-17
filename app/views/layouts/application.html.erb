@@ -61,7 +61,12 @@
             <%= link_to 'Settings', edit_settings_path, class: 'nav-link' %>
           </li>
           <li class="nav-item px-2">
-            <%= link_to 'Sign out', destroy_user_session_path, method: :delete, class: 'nav-link' %>
+            <hr class="dropdown-divider">
+          </li>
+          <li class="nav-item px-2">
+            <%= link_to destroy_user_session_path, method: :delete, class: 'nav-link' do %>
+              <i class="fas fa-sign-out-alt"></i> Sign out
+            <% end %>
           </li>
         <% else %>
           <li class="nav-item px-2">
