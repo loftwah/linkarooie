@@ -6,7 +6,9 @@
           <div class="col">
             <% if @user %>
               <div class="text-center">
-                <%= image_tag 'banner.png', alt: 'User Banner', class: 'img-fluid mb-4 rounded', style: 'width: 35%;' %>
+                <%= image_tag 'banner.png', alt: 'User Banner', class: 'img-fluid mb-4 rounded', style: 'width: 20%;' %>
+                
+                <!-- Your search bar stays here -->
                 <form action="https://www.google.com/search" class="d-flex justify-content-center mb-4 bg-transparent rounded p-2" method="get">
                   <div class="input-group" style="width: 80%;">
                     <input type="text" name="q" class="form-control text-light rounded custom-placeholder" placeholder="Search Google" style="margin-right: 8px; background-color: rgba(0, 0, 0, 0.7);">
@@ -15,19 +17,31 @@
                     </div>
                   </div>
                 </form>
+                
+                <!-- Pinned links -->
+                <div class="d-flex flex-row justify-content-center mb-4">
+                  <% @links.each do |link| %>
+                    <% if link.links_enabled && !link.public && link.links_pinned %>
+                      <a href="<%= link.links_url %>" target="_blank" rel="noopener noreferrer" style="margin: 0 10px; text-decoration: none;">
+                        <i class="<%= link.links_icon %> fa-2x text-dark"></i>
+                      </a>
+                    <% end %>
+                  <% end %>
+                </div>
               </div>
+              
+              <!-- Unpinned links -->
               <div class="card text-light shadow-lg" style="background-color: rgba(0, 0, 0, 0.7);">
                 <div class="card-body">
                   <div class="row">
                     <% @links.each_with_index do |link, index| %>
-                      <% if link.links_enabled && !link.public %>
+                      <% if link.links_enabled && !link.public && !link.links_pinned %>
                         <div class="col-3 d-flex flex-column justify-content-center align-items-center">
-                          <a href="<%= link.links_url %>" class="align-self-center text-center text-light <%= 'pinned' if link.links_pinned %>" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                          <a href="<%= link.links_url %>" class="align-self-center text-center text-light" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
                             <img src="https://www.google.com/s2/favicons?domain=<%= URI.parse(link.links_url).host.split('.').last(2).join('.') %>" 
                             alt="favicon" 
                             class="fa-2x text-light"
                             onerror="this.alt=''; this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
-                            <i class="<%= link.links_icon %> fa-2x text-light" style="display:none;"></i>
                             <span class="d-block text-light"><%= link.links_display_name %></span>
                           </a>
                         </div>
@@ -35,7 +49,7 @@
                       <% if (index + 1) % 4 == 0 %>
                         </div><div class="row mt-4">
                       <% end %>
-                    <% end %> <!-- This corresponds to @links.each_with_index -->
+                    <% end %>
                   </div>
                 </div>
               </div>
