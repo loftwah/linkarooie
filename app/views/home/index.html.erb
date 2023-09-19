@@ -37,12 +37,12 @@
                     <% @links.each_with_index do |link, index| %>
                       <% if link.links_enabled && !link.public && !link.links_pinned %>
                         <div class="col-3 d-flex flex-column justify-content-center align-items-center">
-                          <a href="<%= link.links_url %>" class="align-self-center text-center text-light" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                          <a href="<%= link.links_url %>" class="link-item align-self-center text-center text-light" target="_blank" rel="noopener noreferrer">
                             <img src="https://www.google.com/s2/favicons?domain=<%= URI.parse(link.links_url).host.split('.').last(2).join('.') %>" 
                             alt="favicon" 
                             class="fa-2x text-light"
                             onerror="this.alt=''; this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
-                            <span class="d-block text-light"><%= link.links_display_name %></span>
+                            <span class="d-block mt-2 link-text"><%= link.links_display_name %></span>
                           </a>
                         </div>
                       <% end %>
