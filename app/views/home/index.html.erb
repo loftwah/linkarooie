@@ -32,8 +32,8 @@
               
               <!-- Unpinned links -->
               <div class="card text-light shadow-lg" style="background-color: rgba(0, 0, 0, 0.7);">
-                <div class="card-body">
-                  <div class="row">
+                <div class="card-body d-flex flex-column align-items-center justify-content-center"> <!-- Added classes here -->
+                  <div class="row w-100">  <!-- Added w-100 to make row full width -->
                     <% @links.each_with_index do |link, index| %>
                       <% if link.links_enabled && !link.public && !link.links_pinned %>
                         <div class="col-3 d-flex flex-column justify-content-center align-items-center">
@@ -47,7 +47,7 @@
                         </div>
                       <% end %>
                       <% if (index + 1) % 4 == 0 %>
-                        </div><div class="row mt-4">
+                        </div><div class="row mt-4 w-100">  <!-- Added w-100 to make row full width -->
                       <% end %>
                     <% end %>
                   </div>
