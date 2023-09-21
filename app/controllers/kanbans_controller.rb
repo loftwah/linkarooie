@@ -25,6 +25,8 @@ class KanbansController < ApplicationController
 
     respond_to do |format|
       if @kanban.save
+        @new_card = @kanban.cards.last # Assuming last card created belongs to this Kanban
+        format.turbo_stream
         format.html { redirect_to kanban_url(@kanban), notice: "Kanban was successfully created." }
         format.json { render :show, status: :created, location: @kanban }
       else
@@ -60,30 +62,38 @@ class KanbansController < ApplicationController
           card.update!(kanban_column_id: new_column.id)
           card.insert_at(new_position)
         end
-        render json: { status: 'success' }, status: :ok
+        turbo_stream.replace "card_#{card.id}", partial: 'cards/card', locals: { card: card }
       else
-        render json: { status: 'error', message: 'Invalid parameters or unauthorized action.' }, status: :unprocessable_entity
+        turbo_stream.append "errors", turbo_stream: turbo_stream_action_tag(action: 'replace', target: 'errors') do
+          render partial: 'shared/error', locals: { message: 'Invalid parameters or unauthorized action.' }
+        end
       end
     rescue => e
-      render json: { status: 'error', message: e.message }, status: :unprocessable_entity
+      turbo_stream.append "errors", turbo_stream: turbo_stream_action_tag(action: 'replace', target: 'errors') do
+        render partial: 'shared/error', locals: { message: e.message }
+      end
     end
-  end 
+  end  
 
   # DELETE /kanbans/1 or /kanbans/1.json
   def destroy
-    @kanban.destroy
-
+    @card = Card.find(params[:id])
+    @card.destroy
     respond_to do |format|
-      format.html { redirect_to kanbans_url, notice: "Kanban was successfully destroyed." }
+      format.turbo_stream
+      format.html { redirect_to kanban_url(@kanban), notice: "Card was successfully destroyed." }
       format.json { head :no_content }
     end
-  end
+  end  
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_kanban
       @kanban = Kanban.find(params[:id])
-    end
+      unless @kanban.user == current_user
+        redirect_to root_url, alert: "Unauthorized action."
+      end
+    end    
 
     # Only allow a list of trusted parameters through.
     def kanban_params

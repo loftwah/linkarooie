@@ -20,6 +20,7 @@ class CardsController < ApplicationController
       if @card.save
         redirect_to kanban_kanban_column_cards_url(@kanban, @kanban_column), notice: "Card was successfully created."
       else
+        Rails.logger.error("Failed to create card: #{@card.errors.full_messages.to_sentence}")
         flash.now[:alert] = @card.errors.full_messages.to_sentence
         render :new, status: :unprocessable_entity
       end

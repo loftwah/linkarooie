@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Start Rails server, Webpack dev server, etc.
+foreman start -f Procfile.dev
