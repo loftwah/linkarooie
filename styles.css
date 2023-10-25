@@ -1,0 +1,30 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+input {
+    width: 80%;
+    padding: 10px;
+    margin: 20px;
+    border-radius: 4px;
+}
+
+#shortcuts {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#shortcuts a {
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    color: black;
+}
+
+#shortcuts a:hover {
+    background-color: #f5f5f5;
+}
