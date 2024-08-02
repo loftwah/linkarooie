@@ -6,6 +6,7 @@ resource "digitalocean_droplet" "web" {
   ssh_keys = [var.ssh_key_id]
   user_data = <<-EOF
   #!/bin/bash
+  # Install Docker
   curl -fsSL https://get.docker.com -o get-docker.sh
   sh get-docker.sh
   EOF
