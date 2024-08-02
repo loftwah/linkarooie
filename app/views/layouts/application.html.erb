@@ -34,13 +34,13 @@
           </div>
         <% end %>
       </div>
-      <div class="container mx-auto px-1 py-2 flex justify-between items-center">
+      <div class="container mx-auto px-4 py-2 flex justify-between items-center">
         <div class="flex items-center">
           <%= image_tag "icon.png", class: "h-6 mr-2", alt: "Linkarooie" %>
-          <h1 class="text-3xl font-bold text-lime-200">Linkarooie</h1>
+          <h1 class="text-1xl font-bold text-lime-200">Linkarooie</h1>
         </div>
         <nav>
-          <ul class="flex space-x-4">
+          <ul class="flex space-x-4 text-sm md:text-base">
             <li><%= link_to 'Loftwah', user_links_path('loftwah'), class: 'bg-lime-500 hover:bg-lime-700 text-white font-bold py-1 px-2 rounded' %></li>
             <li><%= link_to 'Home', root_path, class: 'text-white hover:text-lime-300' %></li>
             <% if user_signed_in? %>
