@@ -38,6 +38,13 @@ jobs:
         key: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}
         script: |
           echo "${{ secrets.GH_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-          docker compose -f /root/docker-compose.prod.yml --env-file /root/.env down
-          docker compose -f /root/docker-compose.prod.yml --env-file /root/.env pull
-          docker compose -f /root/docker-compose.prod.yml --env-file /root/.env up -d
+          
+          # Stop and remove all running containers
+          docker stop $(docker ps -aq) || true
+          docker rm $(docker ps -aq) || true
+          
+          # Pull the latest image
+          docker pull ghcr.io/loftwah/linkarooie:latest
+          
+          # Run the new container
+          docker run -d --name linkarooie-app -p 80:3000 -e RAILS_ENV=production -e SECRET_KEY_BASE=${{ secrets.SECRET_KEY_BASE }} ghcr.io/loftwah/linkarooie:latest
