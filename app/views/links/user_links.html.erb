@@ -1,12 +1,12 @@
-<div class="profile-header max-w-4xl mx-auto">
-  <div class="avatar-container relative flex flex-col sm:flex-row items-center sm:items-end px-2">
+<div class="profile-header max-w-4xl mx-auto px-4">
+  <div class="avatar-container relative flex flex-col sm:flex-row items-center sm:items-end text-center sm:text-left">
     <div class="avatar">
       <img src="<%= @user.avatar %>" alt="<%= @user.email %>" class="rounded-full border-4 border-white object-cover" style="width: 8rem; height: auto;">
     </div>
-    <div class="user-info sm:ml-4 mt-4 sm:mt-0 text-center sm:text-left w-full sm:w-auto">
+    <div class="user-info sm:ml-4 mt-4 sm:mt-0">
       <h1 class="text-lg sm:text-xl font-bold text-white text-stroke"><%= @user.full_name %></h1>
       <h2 class="text-base sm:text-l font-bold text-white text-stroke"><%= @user.username %></h2>
-      <div class="tags flex flex-wrap justify-center sm:justify-start mt-2 w-4/5 mx-auto sm:mx-0">
+      <div class="tags flex flex-wrap justify-center sm:justify-start mt-2">
         <% @user.tags.each do |tag| %>
           <span class="tag bg-gray-700 text-white rounded px-2 py-1 mr-1 mb-1"><%= tag %></span>
         <% end %>
@@ -14,7 +14,7 @@
     </div>
   </div>
   <% if @pinned_links.any? %>
-    <div class="pinned-links-section px-2 mt-4">
+    <div class="pinned-links-section mt-4">
       <div class="pinned-links flex flex-wrap justify-center sm:justify-start">
         <% @pinned_links.each do |link| %>
           <%= link_to link.url, target: "_blank", class: 'icon-link bg-gray-800 p-2 mr-1 mb-1' do %>
@@ -24,7 +24,7 @@
       </div>
     </div>
   <% end %>
-  <div class="description px-2 pb-4 text-center sm:text-left">
+  <div class="description pb-4 text-center sm:text-left">
     <p class="text-base sm:text-lg text-white"><%= auto_link_urls(@user.description) %></p>
   </div>
 </div>
