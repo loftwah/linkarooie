@@ -1,93 +1,68 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Linkarooie</title>
-  <%= csrf_meta_tags %>
-  <%= csp_meta_tag %>
-  <meta name="csrf-token" content="<%= form_authenticity_token %>">
-  <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
-  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
-  <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload', defer: true %>
-  <style>
-    input.form-control.dark-placeholder::placeholder {
-      color: #ffffff;
-    }
-    /* Add hover effect for the username */
-    .nav-username:hover {
-      text-decoration: underline;
-    }
-    /* Add hover effect for the nav items */
-    .navbar-nav .nav-link:hover {
-      color: #FFF;
-    }
-  </style>
-</head>
-<body 
-  class="<%= (@user&.background_color.present? || (@user&.background_image&.attached?)) ? '' : 'bg-dark text-light' %>"
-  style="<%= background_style(@user) %>">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm px-3 navbar-collapsed">
-    <div class="d-flex align-items-center">
-      <% if user_signed_in? %>
-        <%= link_to user_public_links_path(current_user.username) do %>
-          <img src="https://github.com/<%= current_user.username %>.png"
-              onerror="this.onerror=null; this.src='https://via.placeholder.com/30';"
-              class="rounded-circle" width="30" height="30" style="margin-right: 15px;">
-        <% end %> 
-      <% end %>
-      <a class="navbar-brand" href="/">Linkarooie</a>
-      <% if user_signed_in? %>
-          <li class="nav-item px-2 nav-username">
-            <span class="badge badge-secondary">@<%= current_user.username %></span>
-          </li>
-      <% end %>
-    </div>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav mr-auto">
-        <!-- Left-aligned items go here -->
-      </ul>
-      <ul class="navbar-nav mx-auto">
-      </ul>
-      <ul class="navbar-nav ml-auto">
-        <% if user_signed_in? %>
-          <li class="nav-item px-2">
-            <%= link_to '<i class="fab fa-github"></i>'.html_safe, 'https://github.com/loftwah/linkarooie', title: 'View on GitHub', class: 'nav-link', target: '_blank' %>
-          </li>
-          <li class="nav-item px-2">
-            <hr class="dropdown-divider">
-          </li>
-          <li class="nav-item px-2">
-            <%= link_to '<i class="fas fa-link"></i> Links'.html_safe, links_path, class: 'nav-link' %>
-          </li>
-          <li class="nav-item px-2">
-            <%= link_to '<i class="fas fa-user"></i> Profile'.html_safe, user_public_links_path(current_user.username), class: 'nav-link' %>
-          </li>
-          <li class="nav-item px-2">
-            <%= link_to '<i class="fas fa-cog"></i> Settings'.html_safe, edit_settings_path, class: 'nav-link' %>
-          </li>
-          <li class="nav-item px-2">
-            <hr class="dropdown-divider">
-          </li>
-          <li class="nav-item px-2">
-            <%= link_to destroy_user_session_path, method: :delete, title: 'Sign out', class: 'nav-link' do %>
-              <i class="fas fa-sign-out-alt"></i> Sign out
-            <% end %>
-          </li>
-        <% else %>
-          <li class="nav-item px-2">
-            <%= link_to 'Sign in', new_user_session_path, class: 'nav-link' %>
-          </li>
-          <li class="nav-item px-2">
-            <%= link_to 'Sign up', new_user_registration_path, class: 'nav-link' %>
-          </li>
+  <head>
+    <title>Linkarooie</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= vite_client_tag %>
+    <%= vite_javascript_tag 'application' %>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  </head>
+
+  <body class="bg-gray-900 text-white">
+    <header class="bg-gray-800 shadow relative">
+      <div class="absolute top-0 right-0 mt-2 mr-2">
+        <% if notice %>
+          <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 relative" role="alert">
+            <p class="font-bold">Notice:</p>
+            <p><%= notice %></p>
+            <button onclick="this.parentElement.style.display='none'" class="absolute top-0 right-0 mt-2 mr-2 text-green-700">
+              &times;
+            </button>
+          </div>
         <% end %>
-      </ul>
-    </div>
-  </nav>
-  <div class="container-fluid h-100 mt-4 d-flex flex-column">
-    <%= yield %>
-  </div>
-</body>
+        <% if alert %>
+          <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 relative" role="alert">
+            <p class="font-bold">Alert:</p>
+            <p><%= alert %></p>
+            <button onclick="this.parentElement.style.display='none'" class="absolute top-0 right-0 mt-2 mr-2 text-red-700">
+              &times;
+            </button>
+          </div>
+        <% end %>
+      </div>
+      <div class="container mx-auto px-1 py-2 flex justify-between items-center">
+        <div class="flex items-center">
+          <%= image_tag "icon.png", class: "h-6 mr-2", alt: "Linkarooie" %>
+          <h1 class="text-3xl font-bold text-lime-200">Linkarooie</h1>
+        </div>
+        <nav>
+          <ul class="flex space-x-4">
+            <li><%= link_to 'Loftwah', user_links_path('loftwah'), class: 'bg-lime-500 hover:bg-lime-700 text-white font-bold py-1 px-2 rounded' %></li>
+            <li><%= link_to 'Home', root_path, class: 'text-white hover:text-lime-300' %></li>
+            <% if user_signed_in? %>
+              <li><%= link_to 'My Public Page', user_links_path(current_user.username), class: 'text-white hover:text-lime-300' %></li>
+              <li><%= link_to 'Edit Links', links_path, class: 'text-white hover:text-lime-300' %></li>
+              <li><%= link_to 'Edit Achievements', achievements_path, class: 'text-white hover:text-lime-300' %></li>
+              <li><%= link_to 'Edit Profile', edit_user_registration_path, class: 'text-white hover:text-lime-300' %></li>
+              <li><%= link_to 'Logout', destroy_user_session_path, method: :delete, class: 'text-white hover:text-lime-300' %></li>
+            <% else %>
+              <li><%= link_to 'Login', new_user_session_path, class: 'text-white hover:text-lime-300' %></li>
+            <% end %>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main class="container mx-auto px-4 py-6">
+      <%= yield %>
+    </main>
+    <footer class="bg-gray-800 shadow mt-12">
+      <div class="container mx-auto px-4 py-6 text-center">
+        <p class="text-gray-400">© 2024 Linkarooie. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
 </html>

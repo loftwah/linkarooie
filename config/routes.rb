@@ -1,19 +1,20 @@
 Rails.application.routes.draw do
-  resources :kanbans do
-    member do
-      patch :move
+  if Rails.env.production?
+    devise_for :users, skip: [:registrations]
+    as :user do
+      get 'users/edit' => 'devise/registrations#edit', as: 'edit_user_registration'
+      put 'users' => 'devise/registrations#update', as: 'user_registration'
     end
-    resources :kanban_columns do
-      resources :cards
-    end
+  else
+    devise_for :users, controllers: {
+      registrations: 'users/registrations'
+    }
   end
-  get 'home/index'
-  devise_for :users, controllers: { registrations: 'registrations' }
-  resource :settings, only: [:edit, :update]
-  resources :links
-  root to: "home#index"
 
-  get '/:username', to: 'public_links#show', as: 'user_public_links'
-  get '/:username/secret', to: 'public_links#show_secret', as: 'user_public_links_secret'
-  get '/:username/90s', to: 'public_links#show_90s', as: 'user_public_links_90s'
+  # Other routes
+  get "up" => "rails/health#show", as: :rails_health_check
+  root to: 'pages#home'
+  resources :links, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+  resources :achievements, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+  get '/:username', to: 'links#user_links', as: 'user_links'
 end

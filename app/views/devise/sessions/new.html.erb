@@ -1,30 +1,26 @@
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <h2>Log in</h2>
-      <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'form-horizontal' }) do |f| %>
-        <div class="form-group">
-          <%= f.label :email, class: 'form-label' %>
-          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control' %>
-        </div>
+<h2 class="text-2xl font-bold mb-4">Log in</h2>
 
-        <div class="form-group">
-          <%= f.label :password, class: 'form-label' %>
-          <%= f.password_field :password, autocomplete: "current-password", class: 'form-control' %>
-        </div>
-
-        <% if devise_mapping.rememberable? %>
-          <div class="form-check">
-            <%= f.check_box :remember_me, class: 'form-check-input' %>
-            <%= f.label :remember_me, class: 'form-check-label' %>
-          </div>
-        <% end %>
-
-        <div class="form-group mt-3">
-          <%= f.submit "Log in", class: 'btn btn-primary' %>
-        </div>
-      <% end %>
-    </div>
+<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+  <div class="mb-2">
+    <%= f.label :email, class: 'block text-gray-300 mb-1' %>
+    <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'w-full p-1 rounded text-black' %>
   </div>
-</div>
+
+  <div class="mb-2">
+    <%= f.label :password, class: 'block text-gray-300 mb-1' %>
+    <%= f.password_field :password, autocomplete: "current-password", class: 'w-full p-1 rounded text-black' %>
+  </div>
+
+  <% if devise_mapping.rememberable? %>
+    <div class="mb-2 flex items-center">
+      <%= f.check_box :remember_me, class: 'mr-2' %>
+      <%= f.label :remember_me, class: 'text-gray-300' %>
+    </div>
+  <% end %>
+
+  <div class="actions mb-2">
+    <%= f.submit "Log in", class: 'bg-lime-500 hover:bg-lime-700 text-white font-bold py-1 px-2 rounded' %>
+  </div>
+<% end %>
+
 <%= render "devise/shared/links" %>

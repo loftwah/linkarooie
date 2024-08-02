@@ -1,46 +1,51 @@
-<%= form_with(model: link, html: { class: 'needs-validation', novalidate: '' }) do |form| %>
-  <div class="row">
-    <div class="col-md-6 mb-3">
-      <%= form.label :links_group, class: 'form-label' %>
-      <%= form.text_field :links_group, class: 'form-control', placeholder: 'Group' %>
+<%= form_with(model: link, local: true) do |form| %>
+  <% if link.errors.any? %>
+    <div id="error_explanation" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4">
+      <h2 class="font-bold"><%= pluralize(link.errors.count, 'error') %> prohibited this link from being saved:</h2>
+      <ul>
+        <% link.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
     </div>
-    <div class="col-md-6 mb-3">
-      <%= form.label :links_url, class: 'form-label' %>
-      <%= form.text_field :links_url, class: 'form-control', placeholder: 'URL' %>
-    </div>
+  <% end %>
+
+  <div class="mb-4">
+    <%= form.label :title, class: 'block text-lime-200 mb-2' %>
+    <%= form.text_field :title, class: 'block w-full px-3 py-2 text-black' %>
   </div>
-  <div class="row">
-    <div class="col-md-6 mb-3">
-      <%= form.label :links_display_name, class: 'form-label' %>
-      <%= form.text_field :links_display_name, class: 'form-control', placeholder: 'Display Name' %>
-    </div>
-    <div class="col-md-6 mb-3">
-      <%= form.label :links_icon, class: 'form-label' %>
-      <%= form.text_field :links_icon, class: 'form-control', placeholder: 'Icon' %>
-    </div>
+
+  <div class="mb-4">
+    <%= form.label :url, class: 'block text-lime-200 mb-2' %>
+    <%= form.text_field :url, class: 'block w-full px-3 py-2 text-black' %>
   </div>
-  <div class="row">
-    <div class="col-md-6 mb-3 form-check">
-      <%= form.check_box :links_enabled, class: 'form-check-input' %>
-      <%= form.label :links_enabled, class: 'form-check-label' %> Enabled
-    </div>
-    <div class="col-md-6 mb-3 form-check">
-      <%= form.check_box :links_pinned, class: 'form-check-input' %>
-      <%= form.label :links_pinned, class: 'form-check-label' %> Pinned
-    </div>
-    <div class="col-md-6 mb-3">
-      <%= form.label :public, 'Public?', class: 'form-label' %>
-      <%= form.check_box :public, class: 'form-check-input' %>
+
+  <div class="mb-4">
+    <%= form.label :description, class: 'block text-lime-200 mb-2' %>
+    <%= form.text_area :description, class: 'block w-full px-3 py-2 text-black' %>
   </div>
-  <div class="row">
-    <div class="col-md-6 mb-3">
-      <%= form.label :position, class: 'form-label' %>
-      <%= form.number_field :position, class: 'form-control', placeholder: 'Position' %>
-    </div>
+
+  <div class="mb-4">
+    <%= form.label :icon, class: 'block text-lime-200 mb-2' %>
+    <%= form.text_field :icon, class: 'block w-full px-3 py-2 text-black' %>
   </div>
-  <div class="row">
-    <div class="col-12">
-      <%= form.submit 'Save', class: 'btn btn-primary mb-3' %>
-    </div>
+
+  <div class="mb-4">
+    <%= form.label :position, class: 'block text-lime-200 mb-2' %>
+    <%= form.number_field :position, class: 'block w-full px-3 py-2 text-black' %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :visible, class: 'block text-lime-200 mb-2' %>
+    <%= form.check_box :visible, class: 'text-black' %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :pinned, class: 'block text-lime-200 mb-2' %>
+    <%= form.check_box :pinned, class: 'text-black' %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit 'Save', class: 'bg-lime-500 hover:bg-lime-700 text-white font-bold py-2 px-4 rounded' %>
   </div>
 <% end %>

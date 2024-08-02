@@ -1,4 +1,6 @@
 class Link < ApplicationRecord
-  default_scope { order(position: :asc) }
   belongs_to :user
+  
+  scope :visible, -> { where(visible: true) }
+  scope :pinned, -> { where(pinned: true) }
 end

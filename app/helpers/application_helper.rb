@@ -1,14 +1,7 @@
 module ApplicationHelper
-    def background_style(user)
-      styles = []
-      if user&.background_image&.attached?
-        styles << "background-image: url(#{url_for(user.background_image)});"
-        styles << "background-size: cover;"
-        styles << "background-position: center;"
-        styles << "background-repeat: no-repeat;"
-        styles << "background-attachment: fixed;"
-      end
-      styles << "background-color: #{user.background_color};" if user&.background_color.present?
-      styles.join(' ')
-    end
+  def auto_link_urls(text)
+    text.gsub(%r{(https?://[^\s]+)}) do |url|
+      "<a href='#{url}' target='_blank' class='text-lime-300 hover:underline'>#{url}</a>"
+    end.html_safe
   end
+end

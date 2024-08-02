@@ -1,32 +1,66 @@
-# Use the official Ruby 3.2.2 image
-FROM ruby:3.2.2
+# syntax = docker/dockerfile:1
 
-# Add NodeSource as a trusted source of Node.js packages
-RUN curl -fsSL https://deb.nodesource.com/setup_14.x | bash -
+# Make sure RUBY_VERSION matches the Ruby version in .ruby-version and Gemfile
+ARG RUBY_VERSION=3.2.2
+FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim as base
 
-# Install Node.js and npm
-RUN apt-get install nodejs npm -y
+# Rails app lives here
+WORKDIR /rails
 
-# Optionally, install Yarn (recommended for Rails asset management)
-RUN npm install --global yarn
+# Set production environment
+ENV RAILS_ENV="production" \
+    BUNDLE_DEPLOYMENT="1" \
+    BUNDLE_PATH="/usr/local/bundle" \
+    BUNDLE_WITHOUT="development test"
 
-# Set an environment variable to store where the app is installed to inside of the Docker image
-ENV INSTALL_PATH /app
+# Throw-away build stage to reduce size of final image
+FROM base as build
 
-# Create the directory and set it as the working directory
-RUN mkdir -p $INSTALL_PATH
-WORKDIR $INSTALL_PATH
+# Install packages needed to build gems and node modules
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y build-essential git libvips pkg-config nodejs npm
 
-# Use Bundler to bundle install the Ruby gems
-# This step is done separately from adding the entire codebase to cache the Docker layer
+# Install application gems
 COPY Gemfile Gemfile.lock ./
-RUN bundle install
+RUN bundle install && \
+    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
+    bundle exec bootsnap precompile --gemfile
 
-# Copy over your application code
+# Copy application code
 COPY . .
 
-# Expose the port
-EXPOSE 3000
+# Install JavaScript dependencies
+RUN npm install
 
-# The command that starts your application
-CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]
+# Precompile bootsnap code for faster boot times
+RUN bundle exec bootsnap precompile app/ lib/
+
+# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
+RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+
+# Final stage for app image
+FROM base
+
+# Install packages needed for deployment
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y curl libsqlite3-0 libvips && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+# Copy built artifacts: gems, application, and node modules
+COPY --from=build /usr/local/bundle /usr/local/bundle
+COPY --from=build /rails /rails
+
+# Ensure required directories exist and have the correct permissions
+RUN mkdir -p public/assets public/packs && \
+    useradd rails --create-home --shell /bin/bash && \
+    chown -R rails:rails db log storage tmp public/assets public/packs
+
+# Run and own only the runtime files as a non-root user for security
+USER rails:rails
+
+# Entrypoint prepares the database.
+ENTRYPOINT ["/rails/bin/docker-entrypoint"]
+
+# Start the server by default, this can be overwritten at runtime
+EXPOSE 3000
+CMD ["./bin/rails", "server"]

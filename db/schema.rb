@@ -10,84 +10,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_15_164817) do
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
-  create_table "active_storage_attachments", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "record_type", null: false
-    t.bigint "record_id", null: false
-    t.bigint "blob_id", null: false
-    t.datetime "created_at", null: false
-    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
-    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
-  end
-
-  create_table "active_storage_blobs", force: :cascade do |t|
-    t.string "key", null: false
-    t.string "filename", null: false
-    t.string "content_type"
-    t.text "metadata"
-    t.string "service_name", null: false
-    t.bigint "byte_size", null: false
-    t.string "checksum"
-    t.datetime "created_at", null: false
-    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
-  end
-
-  create_table "active_storage_variant_records", force: :cascade do |t|
-    t.bigint "blob_id", null: false
-    t.string "variation_digest", null: false
-    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
-  end
-
-  create_table "cards", force: :cascade do |t|
-    t.string "content"
-    t.integer "position", default: 0
-    t.bigint "kanban_column_id", null: false
+ActiveRecord::Schema[7.1].define(version: 2024_07_26_063327) do
+  create_table "achievements", force: :cascade do |t|
+    t.string "title"
+    t.date "date"
+    t.text "description"
+    t.string "icon"
+    t.string "url"
+    t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["kanban_column_id"], name: "index_cards_on_kanban_column_id"
-  end
-
-  create_table "kanban_columns", force: :cascade do |t|
-    t.string "name"
-    t.bigint "kanban_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "position"
-    t.index ["kanban_id"], name: "index_kanban_columns_on_kanban_id"
-  end
-
-  create_table "kanbans", force: :cascade do |t|
-    t.string "name"
-    t.string "description"
-    t.text "cards"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
-    t.index ["user_id"], name: "index_kanbans_on_user_id"
+    t.index ["user_id"], name: "index_achievements_on_user_id"
   end
 
   create_table "links", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.string "title"
     t.string "url"
-    t.string "display_name"
-    t.string "icon"
-    t.boolean "enabled"
-    t.boolean "pinned"
-    t.string "group"
+    t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "links_group"
-    t.string "links_url"
-    t.string "links_display_name"
-    t.string "links_icon"
-    t.boolean "links_enabled"
-    t.boolean "links_pinned"
+    t.string "description"
     t.integer "position"
-    t.boolean "public", default: false, null: false
+    t.string "icon"
+    t.boolean "visible", default: true
+    t.boolean "pinned", default: false
     t.index ["user_id"], name: "index_links_on_user_id"
   end
 
@@ -99,21 +45,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_15_164817) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "avatar"
+    t.string "banner"
+    t.text "description"
     t.string "username"
-    t.string "first_name"
-    t.string "last_name"
-    t.text "short_description"
-    t.string "tags"
-    t.string "background_color"
+    t.string "full_name"
+    t.string "tags", default: "[]"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
-  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "cards", "kanban_columns"
-  add_foreign_key "kanban_columns", "kanbans"
-  add_foreign_key "kanbans", "users"
+  add_foreign_key "achievements", "users"
   add_foreign_key "links", "users"
 end

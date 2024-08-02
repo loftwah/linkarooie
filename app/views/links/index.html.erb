@@ -1,63 +1,30 @@
-<div class="container-fluid h-100 d-flex flex-column">
-  <div class="row flex-grow-1 overflow-auto">
-    <div class="col">
-      <div class="container mt-5">
-        <div class="table-responsive">
-          <table class="table table-hover table-dark table-bordered">
-            <thead class="thead-light">
-              <tr>
-                <th>Group</th>
-                <th>URL</th>
-                <th>Display Name</th>
-                <th class="text-center">Icon</th>
-                <th>Enabled</th>
-                <th>Pinned</th>
-                <th>Position</th>
-                <th>Public</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% @links.each do |link| %>
-                <tr>
-                  <td class="text-light"><%= link.links_group %></td>
-                  <td class="text-light"><%= link.links_url %></td>
-                  <td class="text-light"><%= link.links_display_name %></td>
-                  <td class="text-center">
-                    <img 
-                      src="https://www.google.com/s2/favicons?domain=<%= URI.parse(link.links_url).host.split('.').last(2).join('.') %>" 
-                      alt="favicon" 
-                      class="fa-2x text-light"
-                      onerror="this.alt=''; this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
-                    <i class="<%= link.links_icon %> fa-2x text-light" style="display:none;"></i>
-                  </td>
-                  <td class="<%= link.links_enabled ? 'text-success' : 'text-danger' %>">
-                    <%= link.links_enabled ? 'Enabled' : 'Disabled' %>
-                  </td>
-                  <td class="<%= link.links_pinned ? 'text-primary' : 'text-light' %>">
-                    <%= link.links_pinned ? 'Pinned' : 'Not Pinned' %>
-                  </td>
-                  <td class="text-light"><%= link.position %></td>
-                  <td class="<%= link.public ? 'text-success' : 'text-danger' %>">
-                    <%= link.public ? 'Public' : 'Private' %>
-                  </td>
-                  <td>
-                    <%= link_to edit_link_path(link), class: 'btn btn-light btn-sm' do %>
-                      <i class="fas fa-edit"></i> Edit
-                    <% end %>
-                    <%= link_to link, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' do %>
-                      <i class="fas fa-trash"></i> Delete
-                    <% end %>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-        <%= link_to new_link_path, class: 'btn btn-light btn-lg' do %>
-          <i class="fas fa-plus"></i> New Link
+<h1 class="text-2xl font-bold mb-4">Links</h1>
+<% if user_signed_in? %>
+  <%= link_to 'New Link', new_link_path, class: 'bg-lime-500 hover:bg-lime-700 text-white font-bold py-2 px-4 rounded mb-4 inline-block' %>
+<% end %>
+<ul class="space-y-4">
+  <% @links.each do |link| %>
+    <li class="bg-gray-800 p-4 rounded shadow-md">
+      <h2 class="text-xl text-lime-300 font-bold">
+        <%= link_to link, class: 'hover:underline' do %>
+        <% if link.icon.present? %>
+            <i class="<%= link.icon %>"></i>
+          <% end %>
+          <%= link.title %>
+        <% end %>
+      </h2>
+      <p class="text-gray-400"><%= link.description %></p>
+      <p class="text-gray-500">URL: <a href="<%= link.url %>" class="text-lime-300 hover:underline" target="_blank"><%= link.url %></a></p>
+      <p class="text-gray-500">Position: <%= link.position %></p>
+      <p class="text-gray-500">Created at: <%= link.created_at.strftime("%d %b %Y %H:%M") %></p>
+      <div class="mt-2">
+        <% if user_signed_in? && link.user == current_user %>
+          <%= link_to 'Edit', edit_link_path(link), class: 'text-lime-300 hover:text-lime-500' %> |
+          <%= form_with(model: link, method: :delete, class: 'inline') do |form| %>
+          <%= form.submit 'Delete', class: 'text-lime-300 hover:text-lime-500 bg-transparent border-none cursor-pointer', data: { confirm: 'Are you sure?' } %>
+        <% end %>
         <% end %>
       </div>
-    </div>
-  </div>
-</div>
+    </li>
+  <% end %>
+</ul>

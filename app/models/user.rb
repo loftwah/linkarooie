@@ -2,27 +2,31 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  validates :username, uniqueness: { case_sensitive: false }
+  has_many :links, dependent: :destroy
+  has_many :achievements, dependent: :destroy
 
-  has_many :links
-  has_one :kanban
-  has_one_attached :background_image
+  validates :username, presence: true, uniqueness: true
+  validates :full_name, presence: true
 
-  attr_accessor :remove_background_image, :clear_background_color
+  before_validation :set_default_username, on: :create
 
-  before_save :check_remove_background_image
-  before_save :clear_background_color_field, if: ->{ clear_background_color == '1' }
+  serialize :tags, JSON
 
-  def check_remove_background_image
-    self.background_image.purge if remove_background_image == '1'
+  def parsed_tags
+    if tags.is_a?(String)
+      begin
+        JSON.parse(tags)
+      rescue JSON::ParserError
+        []
+      end
+    else
+      tags
+    end
   end
 
-  def clear_background_color_field
-    self.background_color = nil
-  end
+  private
 
-  def github_avatar_url
-    "https://github.com/#{username}.png"
+  def set_default_username
+    self.username ||= email.split('@').first
   end
-
 end

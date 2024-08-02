@@ -1,41 +1,19 @@
-<div class="container mt-4">
-  <h1 class="display-4 mb-4">Show Link</h1>
-  <div class="list-group">
-    <div class="list-group-item d-flex justify-content-between align-items-center">
-      <span class="fw-bold">Group:</span>
-      <span><%= @link.links_group %></span>
-    </div>
-    <div class="list-group-item d-flex justify-content-between align-items-center">
-      <span class="fw-bold">URL:</span>
-      <span><%= @link.links_url %></span>
-    </div>
-    <div class="list-group-item d-flex justify-content-between align-items-center">
-      <span class="fw-bold">Display Name:</span>
-      <span><%= @link.links_display_name %></span>
-    </div>
-    <div class="list-group-item d-flex justify-content-between align-items-center">
-      <span class="fw-bold">Icon:</span>
-      <span class="d-flex align-items-center">
-        <img 
-          src="https://www.google.com/s2/favicons?domain=<%= URI.parse(link.links_url).host.split('.').last(2).join('.') %>" 
-          alt="favicon" 
-          class="fa-2x text-light"
-          onerror="this.alt=''; this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
-        <i class="<%= link.links_icon %> fa-2x text-light" style="display:none;"></i>
-      </span>
-    </div>
-    <div class="list-group-item d-flex justify-content-between align-items-center">
-      <span class="fw-bold">Enabled:</span>
-      <span><%= @link.links_enabled %></span>
-    </div>
-    <div class="list-group-item d-flex justify-content-between align-items-center">
-      <span class="fw-bold">Pinned:</span>
-      <span><%= @link.links_pinned %></span>
-    </div>
-    <div class="list-group-item d-flex justify-content-between align-items-center">
-      <span class="fw-bold">Position:</span>
-      <span><%= @link.position %></span>
-    </div>
-  </div>
-  <a href="<%= edit_link_path(@link) %>" class="btn btn-primary mt-4">Edit</a>
+<h1 class="text-2xl font-bold mb-4">
+  <% if @link.icon.present? %>
+    <i class="<%= @link.icon %>"></i>
+  <% end %>
+  <%= @link.title %>
+</h1>
+<p class="text-gray-400 mb-4"><%= @link.description %></p>
+<p class="text-gray-500">URL: <a href="<%= @link.url %>" class="text-lime-300 hover:underline" target="_blank"><%= @link.url %></a></p>
+<p class="text-gray-500">Position: <%= @link.position %></p>
+<p class="text-gray-500">Created at: <%= @link.created_at.strftime("%d %b %Y %H:%M") %></p>
+<div class="mt-4">
+  <% if user_signed_in? && @link.user == current_user %>
+    <%= link_to 'Edit', edit_link_path(@link), class: 'text-lime-300 hover:text-lime-500' %> |
+    <%= form_with(model: @link, method: :delete, class: 'inline') do |form| %>
+      <%= form.submit 'Delete', class: 'text-lime-300 hover:text-lime-500 bg-transparent border-none cursor-pointer', data: { confirm: 'Are you sure?' } %>
+    <% end %> |
+  <% end %>
+  <%= link_to 'Back', links_path, class: 'text-lime-300 hover:text-lime-500' %>
 </div>
