@@ -57,28 +57,6 @@ links_data = [
     updated_at: "2024-07-26 14:39:50"
   },
   {
-    title: "Facebook",
-    url: "https://facebook.com/loftwahthebeatsmiff",
-    description: "My Facebook profile.",
-    position: 6,
-    icon: "fa-brands fa-facebook",
-    visible: true,
-    pinned: true,
-    created_at: "2024-07-26 14:37:06",
-    updated_at: "2024-07-26 14:37:25"
-  },
-  {
-    title: "Instagram",
-    url: "https://instagram.com/loftwah",
-    description: "My Instagram profile.",
-    position: 6,
-    icon: "fa-brands fa-instagram",
-    visible: true,
-    pinned: true,
-    created_at: "2024-07-26 14:38:38",
-    updated_at: "2024-07-26 14:38:38"
-  },
-  {
     title: "LinkedIn",
     url: "https://linkedin.com/in/deanlofts",
     description: "My LinkedIn profile.",
