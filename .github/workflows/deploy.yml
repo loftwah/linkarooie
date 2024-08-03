@@ -28,7 +28,7 @@ jobs:
     - name: Build and push Docker image
       run: |
         echo "${{ secrets.GH_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-        GITHUB_TOKEN=${{ secrets.GH_PAT }} docker buildx build --secret id=GITHUB_TOKEN -t ghcr.io/loftwah/linkarooie:latest --push .
+        GITHUB_TOKEN=${{ secrets.GH_PAT }} docker buildx build --no-cache --secret id=GITHUB_TOKEN -t ghcr.io/loftwah/linkarooie:latest --push .
 
     - name: Deploy to droplet
       uses: appleboy/ssh-action@master
