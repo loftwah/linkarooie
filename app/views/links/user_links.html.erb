@@ -1,39 +1,39 @@
-<div class="profile-header max-w-4xl mx-auto px-4">
-  <div class="avatar-container relative flex flex-col sm:flex-row items-center sm:items-end text-center sm:text-left">
+<div class="profile-header max-w-4xl mx-auto px-4 text-center">
+  <div class="avatar-container flex flex-col items-center">
     <div class="avatar">
       <img src="<%= @user.avatar %>" alt="<%= @user.email %>" class="rounded-full border-4 border-white object-cover" style="width: 8rem; height: auto;">
     </div>
-    <div class="user-info ml-4 mt-0">
-      <h1 class="text-lg sm:text-xl font-bold text-white text-stroke"><%= @user.full_name %></h1>
-      <h2 class="text-base sm:text-l font-bold text-white text-stroke"><%= @user.username %></h2>
-      <div class="tags flex flex-wrap justify-center sm:justify-start mt-2">
+    <div class="user-info mt-4">
+      <h1 class="text-xl font-bold text-white text-stroke"><%= @user.full_name %></h1>
+      <h2 class="text-l font-bold text-white text-stroke"><%= @user.username %></h2>
+      <div class="tags flex flex-wrap justify-center mt-2">
         <% @user.tags.each do |tag| %>
-          <span class="tag bg-gray-700 text-white rounded px-2 py-1 mr-1 mb-1"><%= tag %></span>
+          <span class="tag bg-gray-700 text-white rounded px-2 py-1 m-1"><%= tag %></span>
         <% end %>
       </div>
     </div>
   </div>
   <% if @pinned_links.any? %>
     <div class="pinned-links-section mt-4">
-      <div class="pinned-links flex flex-wrap justify-center sm:justify-start">
+      <div class="pinned-links flex flex-wrap justify-center">
         <% @pinned_links.each do |link| %>
-          <%= link_to link.url, target: "_blank", class: 'icon-link bg-gray-800 p-2 mr-1 mb-1' do %>
+          <%= link_to link.url, target: "_blank", class: 'icon-link bg-gray-800 p-2 m-1' do %>
             <i class="<%= link.icon %> text-lime-300"></i>
           <% end %>
         <% end %>
       </div>
     </div>
   <% end %>
-  <div class="description pb-4 text-center sm:text-left">
-    <p class="text-base sm:text-lg text-white"><%= auto_link_urls(@user.description) %></p>
+  <div class="description pb-4">
+    <p class="text-lg text-white"><%= auto_link_urls(@user.description) %></p>
   </div>
 </div>
 
-<div class="links-section max-w-4xl mx-auto mt-8">
-  <h2 class="text-2xl font-bold pt-2 pb-2 text-center text-white">Links</h2>
+<div class="links-section max-w-4xl mx-auto mt-8 text-center">
+  <h2 class="text-2xl font-bold pt-2 pb-2 text-white">Links</h2>
   <ul class="space-y-4">
     <% @links.where(pinned: false).each do |link| %>
-      <li class="bg-gray-800 p-3 rounded shadow-md max-w-2xl mx-auto text-center">
+      <li class="bg-gray-800 p-3 rounded shadow-md max-w-2xl mx-auto">
         <h2 class="text-xl text-lime-300 font-bold">
           <%= link_to link.url, target: "_blank", class: 'hover:underline' do %>
             <i class="<%= link.icon %> text-lime-300"></i> <%= link.title %>
@@ -46,11 +46,11 @@
 </div>
 
 <% if @achievements.present? %>
-  <div class="achievements-section max-w-4xl mx-auto mt-12">
-    <h2 class="text-2xl font-bold pt-2 pb-2 text-center text-white">Achievements</h2>
+  <div class="achievements-section max-w-4xl mx-auto mt-12 text-center">
+    <h2 class="text-2xl font-bold pt-2 pb-2 text-white">Achievements</h2>
     <ul class="space-y-4">
       <% @achievements.each do |achievement| %>
-        <li class="bg-gray-800 p-3 rounded shadow-md max-w-2xl mx-auto text-center">
+        <li class="bg-gray-800 p-3 rounded shadow-md max-w-2xl mx-auto">
           <h2 class="text-xl text-lime-300 font-bold">
             <% if achievement.icon.present? %>
               <i class="<%= achievement.icon %> text-lime-300"></i>
@@ -68,7 +68,7 @@
     </ul>
   </div>
 <% else %>
-  <div class="achievements-section max-w-4xl mx-auto mt-12">
-    <p class="text-gray-500 text-center">No achievements to display.</p>
+  <div class="achievements-section max-w-4xl mx-auto mt-12 text-center">
+    <p class="text-gray-500">No achievements to display.</p>
   </div>
 <% end %>
