@@ -1,4 +1,3 @@
-# app/controllers/links_controller.rb
 class LinksController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show, :user_links]
 
@@ -48,8 +47,6 @@ class LinksController < ApplicationController
     @pinned_links = @user.links.where(visible: true, pinned: true).order(:position)
     @achievements = @user.achievements.order(date: :desc)
     @user.tags = JSON.parse(@user.tags) if @user.tags.is_a?(String)
-    
-    OpenGraphImageGenerator.new(@user).generate
   end
 
   private
@@ -57,5 +54,4 @@ class LinksController < ApplicationController
   def link_params
     params.require(:link).permit(:url, :title, :description, :position, :icon, :visible, :pinned)
   end
-
 end

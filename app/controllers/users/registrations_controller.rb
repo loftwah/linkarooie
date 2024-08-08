@@ -34,11 +34,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
     @user = current_user
     @user.tags = JSON.parse(@user.tags) if @user.tags.is_a?(String)
 
-    # If the user wants to update their password, require the current password
     if params[:user][:password].present? || params[:user][:password_confirmation].present?
       successfully_updated = @user.update_with_password(account_update_params)
     else
-      # Otherwise, allow updating without the current password
       params[:user].delete(:current_password)
       successfully_updated = @user.update_without_password(account_update_params.except(:current_password))
     end
