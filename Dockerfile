@@ -43,7 +43,7 @@ FROM base
 
 # Install packages needed for deployment
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libsqlite3-0 libvips && \
+    apt-get install --no-install-recommends -y curl libsqlite3-0 libvips imagemagick fonts-liberation && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Copy built artifacts: gems, application, and node modules
@@ -51,9 +51,9 @@ COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY --from=build /rails /rails
 
 # Ensure required directories exist and have the correct permissions
-RUN mkdir -p public/assets public/packs && \
+RUN mkdir -p public/assets public/packs public/uploads/og_images && \
     useradd rails --create-home --shell /bin/bash && \
-    chown -R rails:rails db log storage tmp public/assets public/packs
+    chown -R rails:rails db log storage tmp public/assets public/packs public/uploads/og_images
 
 # Run and own only the runtime files as a non-root user for security
 USER rails:rails

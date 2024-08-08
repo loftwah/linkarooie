@@ -12,6 +12,8 @@ class User < ApplicationRecord
 
   serialize :tags, JSON
 
+  after_save :generate_open_graph_image
+
   def parsed_tags
     if tags.is_a?(String)
       begin
@@ -22,6 +24,10 @@ class User < ApplicationRecord
     else
       tags
     end
+  end
+
+  def generate_open_graph_image
+    OpenGraphImageGenerator.new(self).generate
   end
 
   private
