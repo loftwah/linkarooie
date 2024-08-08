@@ -10,6 +10,12 @@
     <%= vite_client_tag %>
     <%= vite_javascript_tag 'application' %>
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="<%= content_for?(:og_title) ? content_for(:og_title) : 'Linkarooie' %>">
+    <meta property="og:description" content="<%= content_for?(:og_description) ? content_for(:og_description) : 'Default description for Linkarooie' %>">
+    <meta property="og:image" content="<%= content_for?(:og_image) ? content_for(:og_image) : image_url('default_og_image.png') %>">
+    <meta property="og:url" content="<%= content_for?(:og_url) ? content_for(:og_url) : root_url %>">
   </head>
 
   <body class="bg-gray-900 text-white">

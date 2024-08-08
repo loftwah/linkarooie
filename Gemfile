@@ -36,6 +36,7 @@ gem "devise"
 gem "mailcatcher"
 gem "font-awesome-sass", "~> 6.5.2"
 gem "vite_rails"
+gem "mini_magick"
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
