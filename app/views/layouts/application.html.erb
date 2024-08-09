@@ -12,15 +12,16 @@
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
     <!-- Open Graph Meta Tags -->
-    <%= tag.meta property: 'og:type', content: 'website' %>
-    <%= tag.meta property: 'og:site_name', content: 'Linkarooie' %>
-    <%= tag.meta property: 'og:locale', content: 'en_US' %>
-    <%= tag.meta property: 'og:updated_time', content: '2024-08-08T12:00:19Z' %>
+   <%= tag.meta property: 'og:type', content: 'website' %>
+   <%= tag.meta property: 'og:site_name', content: 'Linkarooie' %>
+   <%= tag.meta property: 'og:locale', content: 'en_US' %>
+   <%= tag.meta property: 'og:updated_time', content: '2024-08-08T12:00:19Z' %>
 
-    <%= tag.meta property: 'og:title', content: content_for?(:og_title) ? content_for(:og_title) : 'Linkarooie - Simplify Your Online Presence' %>
-    <%= tag.meta property: 'og:description', content: content_for?(:og_description) ? content_for(:og_description) : 'Manage all your links in one place with Linkarooie.' %>
-    <%= tag.meta property: 'og:image', content: content_for?(:og_image) ? content_for(:og_image) : image_url('default_og_image.png') %>
-    <%= tag.meta property: 'og:url', content: content_for?(:og_url) ? content_for(:og_url) : root_url %>
+   <%= tag.meta property: 'og:title', content: content_for?(:og_title) ? content_for(:og_title) : 'Linkarooie - Simplify Your Online Presence' %>
+   <%= tag.meta property: 'og:description', content: content_for?(:og_description) ? content_for(:og_description) : 'Manage all your links in one place with Linkarooie.' %>
+   <%= tag.meta property: 'og:image', content: content_for?(:og_image) ? content_for(:og_image) : image_url('default_og_image.png') %>
+   <%= tag.meta property: 'og:image:alt', content: content_for?(:og_image_alt) ? content_for(:og_image_alt) : 'Default image description' %>
+   <%= tag.meta property: 'og:url', content: content_for?(:og_url) ? content_for(:og_url) : root_url %>
   </head>
 
   <body class="bg-gray-900 text-white">
