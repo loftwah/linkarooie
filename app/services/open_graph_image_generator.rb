@@ -1,4 +1,9 @@
 class OpenGraphImageGenerator
+  IMAGE_WIDTH = 1200
+  IMAGE_HEIGHT = 630
+  AVATAR_SIZE = 200
+  BORDER_SIZE = 10
+
   def initialize(user)
     @user = user
   end
@@ -6,34 +11,38 @@ class OpenGraphImageGenerator
   def generate
     template_path = Rails.root.join('app', 'assets', 'images', 'og_template.png')
     output_path = Rails.root.join('public', 'uploads', 'og_images', "#{@user.username}_og.png")
-
     image = MiniMagick::Image.open(template_path)
     avatar = download_image(@user.avatar)
 
-    avatar.resize '200x200'
+    # Resize avatar and add a white square border
+    avatar.resize "#{AVATAR_SIZE}x#{AVATAR_SIZE}"
+    avatar.combine_options do |c|
+      c.bordercolor 'white'
+      c.border BORDER_SIZE
+    end
 
+    # Generate the final image with all elements
     image.combine_options do |c|
       c.font "Liberation-Sans"
-      # Positioning avatar (example: 50px from left, 100px from top)
-      c.draw "image Over 50,100 200,200 '#{avatar.path}'"
       
-      # Positioning full name
-      c.gravity 'NorthWest'
-      c.pointsize '36'
-      c.draw "text 300,150 '#{@user.full_name}'"
+      # Centered avatar
+      c.gravity 'Center'
+      c.draw "image Over 0,-100 #{AVATAR_SIZE + 2 * BORDER_SIZE},#{AVATAR_SIZE + 2 * BORDER_SIZE} '#{avatar.path}'"
 
-      # Positioning username
-      c.pointsize '24'
-      c.draw "text 300,200 '#{@user.username}'"
+      # Centered Full name
+      c.fill '#BEF264'
+      c.pointsize '40'
+      c.draw "text 0,50 '#{@user.full_name}'"
 
-      # Positioning description
-      c.pointsize '18'
-      c.draw "text 300,250 '#{@user.description.truncate(60)}'"
+      # Centered Username with "@" symbol
+      c.pointsize '28'
+      c.draw "text 0,100 '@#{@user.username}'"
 
-      # Optionally add tags
-      tag_text = @user.parsed_tags.join(', ')
-      c.pointsize '18'
-      c.draw "text 300,300 '#{tag_text}'"
+      # Centered Tags, in white
+      tag_text = @user.parsed_tags.join(' | ')
+      c.fill 'white'
+      c.pointsize '20'
+      c.draw "text 0,150 '#{tag_text}'"
     end
 
     image.write(output_path)
