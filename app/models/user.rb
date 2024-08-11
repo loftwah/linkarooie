@@ -10,7 +10,7 @@ class User < ApplicationRecord
 
   before_validation :set_default_username, on: :create
   after_save :generate_open_graph_image
-  after_save :download_and_store_avatar, if: :saved_change_to_avatar?
+  after_save :download_and_store_avatar
 
   serialize :tags, JSON
 
@@ -31,27 +31,27 @@ class User < ApplicationRecord
   end
 
   def download_and_store_avatar
-    return unless avatar.present? && avatar.start_with?('http')
-
+    return if avatar.blank? || !avatar.start_with?('http')
+  
     require 'open-uri'
     require 'fileutils'
-
+  
     begin
       avatar_dir = Rails.root.join('public', 'avatars')
       FileUtils.mkdir_p(avatar_dir) unless File.directory?(avatar_dir)
-
+  
       file = URI.open(avatar)
-
-      filename = "avatar_#{id}_#{Time.now.to_i}#{File.extname(avatar)}"
+  
+      filename = "#{username}_avatar#{File.extname(avatar)}"
       filepath = File.join(avatar_dir, filename)
-
+  
       File.open(filepath, 'wb') do |local_file|
         local_file.write(file.read)
       end
-
-      update_column(:avatar, "/avatars/#{filename}")
-    rescue OpenURI::HTTPError, SocketError => e
-      Rails.logger.error "Failed to download avatar for user #{id}: #{e.message}"
+  
+      Rails.logger.info "Avatar downloaded for user #{username}"
+    rescue StandardError => e
+      Rails.logger.error "Failed to download avatar for user #{username}: #{e.message}"
     end
   end
 

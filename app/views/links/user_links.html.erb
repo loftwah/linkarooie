@@ -3,10 +3,12 @@
 <div class="profile-header max-w-4xl mx-auto px-4 text-center">
   <div class="avatar-container flex flex-col items-center">
     <div class="avatar">
-      <% if @user.avatar.present? %>
+      <% local_avatar_path = "/avatars/#{@user.username}_avatar#{File.extname(@user.avatar)}" %>
+      <% if File.exist?(Rails.root.join('public' + local_avatar_path)) %>
+        <%= image_tag local_avatar_path, alt: @user.email, class: "rounded-full border-4 border-white object-cover", style: "width: 8rem; height: auto;" %>
+      <% elsif @user.avatar.present? %>
         <%= image_tag @user.avatar, alt: @user.email, class: "rounded-full border-4 border-white object-cover", style: "width: 8rem; height: auto;" %>
       <% else %>
-        <!-- Provide a default avatar image or placeholder -->
         <%= image_tag "greg.jpg", alt: @user.email, class: "rounded-full border-4 border-white object-cover", style: "width: 8rem; height: auto;" %>
       <% end %>
     </div>
