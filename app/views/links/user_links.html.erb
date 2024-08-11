@@ -3,7 +3,12 @@
 <div class="profile-header max-w-4xl mx-auto px-4 text-center">
   <div class="avatar-container flex flex-col items-center">
     <div class="avatar">
-      <img src="<%= @user.avatar %>" alt="<%= @user.email %>" class="rounded-full border-4 border-white object-cover" style="width: 8rem; height: auto;">
+      <% if @user.avatar.present? %>
+        <%= image_tag @user.avatar, alt: @user.email, class: "rounded-full border-4 border-white object-cover", style: "width: 8rem; height: auto;" %>
+      <% else %>
+        <!-- Provide a default avatar image or placeholder -->
+        <%= image_tag "default_avatar.png", alt: @user.email, class: "rounded-full border-4 border-white object-cover", style: "width: 8rem; height: auto;" %>
+      <% end %>
     </div>
     <div class="user-info mt-4">
       <h1 class="text-xl font-bold text-white text-stroke"><%= @user.full_name %></h1>
