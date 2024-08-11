@@ -51,9 +51,9 @@ COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY --from=build /rails /rails
 
 # Ensure required directories exist and have the correct permissions
-RUN mkdir -p public/assets public/packs public/uploads/og_images && \
+RUN mkdir -p public/assets public/packs public/uploads/og_images public/avatars && \
     useradd rails --create-home --shell /bin/bash && \
-    chown -R rails:rails db log storage tmp public/assets public/packs public/uploads/og_images
+    chown -R rails:rails db log storage tmp public/assets public/packs public/uploads/og_images public/avatars
 
 # Run and own only the runtime files as a non-root user for security
 USER rails:rails
