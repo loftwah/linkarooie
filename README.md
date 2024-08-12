@@ -1,7 +1,6 @@
 # Linkarooie
 
 [![Build Status](https://github.com/loftwah/linkarooie/actions/workflows/ci.yml/badge.svg)](https://github.com/loftwah/linkarooie/actions)
-[![Docker Image](https://ghcr.io/loftwah/linkarooie)](https://github.com/loftwah/linkarooie/pkgs/container/linkarooie)
 
 Linkarooie is a simple and open-source alternative to Linktree, allowing you to manage and share all your important links in one place. This project was created as a replacement for BioDrop (LinkFree) after it was archived. It is built using Ruby on Rails and is designed to be easy to deploy and customize.
 
