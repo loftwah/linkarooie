@@ -11,6 +11,12 @@ Rails.application.routes.draw do
     }
   end
 
+  resources :links do
+    member do
+      get :track_click
+    end
+  end
+
   # Other routes
   get "up" => "rails/health#show", as: :rails_health_check
   root to: 'pages#home'

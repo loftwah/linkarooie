@@ -5,6 +5,10 @@ class User < ApplicationRecord
   has_many :links, dependent: :destroy
   has_many :achievements, dependent: :destroy
 
+  has_many :page_views
+  has_many :link_clicks
+  has_many :achievement_views
+
   validates :username, presence: true, uniqueness: true
   validates :full_name, presence: true
 

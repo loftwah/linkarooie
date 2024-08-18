@@ -7,6 +7,21 @@ class AchievementsController < ApplicationController
 
   def show
     @achievement = Achievement.find(params[:id])
+    AchievementView.create(
+      achievement: @achievement,
+      user: @achievement.user,
+      viewed_at: Time.current,
+      referrer: request.referrer,
+      browser: request.user_agent,
+      ip_address: request.ip,
+      session_id: request.session.id
+    )
+
+    if @achievement.url.present?
+      redirect_to @achievement.url, allow_other_host: true
+    else
+      render :show
+    end
   end
 
   def new

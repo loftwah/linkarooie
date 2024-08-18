@@ -49,6 +49,20 @@ class LinksController < ApplicationController
     @user.tags = JSON.parse(@user.tags) if @user.tags.is_a?(String)
   end
 
+  def track_click
+    @link = Link.find(params[:id])
+    LinkClick.create(
+      link: @link,
+      user: @link.user,
+      clicked_at: Time.current,
+      referrer: request.referrer,
+      browser: request.user_agent,
+      ip_address: request.ip,
+      session_id: request.session.id
+    )
+    redirect_to @link.url, allow_other_host: true
+  end
+
   private
 
   def link_params
