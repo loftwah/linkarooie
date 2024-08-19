@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'analytics/index'
   if Rails.env.production?
     devise_for :users, skip: [:registrations]
     as :user do
@@ -17,7 +18,12 @@ Rails.application.routes.draw do
     end
   end
 
+  require 'sidekiq/web'
+  require 'sidekiq-scheduler/web'
+  mount Sidekiq::Web => '/sidekiq'
+
   # Other routes
+  get 'analytics', to: 'analytics#index'
   get "up" => "rails/health#show", as: :rails_health_check
   root to: 'pages#home'
   resources :links, only: [:index, :show, :new, :create, :edit, :update, :destroy]

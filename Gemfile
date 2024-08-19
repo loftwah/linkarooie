@@ -37,6 +37,11 @@ gem "mailcatcher"
 gem "font-awesome-sass", "~> 6.5.2"
 gem "vite_rails"
 gem "mini_magick"
+gem "sidekiq"
+gem "sidekiq-scheduler"
+gem "chartkick"
+gem "groupdate"
+gem "geocoder"
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"

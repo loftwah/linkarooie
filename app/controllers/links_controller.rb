@@ -1,5 +1,5 @@
 class LinksController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show, :user_links]
+  before_action :authenticate_user!, except: [:index, :show, :user_links, :track_click]
 
   def index
     @links = Link.order(:position)
