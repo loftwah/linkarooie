@@ -14,10 +14,10 @@ class User < ApplicationRecord
   validates :full_name, presence: true
 
   before_validation :set_default_username, on: :create
-  after_save :generate_open_graph_image
+  after_save :generate_open_graph_image, unless: -> { Rails.env.test? }
   after_save :download_and_store_avatar
 
-  serialize :tags, JSON
+  serialize :tags, coder: JSON
 
   def parsed_tags
     if tags.is_a?(String)

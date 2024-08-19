@@ -116,6 +116,11 @@ GEM
     et-orbi (1.2.11)
       tzinfo
     eventmachine (1.0.9.1)
+    factory_bot (6.4.6)
+      activesupport (>= 5.0.0)
+    factory_bot_rails (6.4.3)
+      factory_bot (~> 6.4)
+      railties (>= 5.0.0)
     ffi (1.17.0-aarch64-linux-gnu)
     ffi (1.17.0-arm-linux-gnu)
     ffi (1.17.0-arm64-darwin)
@@ -397,6 +402,7 @@ DEPENDENCIES
   chartkick
   debug
   devise
+  factory_bot_rails
   font-awesome-sass (~> 6.5.2)
   geocoder
   groupdate
