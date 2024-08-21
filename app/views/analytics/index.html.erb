@@ -43,60 +43,60 @@
   <% end %>
 
   <!-- Link Analytics Table -->
-  <div class="bg-gray-800 rounded-lg shadow p-4 mb-6">
-    <h2 class="text-xl font-semibold mb-4">Link Analytics</h2>
-    <p class="text-sm mb-4">Performance data for your links. 'Total Clicks' represents all interactions, while 'Unique Visitors' counts individual users.</p>
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm text-left table-auto">
-        <thead class="text-xs uppercase bg-gray-700">
-          <tr>
-            <th scope="col" class="px-4 py-3 rounded-tl-lg max-w-xs break-words">Link</th>
-            <th scope="col" class="px-4 py-3 text-right w-24">Total Clicks</th>
-            <th scope="col" class="px-4 py-3 text-right w-24 rounded-tr-lg">Unique Visitors</th>
+<div class="bg-gray-800 rounded-lg shadow p-4 mb-6">
+  <h2 class="text-xl font-semibold mb-4">Link Analytics</h2>
+  <p class="text-sm mb-4">Performance data for your links. 'Total Clicks' represents all interactions, while 'Unique Visitors' counts individual users.</p>
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm text-center table-auto">
+      <thead class="text-xs uppercase bg-gray-700">
+        <tr>
+          <th scope="col" class="px-4 py-3 rounded-tl-lg max-w-xs break-words">Link</th>
+          <th scope="col" class="px-4 py-3 w-24">Total Clicks</th>
+          <th scope="col" class="px-4 py-3 w-24 rounded-tr-lg">Unique Visitors</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @link_analytics.each_with_index do |link, index| %>
+          <tr class="<%= index.even? ? 'bg-gray-800' : 'bg-gray-900' %> border-b border-gray-700">
+            <th scope="row" class="px-4 py-3 font-medium text-lime-400 break-words max-w-xs">
+              <%= link[:title] %>
+            </th>
+            <td class="px-4 py-3"><%= number_with_delimiter(link[:total_clicks]) %></td>
+            <td class="px-4 py-3"><%= number_with_delimiter(link[:unique_visitors]) %></td>
           </tr>
-        </thead>
-        <tbody>
-          <% @link_analytics.each_with_index do |link, index| %>
-            <tr class="<%= index.even? ? 'bg-gray-800' : 'bg-gray-900' %> border-b border-gray-700">
-              <th scope="row" class="px-4 py-3 font-medium text-lime-400 break-words max-w-xs">
-                <%= link[:title] %>
-              </th>
-              <td class="px-4 py-3 text-right"><%= number_with_delimiter(link[:total_clicks]) %></td>
-              <td class="px-4 py-3 text-right"><%= number_with_delimiter(link[:unique_visitors]) %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
+        <% end %>
+      </tbody>
+    </table>
   </div>
+</div>
 
-  <!-- Achievement Analytics Table -->
-  <div class="bg-gray-800 rounded-lg shadow p-4 mb-6">
-    <h2 class="text-xl font-semibold mb-4">Achievement Analytics</h2>
-    <p class="text-sm mb-4">Performance data for your achievements. 'Total Views' represents all interactions, while 'Unique Viewers' counts individual users.</p>
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm text-left table-auto">
-        <thead class="text-xs uppercase bg-gray-700">
-          <tr>
-            <th scope="col" class="px-4 py-3 rounded-tl-lg max-w-xs break-words">Achievement</th>
-            <th scope="col" class="px-4 py-3 text-right w-24">Total Views</th>
-            <th scope="col" class="px-4 py-3 text-right w-24 rounded-tr-lg">Unique Viewers</th>
+<!-- Achievement Analytics Table -->
+<div class="bg-gray-800 rounded-lg shadow p-4 mb-6">
+  <h2 class="text-xl font-semibold mb-4">Achievement Analytics</h2>
+  <p class="text-sm mb-4">Performance data for your achievements. 'Total Views' represents all interactions, while 'Unique Viewers' counts individual users.</p>
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm text-center table-auto">
+      <thead class="text-xs uppercase bg-gray-700">
+        <tr>
+          <th scope="col" class="px-4 py-3 rounded-tl-lg max-w-xs break-words">Achievement</th>
+          <th scope="col" class="px-4 py-3 w-24">Total Views</th>
+          <th scope="col" class="px-4 py-3 w-24 rounded-tr-lg">Unique Viewers</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @achievement_analytics.each_with_index do |achievement, index| %>
+          <tr class="<%= index.even? ? 'bg-gray-800' : 'bg-gray-900' %> border-b border-gray-700">
+            <th scope="row" class="px-4 py-3 font-medium text-lime-400 break-words max-w-xs">
+              <%= achievement[:title] %>
+            </th>
+            <td class="px-4 py-3"><%= number_with_delimiter(achievement[:total_views]) %></td>
+            <td class="px-4 py-3"><%= number_with_delimiter(achievement[:unique_viewers]) %></td>
           </tr>
-        </thead>
-        <tbody>
-          <% @achievement_analytics.each_with_index do |achievement, index| %>
-            <tr class="<%= index.even? ? 'bg-gray-800' : 'bg-gray-900' %> border-b border-gray-700">
-              <th scope="row" class="px-4 py-3 font-medium text-lime-400 break-words max-w-xs">
-                <%= achievement[:title] %>
-              </th>
-              <td class="px-4 py-3 text-right"><%= number_with_delimiter(achievement[:total_views]) %></td>
-              <td class="px-4 py-3 text-right"><%= number_with_delimiter(achievement[:unique_viewers]) %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
+        <% end %>
+      </tbody>
+    </table>
   </div>
+</div>
 
   <!-- Charts Section -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
