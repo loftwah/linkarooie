@@ -1,190 +1,169 @@
-<div class="container mx-auto px-4 py-8">
-  <h1 class="text-3xl font-bold mb-8 text-white">Your Analytics Dashboard</h1>
+<div class="container mx-auto px-4 py-8 text-white">
+  <h1 class="text-2xl font-bold mb-6 text-center">Your Analytics Dashboard</h1>
 
   <!-- Overall Metrics -->
-  <div class="flex justify-between gap-4 mb-8">
-    <div class="bg-gray-800 rounded-lg shadow p-6 flex-1">
-      <h2 class="text-xl font-semibold text-center text-white">Total Page Views</h2>
-      <p class="text-3xl font-bold text-center text-lime-400"><%= number_with_delimiter(@total_page_views) %></p>
-    </div>
-    <div class="bg-gray-800 rounded-lg shadow p-6 flex-1">
-      <h2 class="text-xl font-semibold text-center text-white">Total Link Clicks</h2>
-      <p class="text-3xl font-bold text-center text-lime-400"><%= number_with_delimiter(@total_link_clicks) %></p>
-    </div>
-    <div class="bg-gray-800 rounded-lg shadow p-6 flex-1">
-      <h2 class="text-xl font-semibold text-center text-white">Total Achievement Views</h2>
-      <p class="text-3xl font-bold text-center text-lime-400"><%= number_with_delimiter(@total_achievement_views) %></p>
-    </div>
-    <div class="bg-gray-800 rounded-lg shadow p-6 flex-1">
-      <h2 class="text-xl font-semibold text-center text-white">Unique Visitors</h2>
-      <p class="text-3xl font-bold text-center text-lime-400"><%= number_with_delimiter(@unique_visitors) %></p>
-    </div>
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+    <% metrics = [
+      { title: "Total Page Views", value: @total_page_views },
+      { title: "Total Link Clicks", value: @total_link_clicks },
+      { title: "Total Achievement Views", value: @total_achievement_views },
+      { title: "Unique Visitors", value: @unique_visitors }
+    ] %>
+    <% metrics.each do |metric| %>
+      <div class="bg-gray-800 rounded-lg shadow p-4">
+        <h2 class="text-sm font-semibold text-center mb-2"><%= metric[:title] %></h2>
+        <p class="text-2xl font-bold text-center text-lime-400"><%= number_with_delimiter(metric[:value]) %></p>
+      </div>
+    <% end %>
   </div>
 
   <!-- Latest Daily Metrics -->
   <% if @latest_daily_metric %>
-    <div class="bg-gray-800 rounded-lg shadow p-6 mb-8">
-      <h2 class="text-2xl font-semibold text-center text-white mb-4">Latest Daily Metrics (<%= @latest_daily_metric.date.strftime('%B %d, %Y') %>)</h2>
-      <div class="flex justify-between gap-4">
-        <div class="flex-1 text-center">
-          <h3 class="text-lg font-semibold text-white">Page Views</h3>
-          <p class="text-2xl font-bold text-lime-400"><%= number_with_delimiter(@latest_daily_metric.page_views) %></p>
+    <div class="bg-gray-800 rounded-lg shadow p-4 mb-6">
+      <h2 class="text-xl font-semibold mb-4 text-center">Latest Daily Metrics (<%= @latest_daily_metric.date.strftime('%B %d, %Y') %>)</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="text-center">
+          <h3 class="text-sm font-semibold">Page Views</h3>
+          <p class="text-xl font-bold text-lime-400"><%= number_with_delimiter(@latest_daily_metric.page_views) %></p>
         </div>
-        <div class="flex-1 text-center">
-          <h3 class="text-lg font-semibold text-white">Link Clicks</h3>
-          <p class="text-2xl font-bold text-lime-400"><%= number_with_delimiter(@latest_daily_metric.link_clicks) %></p>
+        <div class="text-center">
+          <h3 class="text-sm font-semibold">Link Clicks</h3>
+          <p class="text-xl font-bold text-lime-400"><%= number_with_delimiter(@latest_daily_metric.link_clicks) %></p>
         </div>
-        <div class="flex-1 text-center">
-          <h3 class="text-lg font-semibold text-white">Achievement Views</h3>
-          <p class="text-2xl font-bold text-lime-400"><%= number_with_delimiter(@latest_daily_metric.achievement_views) %></p>
+        <div class="text-center">
+          <h3 class="text-sm font-semibold">Achievement Views</h3>
+          <p class="text-xl font-bold text-lime-400"><%= number_with_delimiter(@latest_daily_metric.achievement_views) %></p>
         </div>
-        <div class="flex-1 text-center">
-          <h3 class="text-lg font-semibold text-white">Unique Visitors</h3>
-          <p class="text-2xl font-bold text-lime-400"><%= number_with_delimiter(@latest_daily_metric.unique_visitors || 'N/A') %></p>
+        <div class="text-center">
+          <h3 class="text-sm font-semibold">Unique Visitors</h3>
+          <p class="text-xl font-bold text-lime-400"><%= number_with_delimiter(@latest_daily_metric.unique_visitors || 'N/A') %></p>
         </div>
       </div>
     </div>
   <% end %>
 
-  <!-- Link Analytics -->
-  <div class="bg-gray-800 rounded-lg shadow p-6 mb-8">
-    <h2 class="text-2xl font-semibold text-center text-white mb-4">Link Analytics</h2>
-    <p class="text-white text-center mb-4">Shows how your links are performing. 'Total Clicks' represents all clicks, while 'Unique Visitors' counts individual users who clicked the link.</p>
-    <% @link_analytics.each do |link| %>
-      <div class="mb-6 border-b border-gray-700 pb-4">
-        <h3 class="text-xl font-semibold text-lime-400"><%= link[:title] %></h3>
-        <p class="text-white">Total Clicks: <%= number_with_delimiter(link[:total_clicks]) %></p>
-        <p class="text-white">Unique Visitors: <%= number_with_delimiter(link[:unique_visitors]) %></p>
-        <h4 class="text-lg font-semibold text-white mt-2">Top Sources</h4>
-        <ul class="list-disc list-inside text-white">
-          <% link[:top_referrers].each do |referrer, count| %>
-            <li><%= format_referrer(referrer) %>: <%= number_with_delimiter(count) %></li>
-          <% end %>
-        </ul>
-        <h4 class="text-lg font-semibold text-white mt-2">Browser Usage</h4>
-        <ul class="list-disc list-inside text-white">
-          <% link[:browser_breakdown].each do |browser, count| %>
-            <li><%= browser %>: <%= number_with_delimiter(count) %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
+  <!-- Link Analytics Table -->
+<div class="bg-gray-800 rounded-lg shadow p-4 mb-6">
+  <h2 class="text-xl font-semibold mb-4">Link Analytics</h2>
+  <p class="text-sm mb-4">Performance data for your links. 'Total Clicks' represents all interactions, while 'Unique Visitors' counts individual users.</p>
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm text-center table-auto">
+      <thead class="text-xs uppercase bg-gray-700">
+        <tr>
+          <th scope="col" class="px-4 py-3 rounded-tl-lg max-w-xs break-words">Link</th>
+          <th scope="col" class="px-4 py-3 w-24">Total Clicks</th>
+          <th scope="col" class="px-4 py-3 w-24 rounded-tr-lg">Unique Visitors</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @link_analytics.each_with_index do |link, index| %>
+          <tr class="<%= index.even? ? 'bg-gray-800' : 'bg-gray-900' %> border-b border-gray-700">
+            <th scope="row" class="px-4 py-3 font-medium text-lime-400 break-words max-w-xs">
+              <%= link[:title] %>
+            </th>
+            <td class="px-4 py-3"><%= number_with_delimiter(link[:total_clicks]) %></td>
+            <td class="px-4 py-3"><%= number_with_delimiter(link[:unique_visitors]) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
   </div>
+</div>
 
-  <!-- Achievement Analytics -->
-  <div class="bg-gray-800 rounded-lg shadow p-6 mb-8">
-    <h2 class="text-2xl font-semibold text-center text-white mb-4">Achievement Analytics</h2>
-    <p class="text-white text-center mb-4">Shows how your achievements are performing. 'Total Views' represents all views, while 'Unique Viewers' counts individual users who viewed the achievement.</p>
-    <% @achievement_analytics.each do |achievement| %>
-      <div class="mb-6 border-b border-gray-700 pb-4">
-        <h3 class="text-xl font-semibold text-lime-400"><%= achievement[:title] %></h3>
-        <p class="text-white">Total Views: <%= number_with_delimiter(achievement[:total_views]) %></p>
-        <p class="text-white">Unique Viewers: <%= number_with_delimiter(achievement[:unique_viewers]) %></p>
-      </div>
-    <% end %>
+<!-- Achievement Analytics Table -->
+<div class="bg-gray-800 rounded-lg shadow p-4 mb-6">
+  <h2 class="text-xl font-semibold mb-4">Achievement Analytics</h2>
+  <p class="text-sm mb-4">Performance data for your achievements. 'Total Views' represents all interactions, while 'Unique Viewers' counts individual users.</p>
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm text-center table-auto">
+      <thead class="text-xs uppercase bg-gray-700">
+        <tr>
+          <th scope="col" class="px-4 py-3 rounded-tl-lg max-w-xs break-words">Achievement</th>
+          <th scope="col" class="px-4 py-3 w-24">Total Views</th>
+          <th scope="col" class="px-4 py-3 w-24 rounded-tr-lg">Unique Viewers</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @achievement_analytics.each_with_index do |achievement, index| %>
+          <tr class="<%= index.even? ? 'bg-gray-800' : 'bg-gray-900' %> border-b border-gray-700">
+            <th scope="row" class="px-4 py-3 font-medium text-lime-400 break-words max-w-xs">
+              <%= achievement[:title] %>
+            </th>
+            <td class="px-4 py-3"><%= number_with_delimiter(achievement[:total_views]) %></td>
+            <td class="px-4 py-3"><%= number_with_delimiter(achievement[:unique_viewers]) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
   </div>
+</div>
 
+  <!-- Charts Section -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
   <!-- Geographic Data -->
-  <div class="bg-gray-800 rounded-lg shadow p-6 mb-8">
-    <h2 class="text-2xl font-semibold text-center text-white mb-4">Visitor Locations</h2>
-    <p class="text-white text-center mb-4">This chart shows where your visitors are coming from. The data is approximate based on IP addresses.</p>
+  <div class="bg-gray-800 rounded-lg shadow p-4">
+    <h2 class="text-xl font-semibold mb-4">Visitor Locations</h2>
     <%= pie_chart @geographic_data, 
-                  colors: ["#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6"],
+                  colors: ["#84CC16", "#22D3EE", "#E879F9", "#F87171", "#A78BFA"],
                   library: {
                     backgroundColor: 'transparent',
-                    legend: {
-                      labels: {
-                        color: 'white'
-                      }
-                    }
+                    legend: { position: 'bottom', labels: { color: 'white', fontSize: 12 } },
+                    title: { display: true, text: 'Visitor Locations', color: 'white', fontSize: 16 },
+                    responsive: true,
+                    plugins: { datalabels: { color: 'white', font: { weight: 'bold' } } }
                   },
                   donut: true,
                   prefix: "",
                   thousands: ",",
                   round: 2,
-                  loading: "Loading location data..." %>
-    <div class="mt-4 text-white text-center">
-      <% @geographic_data.sort_by { |_, v| -v }.each do |location, count| %>
-        <p><%= location %>: <%= number_with_delimiter(count) %> visits</p>
-      <% end %>
-    </div>
+                  height: "300px" %>
   </div>
 
   <!-- Time-based Analytics -->
-  <div class="bg-gray-800 rounded-lg shadow p-6 mb-8">
-    <h2 class="text-2xl font-semibold text-center text-white mb-4">Time-based Analytics</h2>
-    <h3 class="text-xl font-semibold text-white text-center mt-2">Daily Views (Last 30 Days)</h3>
-    <p class="text-white text-center mb-4">This chart shows how many views your page received each day over the last month.</p>
+  <div class="bg-gray-800 rounded-lg shadow p-4">
+    <h2 class="text-xl font-semibold mb-4">Daily Views (Last 30 Days)</h2>
     <%= line_chart @daily_views, 
-                   colors: ["#10B981"],
+                   colors: ["#84CC16"],
                    library: {
                      backgroundColor: 'transparent',
-                     legend: {
-                       labels: {
-                         color: 'white'
-                       }
-                     },
+                     legend: { display: false },
                      scales: {
-                       x: {
-                         ticks: { color: 'white' }
-                       },
-                       y: {
-                         ticks: { color: 'white' }
-                       }
-                     }
-                   },
-                   loading: "Loading daily views..." %>
-    <h3 class="text-xl font-semibold text-white text-center mt-4">Hourly Distribution</h3>
-    <p class="text-white text-center mb-4">This chart shows what times of day your page receives the most views.</p>
-    <%= column_chart @hourly_distribution, 
-                     colors: ["#3B82F6"],
-                     library: {
-                       backgroundColor: 'transparent',
-                       legend: {
-                         labels: {
-                           color: 'white'
-                         }
-                       },
-                       scales: {
-                         x: {
-                           ticks: { color: 'white' }
-                         },
-                         y: {
-                           ticks: { color: 'white' }
-                         }
-                       }
+                       x: { ticks: { color: 'white', fontSize: 12 } },
+                       y: { ticks: { color: 'white', fontSize: 12 } },
                      },
-                     loading: "Loading hourly distribution..." %>
+                     elements: {
+                       line: { tension: 0.4 }, # smooth curves
+                       point: { radius: 3, backgroundColor: 'white' }
+                     },
+                     title: { display: true, text: 'Daily Views (Last 30 Days)', color: 'white', fontSize: 16 },
+                     responsive: true
+                   },
+                   height: "300px" %>
   </div>
+</div>
 
-  <!-- Browser Analytics -->
-  <div class="bg-gray-800 rounded-lg shadow p-6 mb-8">
-    <h2 class="text-2xl font-semibold text-center text-white mb-4">Browser Usage</h2>
-    <p class="text-white text-center mb-4">This chart shows which browsers your visitors are using to view your page.</p>
+<!-- Browser Usage and Top Sources -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <!-- Browser Usage -->
+  <div class="bg-gray-800 rounded-lg shadow p-4">
+    <h2 class="text-xl font-semibold mb-4">Browser Usage</h2>
     <%= pie_chart @browser_data, 
-                  colors: ["#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6"],
+                  colors: ["#84CC16", "#22D3EE", "#E879F9", "#F87171", "#A78BFA"],
                   library: {
                     backgroundColor: 'transparent',
-                    legend: {
-                      labels: {
-                        color: 'white'
-                      }
-                    }
+                    legend: { position: 'bottom', labels: { color: 'white', fontSize: 12 } },
+                    title: { display: true, text: 'Browser Usage', color: 'white', fontSize: 16 },
+                    responsive: true,
+                    plugins: { datalabels: { color: 'white', font: { weight: 'bold' } } }
                   },
                   donut: true,
-                  loading: "Loading browser data..." %>
-    <div class="mt-4 text-white text-center">
-      <% @browser_data.sort_by { |_, v| -v }.each do |browser, count| %>
-        <p><%= browser %>: <%= number_with_delimiter(count) %> visits</p>
-      <% end %>
-    </div>
+                  height: "250px" %>
   </div>
 
   <!-- Top Sources -->
-  <div class="bg-gray-800 rounded-lg shadow p-6 mb-8">
-    <h2 class="text-2xl font-semibold text-center text-white mb-4">Top Sources</h2>
-    <p class="text-white text-center mb-4">This list shows where your visitors are coming from. 'Direct' means they typed your URL directly or used a bookmark.</p>
-    <ul class="list-disc list-inside text-white text-center">
+  <div class="bg-gray-800 rounded-lg shadow p-4">
+    <h2 class="text-xl font-semibold mb-4">Top Sources</h2>
+    <ul class="list-disc list-inside text-white">
       <% @top_referrers.each do |referrer, count| %>
         <li><%= format_referrer(referrer) %>: <%= number_with_delimiter(count) %> visits</li>
       <% end %>
