@@ -159,6 +159,10 @@ Note: The Dockerfile uses a multi-stage build process to create a lean productio
 
 The project uses SQLite by default. For production, consider using PostgreSQL or MySQL.
 
+### Geolocation
+
+For now this isn't optional but I intend to make it to. [API key required](https://ipapi.com) but it is free.
+
 ## Customization
 
 Linkarooie is highly customizable:
