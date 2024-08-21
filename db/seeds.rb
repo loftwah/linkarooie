@@ -1,12 +1,16 @@
 # db/seeds.rb
 
-# Delete existing users, links, and achievements to avoid duplication
-User.delete_all
+# Delete existing records in the correct order to avoid foreign key constraints
+PageView.delete_all
+LinkClick.delete_all
+AchievementView.delete_all
+DailyMetric.delete_all
 Link.delete_all
 Achievement.delete_all
+User.delete_all
 
 # Create a new user with the fetched attributes
-user = User.create!(
+user = User.new(
   email: "dean@deanlofts.xyz",
   encrypted_password: "$2a$12$svOkqgPLTEgvJT9ZTGXYHO20UUIQs9PF/im6bQaBBybmcrTKyDD6i",
   avatar: "https://pbs.twimg.com/profile_images/1756873036220059648/zc13kjbX_400x400.jpg",
@@ -17,9 +21,8 @@ user = User.create!(
   tags: ["AWS", "DevOps", "Docker", "GitHub", "Linux", "Open Source", "Ruby", "Ruby on Rails", "Terraform"].to_json,
   created_at: "2024-07-25 02:08:37",
   updated_at: "2024-07-26 15:29:25"
-) do |user|
-  user.save!(validate: false)
-end
+)
+user.save!(validate: false)
 
 # Create associated links for the user
 links_data = [
