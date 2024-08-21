@@ -1,4 +1,3 @@
 web: bin/rails server
 css: bin/rails tailwindcss:watch
-mailcatcher: mailcatcher --foreground --http-ip=0.0.0.0 --smtp-port 1025
 vite: bin/vite dev
