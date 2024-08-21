@@ -57,6 +57,7 @@
             <li><%= link_to 'Home', root_path, class: 'text-white hover:text-lime-300' %></li>
             <% if user_signed_in? %>
               <li><%= link_to 'Public Page', user_links_path(current_user.username), class: 'text-white hover:text-lime-300' %></li>
+              <li><%= link_to 'Analytics', analytics_path, class: 'text-white hover:text-lime-300' %></li>
               <li class="relative">
                 <button id="userMenuBtn" class="text-white hover:text-lime-300 focus:outline-none flex items-center space-x-1">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

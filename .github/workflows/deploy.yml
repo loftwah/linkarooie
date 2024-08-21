@@ -54,12 +54,17 @@ jobs:
         script: |
           echo "${{ secrets.GH_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
           
-          # Stop and remove all running containers
-          docker stop $(docker ps -aq) || true
-          docker rm $(docker ps -aq) || true
+          # Stop the running containers
+          docker compose -f docker-compose.prod.yml down
           
-          # Pull the latest image for the specified branch
-          docker pull ghcr.io/loftwah/linkarooie:${{ github.event.inputs.branch || 'latest' }}
+          # Pull the latest images
+          docker compose -f docker-compose.prod.yml pull
           
-          # Run the new container
-          docker run -d --name linkarooie-app -p 80:3000 -e RAILS_ENV=production -e SECRET_KEY_BASE=${{ secrets.SECRET_KEY_BASE }} ghcr.io/loftwah/linkarooie:${{ github.event.inputs.branch || 'latest' }}
+          # Run database migrations (if necessary)
+          docker compose -f docker-compose.prod.yml run --rm app rails db:migrate
+          
+          # Start the new containers
+          docker compose -f docker-compose.prod.yml up -d
+          
+          # Remove unused images and containers
+          docker system prune -af

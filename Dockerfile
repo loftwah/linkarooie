@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:1
 
 # Make sure RUBY_VERSION matches the Ruby version in .ruby-version and Gemfile
-ARG RUBY_VERSION=3.2.2
+ARG RUBY_VERSION=3.3.4
 FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim as base
 
 # Rails app lives here
@@ -36,24 +36,29 @@ RUN npm install
 RUN bundle exec bootsnap precompile app/ lib/
 
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
+ENV PRECOMPILE_ASSETS=true
 RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+ENV PRECOMPILE_ASSETS=false
 
 # Final stage for app image
 FROM base
 
 # Install packages needed for deployment
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libsqlite3-0 libvips imagemagick fonts-liberation && \
+    apt-get install --no-install-recommends -y curl libsqlite3-0 libvips imagemagick fonts-liberation sqlite3 libsqlite3-dev && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Copy built artifacts: gems, application, and node modules
 COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY --from=build /rails /rails
 
+# Create a directory for the SQLite database
+RUN mkdir -p /rails/storage
+
 # Ensure required directories exist and have the correct permissions
 RUN mkdir -p public/assets public/packs public/uploads/og_images public/avatars && \
     useradd rails --create-home --shell /bin/bash && \
-    chown -R rails:rails db log storage tmp public/assets public/packs public/uploads/og_images public/avatars
+    chown -R rails:rails /rails
 
 # Run and own only the runtime files as a non-root user for security
 USER rails:rails
