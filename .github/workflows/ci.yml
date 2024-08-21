@@ -20,12 +20,21 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.3.4
+          ruby-version: 3.3.0  # Ensure this matches your local setup
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20  # Set to Node.js version 20
 
       - name: Install dependencies
         run: |
           gem install bundler
           bundle install
+          npm install  # Install Vite and other npm dependencies
+
+      - name: Build assets
+        run: npm run build  # This compiles your Vite assets
 
       - name: Set up database
         run: |
