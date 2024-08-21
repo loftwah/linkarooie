@@ -20,7 +20,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.2.2
+          ruby-version: 3.3.4
 
       - name: Install dependencies
         run: |
@@ -28,7 +28,10 @@ jobs:
           bundle install
 
       - name: Set up database
-        run: bundle exec rails db:create db:migrate
+        run: |
+          bundle exec rails db:create
+          bundle exec rails db:schema:load
+          bundle exec rails db:seed  # Ensure the database is seeded
         env:
           RAILS_ENV: test
 
