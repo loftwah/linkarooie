@@ -31,16 +31,16 @@ jobs:
         run: |
           gem install bundler
           bundle install
-          npm install  # Install Vite and other npm dependencies
+          npm install  # Install npm dependencies
 
-      - name: Build assets
-        run: npm run build  # This compiles your Vite assets
+      - name: Build Vite assets
+        run: bundle exec rake vite:build  # Use the correct Rake task to build Vite assets
 
       - name: Set up database
         run: |
           bundle exec rails db:create
           bundle exec rails db:schema:load
-          bundle exec rails db:seed  # Ensure the database is seeded
+          bundle exec rails db:seed  # Seed the database if necessary
         env:
           RAILS_ENV: test
 
