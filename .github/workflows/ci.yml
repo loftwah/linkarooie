@@ -20,27 +20,30 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.3.0  # Ensure this matches your local setup
+          ruby-version: 3.3.0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20  # Set to Node.js version 20
+          node-version: 20
 
       - name: Install dependencies
         run: |
           gem install bundler
           bundle install
-          npm install  # Install npm dependencies
+          npm install
 
       - name: Build Vite assets
-        run: bundle exec rake vite:build  # Use the correct Rake task to build Vite assets
+        run: bundle exec rake vite:build
+
+      - name: Compile Tailwind CSS
+        run: bundle exec rails tailwindcss:build
 
       - name: Set up database
         run: |
           bundle exec rails db:create
           bundle exec rails db:schema:load
-          bundle exec rails db:seed  # Seed the database if necessary
+          bundle exec rails db:seed
         env:
           RAILS_ENV: test
 
