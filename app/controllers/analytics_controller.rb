@@ -83,8 +83,28 @@ class AnalyticsController < ApplicationController
         'Safari'
       when /Edge/
         'Edge'
-      when /IE/
+      when /Opera/
+        'Opera'
+      when /Brave/
+        'Brave'
+      when /Vivaldi/
+        'Vivaldi'
+      when /DuckDuckGo/
+        'DuckDuckGo'
+      when /IE|Internet Explorer/
         'Internet Explorer'
+      when /OpenAI/
+        'OpenAI Bot'
+      when /Googlebot/
+        'Googlebot'
+      when /Bingbot/
+        'Bingbot'
+      when /Slurp/
+        'Yahoo! Slurp'
+      when /DuckDuckBot/
+        'DuckDuckBot'
+      when /Baiduspider/
+        'Baiduspider'
       else
         'Other'
       end
