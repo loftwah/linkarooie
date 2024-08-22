@@ -2,20 +2,20 @@
   <h1 class="text-2xl font-bold mb-6 text-center">Your Analytics Dashboard</h1>
 
   <!-- Overall Metrics -->
-  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-    <% metrics = [
-      { title: "Total Page Views", value: @total_page_views },
-      { title: "Total Link Clicks", value: @total_link_clicks },
-      { title: "Total Achievement Views", value: @total_achievement_views },
-      { title: "Unique Visitors", value: @unique_visitors }
-    ] %>
-    <% metrics.each do |metric| %>
-      <div class="bg-gray-800 rounded-lg shadow p-4">
-        <h2 class="text-sm font-semibold text-center mb-2"><%= metric[:title] %></h2>
-        <p class="text-2xl font-bold text-center text-lime-400"><%= number_with_delimiter(metric[:value]) %></p>
-      </div>
-    <% end %>
-  </div>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+  <% metrics = [
+    { title: "Total Page Views", value: @total_page_views },
+    { title: "Total Link Clicks", value: @total_link_clicks },
+    { title: "Total Achievement Views", value: @total_achievement_views },
+    { title: "Unique Visitors", value: @unique_visitors }
+  ] %>
+  <% metrics.each do |metric| %>
+    <div class="bg-gray-800 rounded-lg shadow p-4 flex flex-col justify-between">
+      <h2 class="text-sm font-semibold text-center mb-2 flex-grow flex items-center justify-center"><%= metric[:title] %></h2>
+      <p class="text-2xl font-bold text-center text-lime-400"><%= number_with_delimiter(metric[:value]) %></p>
+    </div>
+  <% end %>
+</div>
 
   <!-- Latest Daily Metrics -->
   <% if @latest_daily_metric %>
@@ -148,7 +148,7 @@
   <div class="bg-gray-800 rounded-lg shadow p-4">
     <h2 class="text-xl font-semibold mb-4">Browser Usage</h2>
     <%= pie_chart @browser_data, 
-                  colors: ["#84CC16", "#22D3EE", "#E879F9", "#F87171", "#A78BFA"],
+                  colors: ["#84CC16", "#22D3EE", "#E879F9", "#F87171", "#A78BFA", "#F59E0B", "#14B8A6", "#3B82F6"],
                   library: {
                     backgroundColor: 'transparent',
                     legend: { position: 'bottom', labels: { color: 'white', fontSize: 12 } },
@@ -161,12 +161,14 @@
   </div>
 
   <!-- Top Sources -->
-  <div class="bg-gray-800 rounded-lg shadow p-4">
-    <h2 class="text-xl font-semibold mb-4">Top Sources</h2>
-    <ul class="list-disc list-inside text-white">
-      <% @top_referrers.each do |referrer, count| %>
-        <li><%= format_referrer(referrer) %>: <%= number_with_delimiter(count) %> visits</li>
-      <% end %>
-    </ul>
-  </div>
+<div class="bg-gray-800 rounded-lg shadow p-4">
+  <h2 class="text-xl font-semibold mb-4">Top Sources</h2>
+  <ul class="list-disc list-inside">
+    <% @top_referrers.each do |referrer, count| %>
+      <li class="text-lime-400 bg-gray-700 rounded-lg px-3 py-2 my-1">
+        <%= format_referrer(referrer) %>: <%= number_with_delimiter(count) %> visits
+      </li>
+    <% end %>
+  </ul>
+</div>
 </div>

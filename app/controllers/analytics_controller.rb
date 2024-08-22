@@ -2,20 +2,33 @@ class AnalyticsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @total_page_views = current_user.page_views.count
-    @total_link_clicks = current_user.link_clicks.count
-    @total_achievement_views = current_user.achievement_views.count
-    @unique_visitors = current_user.page_views.select(:ip_address).distinct.count
+    @total_page_views = Rails.cache.fetch("#{cache_key_with_version}/total_page_views", expires_in: 10.minutes) do
+      current_user.page_views.count
+    end
 
-    @latest_daily_metric = current_user.daily_metrics.order(date: :desc).first
+    @total_link_clicks = Rails.cache.fetch("#{cache_key_with_version}/total_link_clicks", expires_in: 10.minutes) do
+      current_user.link_clicks.count
+    end
 
-    @link_analytics = fetch_link_analytics
-    @achievement_analytics = fetch_achievement_analytics
-    @geographic_data = fetch_geographic_data
-    @daily_views = fetch_daily_views
-    @hourly_distribution = fetch_hourly_distribution
-    @browser_data = fetch_browser_data
-    @top_referrers = fetch_top_referrers
+    @total_achievement_views = Rails.cache.fetch("#{cache_key_with_version}/total_achievement_views", expires_in: 10.minutes) do
+      current_user.achievement_views.count
+    end
+
+    @unique_visitors = Rails.cache.fetch("#{cache_key_with_version}/unique_visitors", expires_in: 10.minutes) do
+      current_user.page_views.select(:ip_address).distinct.count
+    end
+
+    @latest_daily_metric = Rails.cache.fetch("#{cache_key_with_version}/latest_daily_metric", expires_in: 10.minutes) do
+      current_user.daily_metrics.order(date: :desc).first
+    end
+
+    @link_analytics = Rails.cache.fetch("#{cache_key_with_version}/link_analytics", expires_in: 10.minutes) { fetch_link_analytics }
+    @achievement_analytics = Rails.cache.fetch("#{cache_key_with_version}/achievement_analytics", expires_in: 10.minutes) { fetch_achievement_analytics }
+    @geographic_data = Rails.cache.fetch("#{cache_key_with_version}/geographic_data", expires_in: 10.minutes) { fetch_geographic_data }
+    @daily_views = Rails.cache.fetch("#{cache_key_with_version}/daily_views", expires_in: 10.minutes) { fetch_daily_views }
+    @hourly_distribution = Rails.cache.fetch("#{cache_key_with_version}/hourly_distribution", expires_in: 10.minutes) { fetch_hourly_distribution }
+    @browser_data = Rails.cache.fetch("#{cache_key_with_version}/browser_data", expires_in: 10.minutes) { fetch_browser_data }
+    @top_referrers = Rails.cache.fetch("#{cache_key_with_version}/top_referrers", expires_in: 10.minutes) { fetch_top_referrers }
   end
 
   private
@@ -60,10 +73,49 @@ class AnalyticsController < ApplicationController
   end
 
   def fetch_browser_data
-    current_user.page_views.group(:browser).count
-  end
+    current_user.page_views.group(:browser).count.transform_keys do |user_agent|
+      case user_agent
+      when /Chrome/
+        'Chrome'
+      when /Firefox/
+        'Firefox'
+      when /Safari/
+        'Safari'
+      when /Edge/
+        'Edge'
+      when /Opera/
+        'Opera'
+      when /Brave/
+        'Brave'
+      when /Vivaldi/
+        'Vivaldi'
+      when /DuckDuckGo/
+        'DuckDuckGo'
+      when /IE|Internet Explorer/
+        'Internet Explorer'
+      when /OpenAI/
+        'OpenAI Bot'
+      when /Googlebot/
+        'Googlebot'
+      when /Bingbot/
+        'Bingbot'
+      when /Slurp/
+        'Yahoo! Slurp'
+      when /DuckDuckBot/
+        'DuckDuckBot'
+      when /Baiduspider/
+        'Baiduspider'
+      else
+        'Other'
+      end
+    end
+  end  
 
   def fetch_top_referrers
     current_user.page_views.group(:referrer).count.sort_by { |_, v| -v }.take(10)
+  end
+
+  def cache_key_with_version
+    "user_#{current_user.id}_analytics_v1"
   end
 end
