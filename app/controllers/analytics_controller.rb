@@ -60,8 +60,23 @@ class AnalyticsController < ApplicationController
   end
 
   def fetch_browser_data
-    current_user.page_views.group(:browser).count
-  end
+    current_user.page_views.group(:browser).count.transform_keys do |user_agent|
+      case user_agent
+      when /Chrome/
+        'Chrome'
+      when /Firefox/
+        'Firefox'
+      when /Safari/
+        'Safari'
+      when /Edge/
+        'Edge'
+      when /IE/
+        'Internet Explorer'
+      else
+        'Other'
+      end
+    end
+  end  
 
   def fetch_top_referrers
     current_user.page_views.group(:referrer).count.sort_by { |_, v| -v }.take(10)
