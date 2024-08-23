@@ -1,3 +1,7 @@
 aggregate_metrics:
   cron: '0 1 * * *'  # Run at 1 AM every day
   class: AggregateMetricsJob
+
+backup_database:
+cron: '0 2 * * *'  # Runs daily at 2 AM
+class: "BackupDatabaseJob"
