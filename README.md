@@ -23,7 +23,7 @@ Check out a live demo at [linkarooie.com](https://linkarooie.com).
 
 ### Prerequisites
 
-- Ruby 3.2.2
+- Ruby 3.3.0 or higher
 - Rails 7.1.3 or higher
 - SQLite3
 - Node.js and npm (for asset compilation)
@@ -59,6 +59,50 @@ Check out a live demo at [linkarooie.com](https://linkarooie.com).
    ```
 
 5. Visit `http://localhost:3000` in your browser.
+
+### Creating a New User
+
+This section explains how to create a new user using an interactive Ruby script. This method allows you to quickly add users to your Rails application with the required and optional attributes.
+
+#### Using the Interactive Ruby Script
+
+The Ruby script offers a user-friendly and interactive way to create a new user by prompting you for the required and optional details.
+
+##### Usage
+
+Run the script by navigating to your Rails project directory and executing the following command:
+
+```bash
+ruby create_user.rb
+```
+
+You will be prompted to enter various details for the new user:
+
+```bash
+Enter email: bob.johnson@example.com
+Enter password: AnotherSuperSecretPassword
+Enter username (or leave blank to use email prefix): bob_j
+Enter full name: Bob Johnson
+Enter tags (comma-separated): Marketing,SEO,Content Strategy
+Enter avatar URL: https://pbs.twimg.com/profile_images/1756873036220059648/zc13kjbX_400x400.jpg
+Enter banner URL: https://pbs.twimg.com/profile_banners/1192091185/1719830949/1500x500
+Enter description: Digital marketing expert focused on driving growth through innovative SEO and content strategies.
+```
+
+##### Example
+
+The details entered above will create a user with the following attributes:
+
+* **Email:** `bob.johnson@example.com`
+* **Password:** `AnotherSuperSecretPassword`
+* **Username:** `bob_j`
+* **Full Name:** `Bob Johnson`
+* **Tags:** `Marketing`, `SEO`, `Content Strategy`
+* **Avatar:** Same as provided
+* **Banner:** Same as provided
+* **Description:** "Digital marketing expert focused on driving growth through innovative SEO and content strategies."
+
+After entering all the details, the script will create the user and confirm whether the process was successful.
 
 ### Docker Deployment
 
