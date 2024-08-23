@@ -5,7 +5,7 @@ FactoryBot.define do
     date { Date.today }
     description { "This is a test achievement" }
     icon { "fa-trophy" }
-    url { "http://example.com/achievement" }
+    url { nil }
     association :user
   end
 end
