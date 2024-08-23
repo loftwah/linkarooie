@@ -3,7 +3,9 @@ class BackupDatabaseJob < ApplicationJob
 
   def perform
     environment = Rails.env
-    backup_file = "db/backups/#{environment}_backup_#{Time.now.strftime('%Y%m%d%H%M%S')}.sqlite3"
+    timestamp = Time.now.strftime('%Y%m%d%H%M%S')
+    backup_file = "db/backups/#{environment}_backup_#{timestamp}.sqlite3"
+    compressed_file = "db/backups/#{environment}_backup_#{timestamp}.tar.gz"
 
     begin
       # Ensure the backup directory exists
@@ -13,15 +15,19 @@ class BackupDatabaseJob < ApplicationJob
       database_path = Rails.configuration.database_configuration[environment]["database"]
       `sqlite3 #{database_path} .dump > #{backup_file}`
 
+      # Compress the backup file
+      `tar -czf #{compressed_file} -C db/backups #{File.basename(backup_file)}`
+
       # Upload to DigitalOcean Spaces
-      upload_to_spaces(backup_file)
+      upload_to_spaces(compressed_file)
 
-      # Optionally, delete the local backup file after upload
+      # Optionally, delete the local backup files after upload
       File.delete(backup_file) if File.exist?(backup_file)
+      File.delete(compressed_file) if File.exist?(compressed_file)
 
-      Rails.logger.info "BackupDatabaseJob: Backup created and uploaded successfully: #{backup_file}"
+      Rails.logger.info "BackupDatabaseJob: Backup created, compressed, and uploaded successfully: #{compressed_file}"
     rescue => e
-      Rails.logger.error "BackupDatabaseJob: Failed to create or upload backup: #{e.message}"
+      Rails.logger.error "BackupDatabaseJob: Failed to create, compress, or upload backup: #{e.message}"
       raise
     end
   end
