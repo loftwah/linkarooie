@@ -1,3 +1,4 @@
+# app/models/user.rb
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
@@ -10,10 +11,10 @@ class User < ApplicationRecord
   has_many :link_clicks
   has_many :achievement_views
 
-  validates :username, presence: true, uniqueness: true
+  validates :username, uniqueness: true, allow_blank: true
   validates :full_name, presence: true
+  validate :ensure_username_presence
 
-  before_validation :set_default_username, on: :create
   after_save :generate_open_graph_image, unless: -> { Rails.env.test? }
   after_save :download_and_store_avatar
 
@@ -62,7 +63,9 @@ class User < ApplicationRecord
 
   private
 
-  def set_default_username
-    self.username ||= email.split('@').first
+  def ensure_username_presence
+    if username.blank?
+      self.username = email.present? ? email.split('@').first : "user#{SecureRandom.hex(4)}"
+    end
   end
 end

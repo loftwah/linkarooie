@@ -63,6 +63,7 @@ group :development, :test do
   gem 'debug', platforms: %i[mri windows]
   gem 'factory_bot_rails'
   gem 'rspec-rails', '~> 6.0.0'
+  gem 'shoulda-matchers'
 end
 
 group :development do
@@ -80,4 +81,5 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem 'capybara'
   gem 'selenium-webdriver'
+  gem 'rails-controller-testing'
 end
