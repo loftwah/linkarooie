@@ -154,6 +154,7 @@ Note: The Dockerfile uses a multi-stage build process to create a lean productio
 - `RAILS_ENV`: Set to `production` for production environments.
 - `SECRET_KEY_BASE`: Rails secret key for production.
 - `DATABASE_URL`: Database connection string (if using a different database in production).
+- `CACHE_EXPIRATION`: Duration in minutes for caching analytics data (default: 30 minutes).
 
 ### Database
 
