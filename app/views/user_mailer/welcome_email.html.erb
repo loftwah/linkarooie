@@ -1,0 +1,33 @@
+<!-- app/views/user_mailer/welcome_email.html.erb -->
+<h1 style="font-family: Arial, sans-serif; color: #333;">
+  Welcome to Linkarooie, <%= @user.full_name %>!
+</h1>
+
+<p style="font-family: Arial, sans-serif; color: #555; line-height: 1.5;">
+  Thank you for signing up with Linkarooie! You can now manage and share all your important links in one place, along with tracking their performance.
+</p>
+
+<p style="font-family: Arial, sans-serif; color: #555; line-height: 1.5;">
+  To get started, log in and begin customizing your profile and adding your links:
+</p>
+
+<p style="text-align: center;">
+  <%= link_to 'Log in to Linkarooie', @url, 
+      style: 'background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; 
+              border-radius: 5px; font-family: Arial, sans-serif;' %>
+</p>
+
+<p style="font-family: Arial, sans-serif; color: #555; line-height: 1.5;">
+  If you have any questions or need assistance, don't hesitate to reach out. We're here to help you make the most of Linkarooie.
+</p>
+
+<p style="font-family: Arial, sans-serif; color: #555; line-height: 1.5;">
+  Best regards,<br>
+  The Linkarooie Team
+</p>
+
+<hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+
+<p style="font-family: Arial, sans-serif; color: #777; text-align: center; font-size: 12px;">
+  You received this email because you signed up for Linkarooie. If this wasn't you, please ignore this email or contact our support team.
+</p>

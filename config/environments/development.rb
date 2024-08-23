@@ -49,20 +49,8 @@ Rails.application.configure do
 
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = { address: 'localhost', port: 1025 }
-
-  # Tell Active Support which deprecation messages to disallow.
-  config.active_support.disallowed_deprecation_warnings = []
-
-  # Raise an error on page load if there are pending migrations.
-  config.active_record.migration_error = :page_load
-
-  # Highlight code that triggered database queries in logs.
-  config.active_record.verbose_query_logs = true
-
-  # Highlight code that enqueued background job in logs.
-  config.active_job.verbose_enqueue_logs = true
+  # Log emails to the console
+  config.action_mailer.logger = ActiveSupport::Logger.new(STDOUT)
 
   # Suppress logger output for asset requests.
   config.assets.quiet = true
