@@ -3,5 +3,5 @@ aggregate_metrics:
   class: AggregateMetricsJob
 
 backup_database:
-cron: '0 2 * * *'  # Runs daily at 2 AM
-class: "BackupDatabaseJob"
+  cron: '0 2 * * *'  # Runs daily at 2 AM
+  class: BackupDatabaseJob
