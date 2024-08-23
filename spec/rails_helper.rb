@@ -1,3 +1,4 @@
+# spec/rails_helper.rb
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
@@ -30,5 +31,12 @@ RSpec.configure do |config|
   config.before(:suite) do
     Rails.application.load_tasks
     Rake::Task['assets:precompile'].invoke
+  end
+end
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
   end
 end
