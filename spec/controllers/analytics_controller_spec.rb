@@ -17,15 +17,15 @@ RSpec.describe AnalyticsController, type: :controller do
 
     it "assigns the correct instance variables" do
       get :index
-      expect(assigns(:total_page_views)).to be_a(Integer)
-      expect(assigns(:total_link_clicks)).to be_a(Integer)
-      expect(assigns(:total_achievement_views)).to be_a(Integer)
-      expect(assigns(:unique_visitors)).to be_a(Integer)
-      expect(assigns(:latest_daily_metric)).to be_a(DailyMetric)
-      expect(assigns(:link_analytics)).to be_an(Array)
-      expect(assigns(:achievement_analytics)).to be_an(Array)
-      expect(assigns(:daily_views)).to be_a(Hash)
-      expect(assigns(:browser_data)).to be_a(Hash)
+      expect(controller.instance_variable_get(:@total_page_views)).to be_a(Integer)
+      expect(controller.instance_variable_get(:@total_link_clicks)).to be_a(Integer)
+      expect(controller.instance_variable_get(:@total_achievement_views)).to be_a(Integer)
+      expect(controller.instance_variable_get(:@unique_visitors)).to be_a(Integer)
+      expect(controller.instance_variable_get(:@latest_daily_metric)).to be_a(DailyMetric)
+      expect(controller.instance_variable_get(:@link_analytics)).to be_an(Array)
+      expect(controller.instance_variable_get(:@achievement_analytics)).to be_an(Array)
+      expect(controller.instance_variable_get(:@daily_views)).to be_a(Hash)
+      expect(controller.instance_variable_get(:@browser_data)).to be_a(Hash)
     end
   end
 end
