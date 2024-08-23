@@ -60,48 +60,6 @@ Check out a live demo at [linkarooie.com](https://linkarooie.com).
 
 5. Visit `http://localhost:3000` in your browser.
 
-#### Analytics Temporary
-
-I have added analytics but not a dashboard to view them yet. This is how it works so far.
-
-- Open the Rails console `rails console`
-
-```ruby
-puts "Page Views for loftwah:"
-user = User.find_by(username: 'loftwah')
-puts user.page_views.count
-
-puts "\nMost recent Page Views with new data:"
-puts PageView.order(created_at: :desc).limit(5).map { |pv| "#{pv.path} - #{pv.created_at} - IP: #{pv.ip_address} - Session: #{pv.session_id}" }
-
-puts "\nLink Clicks for loftwah's links:"
-puts user.links.sum { |link| link.link_clicks.count }
-
-puts "\nMost recent Link Clicks with new data:"
-puts LinkClick.order(created_at: :desc).limit(5).map { |lc| "#{lc.link.title} - #{lc.created_at} - IP: #{lc.ip_address} - Session: #{lc.session_id}" }
-
-puts "\nMost viewed pages:"
-puts PageView.group(:path).order('count_id DESC').limit(5).count(:id)
-
-puts "\nMost clicked links:"
-puts LinkClick.joins(:link).group('links.title').order('count_id DESC').limit(5).count(:id)
-
-puts "\nTotal tracking counts:"
-puts "Page Views: #{PageView.count}"
-puts "Link Clicks: #{LinkClick.count}"
-puts "Achievement Views: #{AchievementView.count}"
-
-puts "\nUnique IP addresses:"
-puts "Page Views: #{PageView.distinct.count(:ip_address)}"
-puts "Link Clicks: #{LinkClick.distinct.count(:ip_address)}"
-puts "Achievement Views: #{AchievementView.distinct.count(:ip_address)}"
-
-puts "\nUnique sessions:"
-puts "Page Views: #{PageView.distinct.count(:session_id)}"
-puts "Link Clicks: #{LinkClick.distinct.count(:session_id)}"
-puts "Achievement Views: #{AchievementView.distinct.count(:session_id)}"
-```
-
 ### Docker Deployment
 
 1. Build and start the Docker containers:
