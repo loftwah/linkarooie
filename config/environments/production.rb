@@ -16,7 +16,7 @@ Rails.application.configure do
   config.consider_all_requests_local = false
   config.action_controller.perform_caching = true
 
-  config.active_record.sqlite3_production_warning=false
+  config.active_record.sqlite3_production_warning = false
 
   # Ensures that a master key has been made available in ENV["RAILS_MASTER_KEY"], config/master.key, or an environment
   # key such as config/credentials/production.key. This key is used to decrypt credentials (and other encrypted files).
@@ -97,4 +97,17 @@ Rails.application.configure do
   # ]
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+
+  # SMTP settings for Gmail
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: "smtp-relay.gmail.com",
+    port: 587,
+    domain: "linkarooie.com",  # Replace with your domain
+    enable_starttls_auto: true,
+    openssl_verify_mode: 'none'
+  }
+
+  config.action_mailer.default_url_options = { host: "linkarooie.com" }  # Replace with your domain
+
 end
