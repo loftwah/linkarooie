@@ -3,7 +3,6 @@ name: CI
 on:
   push:
     branches:
-      - main
       - 'feature/**'
       - 'hotfix/**'
   pull_request:
