@@ -99,25 +99,7 @@
 </div>
 
   <!-- Charts Section -->
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-  <!-- Geographic Data -->
-  <div class="bg-gray-800 rounded-lg shadow p-4">
-    <h2 class="text-xl font-semibold mb-4">Visitor Locations</h2>
-    <%= pie_chart @geographic_data, 
-                  colors: ["#84CC16", "#22D3EE", "#E879F9", "#F87171", "#A78BFA"],
-                  library: {
-                    backgroundColor: 'transparent',
-                    legend: { position: 'bottom', labels: { color: 'white', fontSize: 12 } },
-                    title: { display: true, text: 'Visitor Locations', color: 'white', fontSize: 16 },
-                    responsive: true,
-                    plugins: { datalabels: { color: 'white', font: { weight: 'bold' } } }
-                  },
-                  donut: true,
-                  prefix: "",
-                  thousands: ",",
-                  round: 2,
-                  height: "300px" %>
-  </div>
+<div class="grid grid-cols-1 gap-6 mb-6">
 
   <!-- Time-based Analytics -->
   <div class="bg-gray-800 rounded-lg shadow p-4">
@@ -143,7 +125,7 @@
 </div>
 
 <!-- Browser Usage and Top Sources -->
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="grid grid-cols-1 gap-6">
   <!-- Browser Usage -->
   <div class="bg-gray-800 rounded-lg shadow p-4">
     <h2 class="text-xl font-semibold mb-4">Browser Usage</h2>
@@ -159,16 +141,4 @@
                   donut: true,
                   height: "250px" %>
   </div>
-
-  <!-- Top Sources -->
-<div class="bg-gray-800 rounded-lg shadow p-4">
-  <h2 class="text-xl font-semibold mb-4">Top Sources</h2>
-  <ul class="list-disc list-inside">
-    <% @top_referrers.each do |referrer, count| %>
-      <li class="text-lime-400 bg-gray-700 rounded-lg px-3 py-2 my-1">
-        <%= format_referrer(referrer) %>: <%= number_with_delimiter(count) %> visits
-      </li>
-    <% end %>
-  </ul>
-</div>
 </div>
