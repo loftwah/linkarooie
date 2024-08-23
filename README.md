@@ -162,9 +162,47 @@ Note: The Dockerfile uses a multi-stage build process to create a lean productio
 
 The project uses SQLite by default. For production, consider using PostgreSQL or MySQL.
 
+### Backup and Restore Process
+
+Linkarooie includes an automated backup system to ensure that your SQLite database is securely stored and easily recoverable. This process is managed using a combination of scheduled jobs and DigitalOcean Spaces for storage.
+
+#### Automated Backups
+
+The `BackupDatabaseJob` is scheduled to run daily at 2 AM, ensuring that your SQLite database is backed up regularly. The backup process involves the following steps:
+
+1. **Database Dump**: The job creates a dump of the current SQLite database, storing it in the `db/backups` directory with a timestamp and environment identifier.
+2. **Upload to DigitalOcean Spaces**: The backup file is then uploaded to a DigitalOcean Spaces bucket, where it is securely stored with versioning enabled. This ensures that previous versions of the backup are retained for a short period, allowing you to restore from a specific point in time if needed.
+3. **Cleanup**: Optionally, the local backup file is deleted after it has been successfully uploaded to DigitalOcean Spaces.
+
+#### Restoring from a Backup
+
+In the event that you need to restore your database from a backup, you can use the provided Rake task. This task allows you to specify the backup file you want to restore from and automatically loads it into the SQLite database.
+
+**Restoration Steps:**
+
+1. **Run the Restore Task**: Use the following command, specifying the path to your backup file:
+
+   ```bash
+   rake db:restore BACKUP_FILE=path/to/your_backup_file.sql
+   ```
+
+2. **Process Overview**:
+
+   * The task will first drop all existing tables in the database to ensure a clean restoration.
+   * It will then load the specified backup file into the database.
+   * Upon completion, your database will be restored to the state it was in when the backup was created.
+
+3. **Error Handling**: If the backup file is not provided or if any errors occur during the restoration process, the task will output helpful messages to guide you in resolving the issue.
+
+#### Important Notes
+
+* **Environment-Specific Backups**: Backups are created separately for each environment (development, production, test), and the backup files are named accordingly.
+* **DigitalOcean Spaces Configuration**: Ensure that your DigitalOcean API credentials and bucket details are correctly configured in your environment variables for the backup and restore processes to function properly.
+* **Testing Restores**: Regularly test the restore process in a development environment to ensure that your backups are reliable and that the restore process works as expected.
+
 ### Geolocation
 
-For now this isn't optional but I intend to make it to. [API key required](https://ipapi.com) but it is free.
+Currently, geolocation functionality is mandatory, but I plan to make it optional in future updates. To enable geolocation, you will need an [API key from ipapi](https://ipapi.com), which is free to obtain.
 
 ## Customization
 
