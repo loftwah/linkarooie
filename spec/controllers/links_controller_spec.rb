@@ -69,10 +69,10 @@ RSpec.describe LinksController, type: :controller do
 
     it "assigns the correct instance variables" do
       get :user_links, params: { username: user.username }
-      expect(assigns(:user)).to eq(user)
-      expect(assigns(:links)).to be_an(ActiveRecord::Relation)
-      expect(assigns(:pinned_links)).to be_an(ActiveRecord::Relation)
-      expect(assigns(:achievements)).to be_an(ActiveRecord::Relation)
+      expect(controller.instance_variable_get(:@user)).to eq(user)
+      expect(controller.instance_variable_get(:@links)).to be_an(ActiveRecord::Relation)
+      expect(controller.instance_variable_get(:@pinned_links)).to be_an(ActiveRecord::Relation)
+      expect(controller.instance_variable_get(:@achievements)).to be_an(ActiveRecord::Relation)
     end
   end
 
