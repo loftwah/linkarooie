@@ -2,33 +2,33 @@ class AnalyticsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @total_page_views = Rails.cache.fetch("#{cache_key_with_version}/total_page_views", expires_in: 10.minutes) do
+    @total_page_views = Rails.cache.fetch("#{cache_key_with_version}/total_page_views", expires_in: CACHE_EXPIRATION) do
       current_user.page_views.count
     end
 
-    @total_link_clicks = Rails.cache.fetch("#{cache_key_with_version}/total_link_clicks", expires_in: 10.minutes) do
+    @total_link_clicks = Rails.cache.fetch("#{cache_key_with_version}/total_link_clicks", expires_in: CACHE_EXPIRATION) do
       current_user.link_clicks.count
     end
 
-    @total_achievement_views = Rails.cache.fetch("#{cache_key_with_version}/total_achievement_views", expires_in: 10.minutes) do
+    @total_achievement_views = Rails.cache.fetch("#{cache_key_with_version}/total_achievement_views", expires_in: CACHE_EXPIRATION) do
       current_user.achievement_views.count
     end
 
-    @unique_visitors = Rails.cache.fetch("#{cache_key_with_version}/unique_visitors", expires_in: 10.minutes) do
+    @unique_visitors = Rails.cache.fetch("#{cache_key_with_version}/unique_visitors", expires_in: CACHE_EXPIRATION) do
       current_user.page_views.select(:ip_address).distinct.count
     end
 
-    @latest_daily_metric = Rails.cache.fetch("#{cache_key_with_version}/latest_daily_metric", expires_in: 10.minutes) do
+    @latest_daily_metric = Rails.cache.fetch("#{cache_key_with_version}/latest_daily_metric", expires_in: CACHE_EXPIRATION) do
       current_user.daily_metrics.order(date: :desc).first
     end
 
-    @link_analytics = Rails.cache.fetch("#{cache_key_with_version}/link_analytics", expires_in: 10.minutes) { fetch_link_analytics }
-    @achievement_analytics = Rails.cache.fetch("#{cache_key_with_version}/achievement_analytics", expires_in: 10.minutes) { fetch_achievement_analytics }
-    @geographic_data = Rails.cache.fetch("#{cache_key_with_version}/geographic_data", expires_in: 10.minutes) { fetch_geographic_data }
-    @daily_views = Rails.cache.fetch("#{cache_key_with_version}/daily_views", expires_in: 10.minutes) { fetch_daily_views }
-    @hourly_distribution = Rails.cache.fetch("#{cache_key_with_version}/hourly_distribution", expires_in: 10.minutes) { fetch_hourly_distribution }
-    @browser_data = Rails.cache.fetch("#{cache_key_with_version}/browser_data", expires_in: 10.minutes) { fetch_browser_data }
-    @top_referrers = Rails.cache.fetch("#{cache_key_with_version}/top_referrers", expires_in: 10.minutes) { fetch_top_referrers }
+    @link_analytics = Rails.cache.fetch("#{cache_key_with_version}/link_analytics", expires_in: CACHE_EXPIRATION) { fetch_link_analytics }
+    @achievement_analytics = Rails.cache.fetch("#{cache_key_with_version}/achievement_analytics", expires_in: CACHE_EXPIRATION) { fetch_achievement_analytics }
+    @geographic_data = Rails.cache.fetch("#{cache_key_with_version}/geographic_data", expires_in: CACHE_EXPIRATION) { fetch_geographic_data }
+    @daily_views = Rails.cache.fetch("#{cache_key_with_version}/daily_views", expires_in: CACHE_EXPIRATION) { fetch_daily_views }
+    @hourly_distribution = Rails.cache.fetch("#{cache_key_with_version}/hourly_distribution", expires_in: CACHE_EXPIRATION) { fetch_hourly_distribution }
+    @browser_data = Rails.cache.fetch("#{cache_key_with_version}/browser_data", expires_in: CACHE_EXPIRATION) { fetch_browser_data }
+    @top_referrers = Rails.cache.fetch("#{cache_key_with_version}/top_referrers", expires_in: CACHE_EXPIRATION) { fetch_top_referrers }
   end
 
   private
@@ -112,8 +112,81 @@ class AnalyticsController < ApplicationController
   end  
 
   def fetch_top_referrers
-    current_user.page_views.group(:referrer).count.sort_by { |_, v| -v }.take(10)
+    referrers = current_user.page_views.group(:referrer).count
+
+    # Normalize referrers to group similar ones together
+    normalized_referrers = referrers.each_with_object(Hash.new(0)) do |(referrer, count), hash|
+      normalized_referrer = normalize_referrer(referrer)
+      hash[normalized_referrer] += count
+    end
+
+    normalized_referrers.sort_by { |_, v| -v }.take(10)
   end
+
+  def normalize_referrer(referrer)
+    return 'Direct' if referrer.blank?
+    
+    uri = URI.parse(referrer)
+    host = uri.host.downcase
+  
+    # Remove 'www.' prefix for consistency
+    host = host.start_with?('www.') ? host[4..-1] : host
+  
+    # Normalize common referrers
+    case host
+    when 't.co'
+      'Twitter'
+    when 'facebook.com', 'fb.com'
+      'Facebook'
+    when 'instagram.com'
+      'Instagram'
+    when 'linkedin.com'
+      'LinkedIn'
+    when 'pinterest.com'
+      'Pinterest'
+    when 'youtube.com', 'youtu.be'
+      'YouTube'
+    when 'reddit.com'
+      'Reddit'
+    when 'tumblr.com'
+      'Tumblr'
+    when 'snapchat.com'
+      'Snapchat'
+    when 'whatsapp.com'
+      'WhatsApp'
+    when 'telegram.org'
+      'Telegram'
+    when 'discord.com', 'discordapp.com'
+      'Discord'
+    when 'google.com', 'google.co.uk', 'google.fr', 'google.de', 'google.es', 
+         'google.it', 'google.ca', 'google.com.au', 'google.co.in', 'google.co.jp'
+      'Google'
+    when 'bing.com'
+      'Bing'
+    when 'yahoo.com', 'yahoo.co.jp'
+      'Yahoo'
+    when 'duckduckgo.com'
+      'DuckDuckGo'
+    when 'baidu.com'
+      'Baidu'
+    when 'yandex.com', 'yandex.ru'
+      'Yandex'
+    when 'amazon.com', 'amazon.co.uk', 'amazon.de', 'amazon.fr', 'amazon.co.jp'
+      'Amazon'
+    when 'ebay.com', 'ebay.co.uk'
+      'eBay'
+    when 'quora.com'
+      'Quora'
+    when 'medium.com'
+      'Medium'
+    when 'wikipedia.org'
+      'Wikipedia'
+    else
+      host.capitalize # Default to capitalized host if not matched
+    end
+  rescue URI::InvalidURIError
+    'Unknown'
+  end  
 
   def cache_key_with_version
     "user_#{current_user.id}_analytics_v1"
