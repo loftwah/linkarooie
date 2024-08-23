@@ -1,13 +1,13 @@
 name: CI
 
 on:
+  pull_request:
+    branches:
+      - main
   push:
     branches:
       - 'feature/**'
       - 'hotfix/**'
-  pull_request:
-    branches:
-      - main
 
 jobs:
   test:
