@@ -1,4 +1,3 @@
-# spec/controllers/analytics_controller_spec.rb
 require 'rails_helper'
 
 RSpec.describe AnalyticsController, type: :controller do
@@ -11,12 +10,14 @@ RSpec.describe AnalyticsController, type: :controller do
 
   describe "GET #index" do
     it "returns a success response" do
-      get :index
+      get :index, params: { username: user.username }
       expect(response).to be_successful
     end
 
-    it "assigns the correct instance variables" do
-      get :index
+    it "sets the correct instance variables" do
+      get :index, params: { username: user.username }
+      
+      expect(controller.instance_variable_get(:@user)).to eq(user)
       expect(controller.instance_variable_get(:@total_page_views)).to be_a(Integer)
       expect(controller.instance_variable_get(:@total_link_clicks)).to be_a(Integer)
       expect(controller.instance_variable_get(:@total_achievement_views)).to be_a(Integer)
@@ -26,6 +27,21 @@ RSpec.describe AnalyticsController, type: :controller do
       expect(controller.instance_variable_get(:@achievement_analytics)).to be_an(Array)
       expect(controller.instance_variable_get(:@daily_views)).to be_a(Hash)
       expect(controller.instance_variable_get(:@browser_data)).to be_a(Hash)
+    end
+
+    context "when viewing another user's analytics" do
+      let(:other_user) { create(:user, public_analytics: true) }
+
+      it "allows viewing public analytics" do
+        get :index, params: { username: other_user.username }
+        expect(response).to be_successful
+      end
+
+      it "redirects when trying to view private analytics" do
+        other_user.update(public_analytics: false)
+        get :index, params: { username: other_user.username }
+        expect(response).to redirect_to(root_path)
+      end
     end
   end
 end

@@ -63,8 +63,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def account_update_params
-    params.require(:user).permit(:email, :password, :password_confirmation, :current_password, :username, :full_name, :tags, :avatar, :banner, :description).tap do |user_params|
-      user_params[:tags] = user_params[:tags].split(',').map(&:strip).to_json if user_params[:tags].present?
+    params.require(:user).permit(:email, :password, :password_confirmation, :current_password,
+                                 :username, :full_name, :avatar, :banner, :description, :tags,
+                                 :public_analytics).tap do |user_params|
+      if user_params[:tags].present?
+        user_params[:tags] = user_params[:tags].split(',').map(&:strip).to_json
+      end
     end
   end
 end

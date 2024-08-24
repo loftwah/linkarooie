@@ -23,7 +23,7 @@ Rails.application.routes.draw do
   mount Sidekiq::Web => '/sidekiq'
 
   # Other routes
-  get 'analytics', to: 'analytics#index'
+  get '/:username/analytics', to: 'analytics#index', as: :user_analytics
   get "up" => "rails/health#show", as: :rails_health_check
   root to: 'pages#home'
   resources :links, only: [:index, :show, :new, :create, :edit, :update, :destroy]

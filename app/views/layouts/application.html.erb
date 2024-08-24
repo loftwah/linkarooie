@@ -65,7 +65,7 @@
               </button>
               <div id="userMenu" class="absolute right-0 mt-2 w-48 bg-gray-700 rounded-md shadow-xl z-20 hidden">
                 <%= link_to 'Public Page', user_links_path(current_user.username), class: 'block px-4 py-2 text-sm text-white hover:bg-gray-600' %>
-                <%= link_to 'Analytics', analytics_path, class: 'block px-4 py-2 text-sm text-white hover:bg-gray-600' %>
+                <%= link_to 'Analytics', user_analytics_path(current_user.username), class: 'block px-4 py-2 text-sm text-white hover:bg-gray-600' %>
                 <%= link_to 'Links', links_path, class: 'block px-4 py-2 text-sm text-white hover:bg-gray-600' %>
                 <%= link_to 'Achievements', achievements_path, class: 'block px-4 py-2 text-sm text-white hover:bg-gray-600' %>
                 <%= link_to 'Profile', edit_user_registration_path, class: 'block px-4 py-2 text-sm text-white hover:bg-gray-600' %>

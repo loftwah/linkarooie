@@ -38,6 +38,11 @@
     <%= f.text_area :description, class: 'w-full p-1 rounded text-black' %>
   </div>
 
+  <div class="field">
+    <%= f.label :public_analytics %>
+    <%= f.check_box :public_analytics %>
+  </div>
+
   <div class="mb-2">
     <%= f.label :password, class: 'block text-gray-300 mb-1' %>
     <% if @minimum_password_length %>

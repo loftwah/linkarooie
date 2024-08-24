@@ -1,21 +1,33 @@
 <div class="container mx-auto px-4 py-8 text-white">
-  <h1 class="text-2xl font-bold mb-6 text-center">Your Analytics Dashboard</h1>
+  <h1 class="text-2xl font-bold mb-6 text-center flex justify-center items-center space-x-2">
+    Analytics for <%= @user.username %>
+    <% if @user.public_analytics? %>
+      <span class="bg-gray-100 text-black text-sm font-medium px-3 py-1 rounded ml-2">
+        Public
+      </span>
+    <% else %>
+      <span class="bg-gray-100 text-black text-sm font-medium px-3 py-1 rounded ml-2">
+        Private
+      </span>
+    <% end %>
+  </h1>
+</div>
 
   <!-- Overall Metrics -->
-<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-  <% metrics = [
-    { title: "Total Page Views", value: @total_page_views },
-    { title: "Total Link Clicks", value: @total_link_clicks },
-    { title: "Total Achievement Views", value: @total_achievement_views },
-    { title: "Unique Visitors", value: @unique_visitors }
-  ] %>
-  <% metrics.each do |metric| %>
-    <div class="bg-gray-800 rounded-lg shadow p-4 flex flex-col justify-between">
-      <h2 class="text-sm font-semibold text-center mb-2 flex-grow flex items-center justify-center"><%= metric[:title] %></h2>
-      <p class="text-2xl font-bold text-center text-lime-400"><%= number_with_delimiter(metric[:value]) %></p>
-    </div>
-  <% end %>
-</div>
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+    <% metrics = [
+      { title: "Total Page Views", value: @total_page_views },
+      { title: "Total Link Clicks", value: @total_link_clicks },
+      { title: "Total Achievement Views", value: @total_achievement_views },
+      { title: "Unique Visitors", value: @unique_visitors }
+    ] %>
+    <% metrics.each do |metric| %>
+      <div class="bg-gray-800 rounded-lg shadow p-4 flex flex-col justify-between">
+        <h2 class="text-sm font-semibold text-center mb-2 flex-grow flex items-center justify-center"><%= metric[:title] %></h2>
+        <p class="text-2xl font-bold text-center text-lime-400"><%= number_with_delimiter(metric[:value]) %></p>
+      </div>
+    <% end %>
+  </div>
 
   <!-- Latest Daily Metrics -->
   <% if @latest_daily_metric %>
@@ -43,102 +55,101 @@
   <% end %>
 
   <!-- Link Analytics Table -->
-<div class="bg-gray-800 rounded-lg shadow p-4 mb-6">
-  <h2 class="text-xl font-semibold mb-4">Link Analytics</h2>
-  <p class="text-sm mb-4">Performance data for your links. 'Total Clicks' represents all interactions, while 'Unique Visitors' counts individual users.</p>
-  <div class="overflow-x-auto">
-    <table class="w-full text-sm text-center table-auto">
-      <thead class="text-xs uppercase bg-gray-700">
-        <tr>
-          <th scope="col" class="px-4 py-3 rounded-tl-lg max-w-xs break-words">Link</th>
-          <th scope="col" class="px-4 py-3 w-24">Total Clicks</th>
-          <th scope="col" class="px-4 py-3 w-24 rounded-tr-lg">Unique Visitors</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @link_analytics.each_with_index do |link, index| %>
-          <tr class="<%= index.even? ? 'bg-gray-800' : 'bg-gray-900' %> border-b border-gray-700">
-            <th scope="row" class="px-4 py-3 font-medium text-lime-400 break-words max-w-xs">
-              <%= link[:title] %>
-            </th>
-            <td class="px-4 py-3"><%= number_with_delimiter(link[:total_clicks]) %></td>
-            <td class="px-4 py-3"><%= number_with_delimiter(link[:unique_visitors]) %></td>
+  <div class="bg-gray-800 rounded-lg shadow p-4 mb-6">
+    <h2 class="text-xl font-semibold mb-4">Link Analytics</h2>
+    <p class="text-sm mb-4">Performance data for links. 'Total Clicks' represents all interactions, while 'Unique Visitors' counts individual users.</p>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm text-center table-auto">
+        <thead class="text-xs uppercase bg-gray-700">
+          <tr>
+            <th scope="col" class="px-4 py-3 rounded-tl-lg max-w-xs break-words">Link</th>
+            <th scope="col" class="px-4 py-3 w-24">Total Clicks</th>
+            <th scope="col" class="px-4 py-3 w-24 rounded-tr-lg">Unique Visitors</th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <% @link_analytics.each_with_index do |link, index| %>
+            <tr class="<%= index.even? ? 'bg-gray-800' : 'bg-gray-900' %> border-b border-gray-700">
+              <th scope="row" class="px-4 py-3 font-medium text-lime-400 break-words max-w-xs">
+                <%= link[:title] %>
+              </th>
+              <td class="px-4 py-3"><%= number_with_delimiter(link[:total_clicks]) %></td>
+              <td class="px-4 py-3"><%= number_with_delimiter(link[:unique_visitors]) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
 
-<!-- Achievement Analytics Table -->
-<div class="bg-gray-800 rounded-lg shadow p-4 mb-6">
-  <h2 class="text-xl font-semibold mb-4">Achievement Analytics</h2>
-  <p class="text-sm mb-4">Performance data for your achievements. 'Total Views' represents all interactions, while 'Unique Viewers' counts individual users.</p>
-  <div class="overflow-x-auto">
-    <table class="w-full text-sm text-center table-auto">
-      <thead class="text-xs uppercase bg-gray-700">
-        <tr>
-          <th scope="col" class="px-4 py-3 rounded-tl-lg max-w-xs break-words">Achievement</th>
-          <th scope="col" class="px-4 py-3 w-24">Total Views</th>
-          <th scope="col" class="px-4 py-3 w-24 rounded-tr-lg">Unique Viewers</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @achievement_analytics.each_with_index do |achievement, index| %>
-          <tr class="<%= index.even? ? 'bg-gray-800' : 'bg-gray-900' %> border-b border-gray-700">
-            <th scope="row" class="px-4 py-3 font-medium text-lime-400 break-words max-w-xs">
-              <%= achievement[:title] %>
-            </th>
-            <td class="px-4 py-3"><%= number_with_delimiter(achievement[:total_views]) %></td>
-            <td class="px-4 py-3"><%= number_with_delimiter(achievement[:unique_viewers]) %></td>
+  <!-- Achievement Analytics Table -->
+  <div class="bg-gray-800 rounded-lg shadow p-4 mb-6">
+    <h2 class="text-xl font-semibold mb-4">Achievement Analytics</h2>
+    <p class="text-sm mb-4">Performance data for achievements. 'Total Views' represents all interactions, while 'Unique Viewers' counts individual users.</p>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm text-center table-auto">
+        <thead class="text-xs uppercase bg-gray-700">
+          <tr>
+            <th scope="col" class="px-4 py-3 rounded-tl-lg max-w-xs break-words">Achievement</th>
+            <th scope="col" class="px-4 py-3 w-24">Total Views</th>
+            <th scope="col" class="px-4 py-3 w-24 rounded-tr-lg">Unique Viewers</th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <% @achievement_analytics.each_with_index do |achievement, index| %>
+            <tr class="<%= index.even? ? 'bg-gray-800' : 'bg-gray-900' %> border-b border-gray-700">
+              <th scope="row" class="px-4 py-3 font-medium text-lime-400 break-words max-w-xs">
+                <%= achievement[:title] %>
+              </th>
+              <td class="px-4 py-3"><%= number_with_delimiter(achievement[:total_views]) %></td>
+              <td class="px-4 py-3"><%= number_with_delimiter(achievement[:unique_viewers]) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
 
   <!-- Charts Section -->
-<div class="grid grid-cols-1 gap-6 mb-6">
-
-  <!-- Time-based Analytics -->
-  <div class="bg-gray-800 rounded-lg shadow p-4">
-    <h2 class="text-xl font-semibold mb-4">Daily Views (Last 30 Days)</h2>
-    <%= line_chart @daily_views, 
-                   colors: ["#84CC16"],
-                   library: {
-                     backgroundColor: 'transparent',
-                     legend: { display: false },
-                     scales: {
-                       x: { ticks: { color: 'white', fontSize: 12 } },
-                       y: { ticks: { color: 'white', fontSize: 12 } },
+  <div class="grid grid-cols-1 gap-6 mb-6">
+    <!-- Time-based Analytics -->
+    <div class="bg-gray-800 rounded-lg shadow p-4">
+      <h2 class="text-xl font-semibold mb-4">Daily Views (Last 30 Days)</h2>
+      <%= line_chart @daily_views, 
+                     colors: ["#84CC16"],
+                     library: {
+                       backgroundColor: 'transparent',
+                       legend: { display: false },
+                       scales: {
+                         x: { ticks: { color: 'white', fontSize: 12 } },
+                         y: { ticks: { color: 'white', fontSize: 12 } },
+                       },
+                       elements: {
+                         line: { tension: 0.4 },
+                         point: { radius: 3, backgroundColor: 'white' }
+                       },
+                       title: { display: true, text: 'Daily Views (Last 30 Days)', color: 'white', fontSize: 16 },
+                       responsive: true
                      },
-                     elements: {
-                       line: { tension: 0.4 }, # smooth curves
-                       point: { radius: 3, backgroundColor: 'white' }
-                     },
-                     title: { display: true, text: 'Daily Views (Last 30 Days)', color: 'white', fontSize: 16 },
-                     responsive: true
-                   },
-                   height: "300px" %>
+                     height: "300px" %>
+    </div>
   </div>
-</div>
 
-<!-- Browser Usage and Top Sources -->
-<div class="grid grid-cols-1 gap-6">
   <!-- Browser Usage -->
-  <div class="bg-gray-800 rounded-lg shadow p-4">
-    <h2 class="text-xl font-semibold mb-4">Browser Usage</h2>
-    <%= pie_chart @browser_data, 
-                  colors: ["#84CC16", "#22D3EE", "#E879F9", "#F87171", "#A78BFA", "#F59E0B", "#14B8A6", "#3B82F6"],
-                  library: {
-                    backgroundColor: 'transparent',
-                    legend: { position: 'bottom', labels: { color: 'white', fontSize: 12 } },
-                    title: { display: true, text: 'Browser Usage', color: 'white', fontSize: 16 },
-                    responsive: true,
-                    plugins: { datalabels: { color: 'white', font: { weight: 'bold' } } }
-                  },
-                  donut: true,
-                  height: "250px" %>
+  <div class="grid grid-cols-1 gap-6">
+    <div class="bg-gray-800 rounded-lg shadow p-4">
+      <h2 class="text-xl font-semibold mb-4">Browser Usage</h2>
+      <%= pie_chart @browser_data, 
+                    colors: ["#84CC16", "#22D3EE", "#E879F9", "#F87171", "#A78BFA", "#F59E0B", "#14B8A6", "#3B82F6"],
+                    library: {
+                      backgroundColor: 'transparent',
+                      legend: { position: 'bottom', labels: { color: 'white', fontSize: 12 } },
+                      title: { display: true, text: 'Browser Usage', color: 'white', fontSize: 16 },
+                      responsive: true,
+                      plugins: { datalabels: { color: 'white', font: { weight: 'bold' } } }
+                    },
+                    donut: true,
+                    height: "250px" %>
+    </div>
   </div>
 </div>

@@ -22,6 +22,7 @@
       </div>
     </div>
   </div>
+
   <% if @pinned_links.any? %>
     <div class="pinned-links-section mt-4">
       <div class="pinned-links flex flex-wrap justify-center">
@@ -79,5 +80,13 @@
 <% else %>
   <div class="achievements-section max-w-4xl mx-auto mt-12 text-center">
     <p class="text-gray-500">No achievements to display.</p>
+  </div>
+<% end %>
+
+<% if @user.public_analytics %>
+  <div class="analytics-link text-center mt-8 mb-4">
+    <%= link_to user_analytics_path(@user.username), class: 'text-gray-400 hover:text-lime-300 text-sm' do %>
+      <i class="fas fa-chart-line"></i> View Analytics
+    <% end %>
   </div>
 <% end %>
