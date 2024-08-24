@@ -113,10 +113,10 @@ show_file_content "config/tailwind.config.js"
 show_tree "terraform"
 
 output "=== Terraform Files ===\n"
-find ./terraform -type f -name "*.tf" -exec sh -c 'echo "Processing file: $1"; cat "$1"' _ {} \; | while read line; do output "$line\n"; done
+find ./terraform -type f -name "*.tf" -exec sh -c 'echo "Processing file: $1"; cat "$1"' _ {} \; | while read -r line; do output "$line\n"; done
 
 output "=== App Directory Files (Ruby and HTML ERB) ===\n"
-find ./app -type f \( -name "*.rb" -o -name "*.html.erb" \) -exec sh -c 'echo "Processing file: $1"; cat "$1"' _ {} \; | while read line; do output "$line\n"; done
+find ./app -type f \( -name "*.rb" -o -name "*.html.erb" \) -exec sh -c 'echo "Processing file: $1"; cat "$1"' _ {} \; | while read -r line; do output "$line\n"; done
 
 output "=== GitHub Workflow Files ===\n"
 for file in .github/workflows/*.yml; do
@@ -127,7 +127,7 @@ done
 show_tree "bin"
 
 output "=== Spec Directory Files (Ruby) ===\n"
-find spec -type f -name "*.rb" -exec sh -c 'for file; do echo "$file"; cat "$file"; done' _ {} + | while read line; do output "$line\n"; done
+find spec -type f -name "*.rb" -exec sh -c 'for file; do echo "$file"; cat "$file"; done' _ {} + | while read -r line; do output "$line\n"; done
 
 output "=== Public Directory (One Level Deep) ===\n"
 output "$(tree -L 1 public)\n"
