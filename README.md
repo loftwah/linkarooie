@@ -1,23 +1,104 @@
 # Linkarooie
 
-[![Build Status](https://github.com/loftwah/linkarooie/actions/workflows/ci.yml/badge.svg)](https://github.com/loftwah/linkarooie/actions)
+[![Build Status](https://github.com/loftwah/linkarooie/actions/workflows/ci.yml/badge.svg)](https://github.com/loftwah/linkarooie/actions) [![Docker Image Available](https://img.shields.io/badge/Docker%20image-available-blue?logo=docker)](https://github.com/users/loftwah/packages/container/package/linkarooie)
 
-Linkarooie is a simple and open-source alternative to Linktree, allowing you to manage and share all your important links in one place. This project was created as a replacement for BioDrop (LinkFree) after it was archived. It is built using Ruby on Rails and is designed to be easy to deploy and customize.
+Linkarooie is a robust, open-source alternative to Linktree, built with Ruby on Rails. It provides a centralized platform for managing and sharing your important links, achievements, and online presence. Created as a replacement for the archived BioDrop (LinkFree) project, Linkarooie offers a feature-rich, customizable solution designed for easy deployment and management.
+
+## Table of Contents
+
+1. [Features](#features)
+2. [Tech Stack](#tech-stack)
+3. [Getting Started](#getting-started)
+   - [Prerequisites](#prerequisites)
+   - [Local Development Setup](#local-development-setup)
+   - [Creating a New User](#creating-a-new-user)
+4. [Docker Deployment](#docker-deployment)
+5. [DigitalOcean Deployment](#digitalocean-deployment)
+6. [Configuration](#configuration)
+   - [Environment Variables](#environment-variables)
+   - [Database Configuration](#database-configuration)
+7. [Backup and Restore Process](#backup-and-restore-process)
+8. [Geolocation](#geolocation)
+9. [Customization](#customization)
+10. [Testing](#testing)
+11. [CI/CD](#cicd)
+12. [Project Structure](#project-structure)
+13. [Key Components](#key-components)
+14. [Gather Script](#gather-script)
+15. [Contributing](#contributing)
+16. [License](#license)
+17. [Support](#support)
+18. [Acknowledgements](#acknowledgements)
 
 ## Features
 
-- **Custom Links:** Easily add and manage your links.
-- **Analytics:** Track the performance of your links.
-- **Social Integration:** Seamlessly connect all your social media profiles.
-- **Responsive Design:** Works well on any device.
-- **User Achievements:** Showcase your accomplishments.
-- **Pinned Links:** Highlight your most important links.
-- **User Profiles:** Customizable profiles with avatars, banners, and descriptions.
-- **Open Graph Image Generation:** Automatically generate social media preview images.
+- **Custom Links Management:** 
+  - Add, edit, and delete links with titles, URLs, descriptions, and custom icons
+  - Toggle link visibility
+  - Pin important links to the top of your profile
+  - Organize links with custom positioning
 
-## Demo
+- **User Profiles:** 
+  - Customizable profiles with avatars, banners, full names, usernames, and descriptions
+  - Tagging system for categorizing profiles
 
-Check out a live demo at [linkarooie.com](https://linkarooie.com).
+- **User Achievements:** 
+  - Create and showcase personal or professional accomplishments
+  - Include achievement titles, dates, descriptions, icons, and URLs
+
+- **Analytics:** 
+  - Track page views, link clicks, and unique visitors
+  - View daily metrics for user engagement
+  - Geolocation tracking for visitor insights (currently mandatory)
+
+- **Open Graph Image Generation:** 
+  - Automatic creation of social media preview images for improved sharing
+
+- **Responsive Design:** 
+  - Ensures optimal user experience across all devices
+
+- **Background Job Processing:** 
+  - Utilizes Sidekiq for efficient handling of background tasks
+
+- **Asset Management:** 
+  - Implements Vite for modern, efficient frontend asset handling
+
+- **Automated Backups:** 
+  - Daily backups to DigitalOcean Spaces with easy restoration process
+
+## Tech Stack
+
+- **Backend:**
+  - Ruby 3.3.0 (local development)
+  - Ruby 3.3.4 (production Docker image)
+  - Rails 7.1.3
+  - SQLite3 (development)
+  - PostgreSQL/MySQL (recommended for production)
+  - Sidekiq for background job processing
+  - Redis for Sidekiq and caching
+
+- **Frontend:**
+  - Vite for asset compilation and management
+  - Tailwind CSS for styling
+  - Stimulus.js for JavaScript sprinkles
+  - Chartkick for chart generation
+
+- **Testing:**
+  - RSpec for unit and integration tests
+  - Factory Bot for test data generation
+  - Shoulda Matchers for additional RSpec matchers
+
+- **Deployment & Infrastructure:**
+  - Docker and Docker Compose for containerization
+  - GitHub Actions for CI/CD
+  - Terraform for infrastructure as code
+  - DigitalOcean for hosting (Droplets and Spaces)
+
+- **Additional Libraries:**
+  - Devise for authentication
+  - Geocoder for geolocation services
+  - AWS SDK for S3 compatible storage interactions
+  - Font Awesome for icons
 
 ## Getting Started
 
@@ -26,219 +107,310 @@ Check out a live demo at [linkarooie.com](https://linkarooie.com).
 - Ruby 3.3.0 or higher
 - Rails 7.1.3 or higher
 - SQLite3
-- Node.js and npm (for asset compilation)
+- Node.js (v20 or higher) and npm
 - Docker and Docker Compose (for containerized deployment)
 - Git
 
 ### Local Development Setup
 
 1. Clone the repository:
-
    ```bash
    git clone https://github.com/loftwah/linkarooie.git
    cd linkarooie
    ```
 
-2. Install dependencies:
-
+2. Install Ruby dependencies:
    ```bash
    bundle install
+   ```
+
+3. Install JavaScript dependencies:
+   ```bash
    npm install
    ```
 
-3. Set up the database:
-
+4. Set up the database:
    ```bash
-   rails db:create db:migrate
+   rails db:create db:migrate db:seed
    ```
 
-4. Start the Rails server:
-
+5. Start the development servers:
    ```bash
    bin/dev
    ```
+   This command starts the Rails server, Vite dev server, and Tailwind CSS watcher.
 
-5. Visit `http://localhost:3000` in your browser.
+6. Visit `http://localhost:3000` in your browser to access the application.
 
 ### Creating a New User
 
-This section explains how to create a new user using an interactive Ruby script. This method allows you to quickly add users to your Rails application with the required and optional attributes.
+Linkarooie provides an interactive Ruby script for creating new users:
 
-#### Using the Interactive Ruby Script
+1. Run the script:
+   ```bash
+   ruby create_user.rb
+   ```
 
-The Ruby script offers a user-friendly and interactive way to create a new user by prompting you for the required and optional details.
+2. Follow the prompts to enter user details, including:
+   - Email
+   - Password
+   - Username (optional)
+   - Full name
+   - Tags (comma-separated)
+   - Avatar URL
+   - Banner URL
+   - Description
 
-##### Usage
+This script allows for easy user creation, especially useful for setting up initial accounts or testing.
 
-Run the script by navigating to your Rails project directory and executing the following command:
+## Docker Deployment
 
-```bash
-ruby create_user.rb
-```
-
-You will be prompted to enter various details for the new user:
-
-```bash
-Enter email: bob.johnson@example.com
-Enter password: AnotherSuperSecretPassword
-Enter username (or leave blank to use email prefix): bob_j
-Enter full name: Bob Johnson
-Enter tags (comma-separated): Marketing,SEO,Content Strategy
-Enter avatar URL: https://pbs.twimg.com/profile_images/1756873036220059648/zc13kjbX_400x400.jpg
-Enter banner URL: https://pbs.twimg.com/profile_banners/1192091185/1719830949/1500x500
-Enter description: Digital marketing expert focused on driving growth through innovative SEO and content strategies.
-```
-
-##### Example
-
-The details entered above will create a user with the following attributes:
-
-* **Email:** `bob.johnson@example.com`
-* **Password:** `AnotherSuperSecretPassword`
-* **Username:** `bob_j`
-* **Full Name:** `Bob Johnson`
-* **Tags:** `Marketing`, `SEO`, `Content Strategy`
-* **Avatar:** Same as provided
-* **Banner:** Same as provided
-* **Description:** "Digital marketing expert focused on driving growth through innovative SEO and content strategies."
-
-After entering all the details, the script will create the user and confirm whether the process was successful.
-
-### Docker Deployment
+Linkarooie uses Docker for easy deployment and scaling. The project includes a multi-stage Dockerfile for creating a lean production image.
 
 1. Build and start the Docker containers:
-
    ```bash
-   docker compose up --build
+   docker compose -f docker-compose.prod.yml up --build
    ```
 
-2. Visit `http://localhost` in your browser.
+2. Access the application at `http://localhost`.
 
-Note: The Dockerfile uses a multi-stage build process to create a lean production image. It installs necessary dependencies, precompiles assets, and sets up the application to run as a non-root user for improved security.
+The production Docker setup includes:
+- Rails application container
+- Redis container for Sidekiq and caching
+- Sidekiq container for background job processing
 
-### DigitalOcean Deployment
+Key Dockerfile features:
+- Multi-stage build for a smaller final image
+- Precompilation of assets and bootsnap
+- Non-root user for improved security
 
-1. Set up a DigitalOcean account and generate an API token.
+## DigitalOcean Deployment
 
-2. Create a DigitalOcean Droplet with Terraform:
+Linkarooie is optimized for deployment on DigitalOcean using Terraform for infrastructure management and GitHub Actions for continuous deployment.
 
+### Setting up DigitalOcean Infrastructure
+
+1. Install Terraform and set up a DigitalOcean account.
+
+2. Configure your DigitalOcean API token:
    ```bash
+   export DO_TOKEN=your_digitalocean_api_token
+   ```
+
+3. Create a DigitalOcean Droplet:
+   ```bash
+   cd terraform/droplet
    terraform init
-   terraform apply -var="do_token=YOUR_DIGITALOCEAN_TOKEN"
+   terraform apply -var="do_token=$DO_TOKEN"
    ```
 
-3. Deploy the app using GitHub Actions:
-
-   * Ensure you have the following secrets set in your GitHub repository:
-     * `DROPLET_IP`: The IP address of your DigitalOcean Droplet (output from Terraform).
-     * `DROPLET_SSH_PRIVATE_KEY`: The private SSH key to access your Droplet.
-     * `GH_PAT`: Your GitHub Personal Access Token.
-
-   * Push your code to the `main` branch, and the GitHub Actions workflow will automatically deploy the latest version to your Droplet.
-
-4. Important Note on Docker Installation:
-   The user data script in the Terraform configuration installs Docker using the get.docker.com script. However, this installation is not instantaneous and may take a few minutes to complete after the Droplet is created.
-
-5. Checking Docker Installation Status:
-   If you encounter issues with Docker not being available immediately after Droplet creation, you can check the cloud-init logs:
-
+4. Set up DigitalOcean Spaces for backups:
    ```bash
-   ssh root@YOUR_DROPLET_IP
-   sudo tail -f /var/log/cloud-init-output.log
+   cd ../spaces
+   terraform init
+   terraform apply
    ```
 
-   This will show you the progress of the initialization script, including the Docker installation.
+### Configuring GitHub Actions
+
+1. Set up the following secrets in your GitHub repository:
+   - `DROPLET_IP`: The IP address of your DigitalOcean Droplet (output from Terraform)
+   - `DROPLET_SSH_PRIVATE_KEY`: The private SSH key to access your Droplet
+   - `GH_PAT`: Your GitHub Personal Access Token
+
+2. The GitHub Actions workflows will automatically:
+   - Run tests and build Docker images on pull requests and pushes to feature branches
+   - Deploy to your DigitalOcean Droplet when changes are merged to the main branch
+
+### Manual Deployment
+
+You can also trigger a manual deployment using the GitHub Actions workflow dispatch event.
 
 ## Configuration
 
 ### Environment Variables
 
-- `RAILS_ENV`: Set to `production` for production environments.
-- `SECRET_KEY_BASE`: Rails secret key for production.
-- `DATABASE_URL`: Database connection string (if using a different database in production).
-- `CACHE_EXPIRATION`: Duration in minutes for caching analytics data (default: 30 minutes).
+Create a `.env` file in the root directory with the following variables:
 
-### Database
+```
+SECRET_KEY_BASE=your_secret_key_base
+AXIOM_API_KEY=your_axiom_api_key
+GEOCODER_API_KEY=your_geocoder_api_key
+DO_TOKEN=your_digitalocean_token
+SPACES_ACCESS_KEY_ID=your_spaces_access_key_id
+SPACES_SECRET_ACCESS_KEY=your_spaces_secret_access_key
+SPACES_REGION=your_spaces_region
+SPACES_BUCKET_NAME=your_spaces_bucket_name
+RAILS_ENV=production
+CACHE_EXPIRATION=30
+```
 
-The project uses SQLite by default. For production, consider using PostgreSQL or MySQL.
+Ensure all placeholder values are replaced with your actual API keys and tokens.
 
-### Backup and Restore Process
+### Database Configuration
 
-Linkarooie includes an automated backup system to ensure that your SQLite database is securely stored and easily recoverable. This process is managed using a combination of scheduled jobs and DigitalOcean Spaces for storage.
+- Development and test environments use SQLite3.
+- For production, configure your preferred database (PostgreSQL recommended) in `config/database.yml`.
 
-#### Automated Backups
+## Backup and Restore Process
 
-The `BackupDatabaseJob` is scheduled to run daily at 2 AM, ensuring that your SQLite database is backed up regularly. The backup process involves the following steps:
+Linkarooie includes an automated backup system utilizing DigitalOcean Spaces:
 
-1. **Database Dump**: The job creates a dump of the current SQLite database, storing it in the `db/backups` directory with a timestamp and environment identifier.
-2. **Upload to DigitalOcean Spaces**: The backup file is then uploaded to a DigitalOcean Spaces bucket, where it is securely stored with versioning enabled. This ensures that previous versions of the backup are retained for a short period, allowing you to restore from a specific point in time if needed.
-3. **Cleanup**: Optionally, the local backup file is deleted after it has been successfully uploaded to DigitalOcean Spaces.
+### Automated Backups
 
-#### Restoring from a Backup
+- The `BackupDatabaseJob` runs daily at 2 AM.
+- It creates a dump of the SQLite database and uploads it to a DigitalOcean Spaces bucket.
+- Backups are versioned for easy point-in-time recovery.
 
-In the event that you need to restore your database from a backup, you can use the provided Rake task. This task allows you to specify the backup file you want to restore from and automatically loads it into the SQLite database.
+### Restoring from a Backup
 
-**Restoration Steps:**
-
-1. **Run the Restore Task**: Use the following command, specifying the path to your backup file:
-
-   ```bash
-   rake db:restore BACKUP_FILE=path/to/your_backup_file.sql
-   ```
-
-2. **Process Overview**:
-
-   * The task will first drop all existing tables in the database to ensure a clean restoration.
-   * It will then load the specified backup file into the database.
-   * Upon completion, your database will be restored to the state it was in when the backup was created.
-
-3. **Error Handling**: If the backup file is not provided or if any errors occur during the restoration process, the task will output helpful messages to guide you in resolving the issue.
-
-#### Important Notes
-
-* **Environment-Specific Backups**: Backups are created separately for each environment (development, production, test), and the backup files are named accordingly.
-* **DigitalOcean Spaces Configuration**: Ensure that your DigitalOcean API credentials and bucket details are correctly configured in your environment variables for the backup and restore processes to function properly.
-* **Testing Restores**: Regularly test the restore process in a development environment to ensure that your backups are reliable and that the restore process works as expected.
-
-### Geolocation
-
-Currently, geolocation functionality is mandatory, but I plan to make it optional in future updates. To enable geolocation, you will need an [API key from ipapi](https://ipapi.com), which is free to obtain.
-
-## Gather.sh
-
-I wrote a script to gather information that is useful to copy paste into things like ChatGPT or Cluade.
+Use the provided Rake task to restore from a backup:
 
 ```bash
-➜  linkarooie git:(dl/public-analytics-page) ✗ ./gather.sh --help
-Usage: ./gather.sh [-o output_method] [-f output_file]
-  -o, --output         Output method: stdout, clipboard, or file (default: stdout)
-  -f, --file           Output file path (required if output method is file)
-  ```
+rake db:restore BACKUP_FILE=path/to/your_backup_file.sql
+```
+
+For compressed backups:
+
+```bash
+rake db:restore BACKUP_FILE=path/to/your_backup_file.sql.tar.gz
+```
+
+The restore process:
+1. Drops all existing tables in the database.
+2. Loads the specified backup file.
+3. Applies any pending migrations.
+
+## Geolocation
+
+Geolocation is currently a mandatory feature in Linkarooie. It uses the `geocoder` gem to provide location-based insights for link clicks and page views.
+
+To enable geolocation:
+1. Obtain a free API key from [ipapi](https://ipapi.com).
+2. Set the `GEOCODER_API_KEY` environment variable with your API key.
+
+Future plans include making geolocation optional to cater to different privacy preferences.
 
 ## Customization
 
-Linkarooie is highly customizable:
+Linkarooie is designed to be highly customizable:
 
-* **Views:** Modify the HTML/CSS in the `app/views` directory.
-* **Styles:** Customize the look and feel using Tailwind CSS.
-* **Features:** Add or modify features in the `app/controllers` and `app/models` directories.
+- **Views:** Modify ERB templates in `app/views/`
+- **Styles:** 
+  - Edit Tailwind CSS classes directly in views
+  - Customize Tailwind configuration in `config/tailwind.config.js`
+  - Add custom styles in `app/assets/stylesheets/application.css.scss`
+- **JavaScript:** 
+  - Add or modify Stimulus controllers in `app/javascript/controllers/`
+  - Update the main JavaScript file at `app/javascript/application.js`
+- **Backend Logic:** 
+  - Controllers are located in `app/controllers/`
+  - Models are in `app/models/`
+- **Background Jobs:** Add or modify Sidekiq jobs in `app/jobs/`
+- **Localization:** Update language files in `config/locales/`
 
 ## Testing
 
-Run the test suite with:
+Linkarooie uses RSpec for testing. The test suite includes:
+- Model specs
+- Controller specs
+- Feature specs
+- Helper specs
+
+To run the entire test suite:
 
 ```bash
-rspec
+bundle exec rspec
 ```
+
+To run specific tests:
+
+```bash
+bundle exec rspec spec/models
+bundle exec rspec spec/controllers
+bundle exec rspec spec/features
+```
+
+## CI/CD
+
+Linkarooie utilizes GitHub Actions for continuous integration and deployment:
+
+1. **CI Workflow** (`ci.yml`):
+   - Triggered on pull requests to `main` and pushes to feature branches
+   - Sets up Ruby and Node.js environments
+   - Installs dependencies
+   - Runs tests
+   - Builds and pushes Docker image to GitHub Container Registry
+
+2. **Deployment Workflow** (`deploy.yml`):
+   - Triggered on merges to `main` or manual dispatch
+   - Builds and pushes Docker image
+   - SSHs into the DigitalOcean Droplet
+   - Pulls the latest Docker image
+   - Runs database migrations
+   - Restarts the application containers
+
+## Project Structure
+
+```
+linkarooie/
+├── app/
+│   ├── assets/
+│   ├── controllers/
+│   ├── helpers/
+│   ├── javascript/
+│   ├── jobs/
+│   ├── mailers/
+│   ├── models/
+│   ├── services/
+│   └── views/
+├── bin/
+├── config/
+├── db/
+├── lib/
+├── public/
+├── spec/
+├── storage/
+├── terraform/
+│   ├── droplet/
+│   └── spaces/
+├── .github/workflows/
+├── Dockerfile
+├── docker-compose.prod.yml
+├── Gemfile
+├── package.json
+└── ...
+```
+
+## Key Components
+
+- **User Model:** Manages user accounts, profiles, and authentication.
+- **Link Model:** Handles the creation and management of user links.
+- **Achievement Model:** Manages user achievements and milestones.
+- **Analytics:** Tracks and stores user engagement metrics.
+- **OpenGraphImageGenerator:** Service for creating social media preview images.
+- **BackupDatabaseJob:** Manages automated database backups.
+
+## Gather Script
+
+The `gather.sh` script is a utility for collecting project information:
+
+```bash
+./gather.sh [-o output_method] [-f output_file]
+  -o, --output         Output method: stdout, clipboard, or file (default: stdout)
+  -f, --file           Output file path (required if output method is file)
+```
+
+This script is useful for quickly compiling project details for documentation or sharing.
 
 ## Contributing
 
-Contributions are welcome! Please follow these steps:
+We welcome contributions to Linkarooie! Here's how you can help:
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
+2. Create your feature branch: `git checkout -b feature/AmazingFeature`
+3. Commit your changes: `git commit -m 'Add some AmazingFeature'`
+4. Push to the branch: `git push origin feature/AmazingFeature`
 5. Open a Pull Request
 
 Please ensure your code adheres to the existing style and passes all tests.
@@ -249,11 +421,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-If you find this project helpful, please consider:
+If you find Linkarooie helpful, please consider:
 
 - Starring the repository on GitHub
-- Sharing it with others
-- Contributing to the project
+- Sharing the project with others
+- Contributing to the codebase
+- Reporting issues or suggesting improvements
 
 ## Acknowledgements
 
@@ -262,6 +435,11 @@ If you find this project helpful, please consider:
 - [Docker](https://www.docker.com/)
 - [DigitalOcean](https://www.digitalocean.com/)
 - [Terraform](https://www.terraform.io/)
+- [Vite](https://vitejs.dev/)
+- [Sidekiq](https://sidekiq.org/)
+- [Devise](https://github.com/heartcombo/devise)
+- [Chartkick](https://chartkick.com/)
+- [Geocoder](https://github.com/alexreisner/geocoder)
 
 ---
 
