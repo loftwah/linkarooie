@@ -204,6 +204,17 @@ In the event that you need to restore your database from a backup, you can use t
 
 Currently, geolocation functionality is mandatory, but I plan to make it optional in future updates. To enable geolocation, you will need an [API key from ipapi](https://ipapi.com), which is free to obtain.
 
+## Gather.sh
+
+I wrote a script to gather information that is useful to copy paste into things like ChatGPT or Cluade.
+
+```bash
+➜  linkarooie git:(dl/public-analytics-page) ✗ ./gather.sh --help
+Usage: ./gather.sh [-o output_method] [-f output_file]
+  -o, --output         Output method: stdout, clipboard, or file (default: stdout)
+  -f, --file           Output file path (required if output method is file)
+  ```
+
 ## Customization
 
 Linkarooie is highly customizable:
