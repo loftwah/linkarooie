@@ -1,0 +1,35 @@
+services:
+  app:
+    build: .  # This tells Docker Compose to build the image from the Dockerfile in the current directory
+    ports:
+      - "80:3000"
+    env_file:
+      - .env
+    environment:
+      - RAILS_ENV=production
+      - REDIS_URL=redis://redis:6379/0
+    volumes:
+      - ./storage:/rails/storage
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:6-alpine
+    volumes:
+      - redis_data:/data
+
+  sidekiq:
+    build: .  # Same as above, using the Dockerfile in the current directory
+    command: bundle exec sidekiq
+    env_file:
+      - .env
+    environment:
+      - RAILS_ENV=production
+      - REDIS_URL=redis://redis:6379/0
+    volumes:
+      - ./storage:/rails/storage
+    depends_on:
+      - redis
+
+volumes:
+  redis_data:
