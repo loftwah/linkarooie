@@ -43,6 +43,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
 
     if successfully_updated
+      bypass_sign_in(@user) # Sign in the user bypassing validation
       redirect_to edit_user_registration_path, notice: 'Profile updated successfully'
     else
       render :edit
