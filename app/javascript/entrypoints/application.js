@@ -5,6 +5,8 @@
 //    <%= vite_javascript_tag 'application' %>
 import Rails from "@rails/ujs";
 import "chartkick/chart.js"
+import "flowbite";
+
 Rails.start();
 
 console.log('Vite ⚡️ Rails')

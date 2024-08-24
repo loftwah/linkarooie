@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_21_092726) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_24_060759) do
   create_table "achievement_views", force: :cascade do |t|
     t.integer "achievement_id", null: false
     t.integer "user_id", null: false
@@ -132,6 +132,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_21_092726) do
     t.string "username"
     t.string "full_name"
     t.string "tags", default: "[]"
+    t.boolean "public_analytics", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
