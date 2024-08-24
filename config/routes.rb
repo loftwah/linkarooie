@@ -1,16 +1,10 @@
 Rails.application.routes.draw do
   get 'analytics/index'
-  if Rails.env.production?
-    devise_for :users, skip: [:registrations]
-    as :user do
-      get 'users/edit' => 'devise/registrations#edit', as: 'edit_user_registration'
-      put 'users' => 'devise/registrations#update', as: 'user_registration'
-    end
-  else
-    devise_for :users, controllers: {
-      registrations: 'users/registrations'
-    }
-  end
+  
+  # Use the custom registrations controller in all environments
+  devise_for :users, controllers: {
+    registrations: 'users/registrations'
+  }
 
   resources :links do
     member do
