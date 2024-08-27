@@ -111,29 +111,51 @@
   </div>
 
   <!-- Charts Section -->
-  <div class="grid grid-cols-1 gap-6 mb-6">
-    <!-- Time-based Analytics -->
-    <div class="bg-gray-800 rounded-lg shadow p-4">
-      <h2 class="text-xl font-semibold mb-4">Daily Views (Last 30 Days)</h2>
-      <%= line_chart @daily_views, 
-                     colors: ["#84CC16"],
-                     library: {
-                       backgroundColor: 'transparent',
-                       legend: { display: false },
-                       scales: {
-                         x: { ticks: { color: 'white', fontSize: 12 } },
-                         y: { ticks: { color: 'white', fontSize: 12 } },
-                       },
-                       elements: {
-                         line: { tension: 0.4 },
-                         point: { radius: 3, backgroundColor: 'white' }
-                       },
-                       title: { display: true, text: 'Daily Views (Last 30 Days)', color: 'white', fontSize: 16 },
-                       responsive: true
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+  <!-- Time-based Analytics -->
+  <div class="bg-gray-800 rounded-lg shadow p-4">
+    <h2 class="text-xl font-semibold mb-4">Daily Views (Last 30 Days)</h2>
+    <%= line_chart @daily_views, 
+                   colors: ["#84CC16"],
+                   library: {
+                     backgroundColor: 'transparent',
+                     legend: { display: false },
+                     scales: {
+                       x: { ticks: { color: 'white', fontSize: 12 } },
+                       y: { ticks: { color: 'white', fontSize: 12 } },
                      },
-                     height: "300px" %>
-    </div>
+                     elements: {
+                       line: { tension: 0.4 },
+                       point: { radius: 3, backgroundColor: 'white' }
+                     },
+                     title: { display: true, text: 'Daily Views (Last 30 Days)', color: 'white', fontSize: 16 },
+                     responsive: true
+                   },
+                   height: "300px" %>
   </div>
+
+  <!-- Unique Visitors Chart -->
+  <div class="bg-gray-800 rounded-lg shadow p-4">
+    <h2 class="text-xl font-semibold mb-4">Unique Visitors (Last 30 Days)</h2>
+    <%= line_chart @daily_unique_visitors, 
+                   colors: ["#E879F9"],
+                   library: {
+                     backgroundColor: 'transparent',
+                     legend: { display: false },
+                     scales: {
+                       x: { ticks: { color: 'white', fontSize: 12 } },
+                       y: { ticks: { color: 'white', fontSize: 12 } },
+                     },
+                     elements: {
+                       line: { tension: 0.4 },
+                       point: { radius: 3, backgroundColor: 'white' }
+                     },
+                     title: { display: true, text: 'Unique Visitors (Last 30 Days)', color: 'white', fontSize: 16 },
+                     responsive: true
+                   },
+                   height: "300px" %>
+  </div>
+</div>
 
   <!-- Browser Usage -->
   <div class="grid grid-cols-1 gap-6">
