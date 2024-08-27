@@ -1,5 +1,6 @@
 class LinksController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show, :user_links, :track_click]
+  before_action :set_theme, only: [:user_links]  # Add this line
 
   def index
     @links = Link.order(:position)
@@ -43,10 +44,27 @@ class LinksController < ApplicationController
 
   def user_links
     @user = User.find_by(username: params[:username])
-    @links = @user.links.where(visible: true).order(:position)
-    @pinned_links = @user.links.where(visible: true, pinned: true).order(:position)
-    @achievements = @user.achievements.order(date: :desc)
+    return redirect_to root_path, alert: "User not found" if @user.nil?
+
+    @links = @user.links
+    @pinned_links = @user.links.where(pinned: true)
+    @achievements = @user.achievements
     @user.tags = JSON.parse(@user.tags) if @user.tags.is_a?(String)
+
+    # Add debugging
+    Rails.logger.debug "Theme: #{@theme.inspect}"
+
+    # Render the appropriate template based on the theme
+    case @theme
+    when 'retro'
+      render 'user_links_retro'
+    when 'win95'
+      render 'user_links_win95'
+    when 'win98'
+      render 'user_links_win98'
+    else
+      render 'user_links'
+    end
   end
 
   def track_click
@@ -67,5 +85,10 @@ class LinksController < ApplicationController
 
   def link_params
     params.require(:link).permit(:url, :title, :description, :position, :icon, :visible, :pinned)
+  end
+
+  def set_theme
+    # Determine the theme either from a query parameter or route segment
+    @theme = params[:theme] || 'default'
   end
 end
