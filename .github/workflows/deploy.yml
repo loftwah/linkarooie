@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy and Release
 
 on:
   pull_request:
@@ -13,7 +13,7 @@ on:
         default: 'main'
 
 jobs:
-  deploy:
+  deploy_and_release:
     runs-on: ubuntu-latest
     if: |
       github.event_name == 'workflow_dispatch' ||
@@ -66,3 +66,17 @@ jobs:
           
           # Remove unused images and containers
           docker system prune -af
+
+    - name: Get current date
+      id: date
+      run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: release-${{ steps.date.outputs.DATE }}
+        release_name: Release ${{ steps.date.outputs.DATE }}
+        draft: false
+        prerelease: false
