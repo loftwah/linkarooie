@@ -12,8 +12,9 @@ class AnalyticsController < ApplicationController
     @link_analytics = fetch_cached_data("link_analytics") { fetch_link_analytics }
     @achievement_analytics = fetch_cached_data("achievement_analytics") { fetch_achievement_analytics }
     @daily_views = fetch_cached_data("daily_views") { fetch_daily_views }
+    @daily_unique_visitors = fetch_cached_data("daily_unique_visitors") { fetch_daily_unique_visitors }
     @browser_data = fetch_cached_data("browser_data") { fetch_browser_data }
-  end
+  end  
 
   private
 
@@ -57,6 +58,10 @@ class AnalyticsController < ApplicationController
   def fetch_daily_views
     @user.page_views.group_by_day(:visited_at, range: 30.days.ago..Time.now).count
   end
+
+  def fetch_daily_unique_visitors
+    @user.page_views.select(:ip_address).distinct.group_by_day(:visited_at, range: 30.days.ago..Time.now).count
+  end  
 
   def fetch_browser_data
     @user.page_views.group(:browser).count.transform_keys do |user_agent|
