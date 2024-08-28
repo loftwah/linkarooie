@@ -11,18 +11,44 @@
     <%= vite_javascript_tag 'application' %>
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
-    <!-- Open Graph Meta Tags -->
+    <!-- Generic Open Graph Meta Tags (for general application pages) -->
     <%= tag.meta property: 'og:type', content: 'website' %>
     <%= tag.meta property: 'og:site_name', content: 'Linkarooie' %>
     <%= tag.meta property: 'og:locale', content: 'en_US' %>
     <%= tag.meta property: 'og:updated_time', content: '2024-08-08T12:00:19Z' %>
-    <%= tag.meta name: 'twitter:card', content: 'summary_large_image' %>
 
-    <%= tag.meta property: 'og:title', content: content_for?(:og_title) ? content_for(:og_title) : 'Linkarooie - Simplify Your Online Presence' %>
-    <%= tag.meta property: 'og:description', content: content_for?(:og_description) ? content_for(:og_description) : 'Manage all your links in one place with Linkarooie.' %>
-    <%= tag.meta property: 'og:image', content: content_for?(:og_image) ? content_for(:og_image) : image_url('default_og_image.png') %>
-    <%= tag.meta property: 'og:image:alt', content: content_for?(:og_image_alt) ? content_for(:og_image_alt) : 'Default image description' %>
-    <%= tag.meta property: 'og:url', content: content_for?(:og_url) ? content_for(:og_url) : root_url %>
+    <%= tag.meta property: 'og:title', content: 'Linkarooie - Simplify Your Online Presence' %>
+    <%= tag.meta property: 'og:description', content: 'Manage all your links in one place with Linkarooie. Create a central hub for your social and professional profiles.' %>
+    <%= tag.meta property: 'og:image', content: image_url('default_og_image.png') %>
+    <%= tag.meta property: 'og:image:alt', content: 'Linkarooie logo' %>
+    <%= tag.meta property: 'og:url', content: root_url %>
+
+    <!-- Generic Twitter Card Meta Tags (for general application pages) -->
+    <%= tag.meta name: 'twitter:card', content: 'summary_large_image' %>
+    <%= tag.meta name: 'twitter:title', content: 'Linkarooie - Simplify Your Online Presence' %>
+    <%= tag.meta name: 'twitter:description', content: 'Manage all your links in one place with Linkarooie. Create a central hub for your social and professional profiles.' %>
+    <%= tag.meta name: 'twitter:image', content: image_url('default_og_image.png') %>
+    <%= tag.meta name: 'twitter:image:alt', content: 'Linkarooie logo' %>
+    <%= tag.meta name: 'twitter:site', content: '@loftwah' %>
+    <%= tag.meta name: 'twitter:creator', content: '@loftwah' %>
+
+    <!-- SEO Meta Tags -->
+    <%= tag.meta name: 'description', content: 'Linkarooie helps you manage all your links in one place, making it easy to simplify your online presence and create a central hub for your social and professional profiles.' %>
+    <%= tag.link rel: 'canonical', href: root_url %>
+
+    <!-- Optional: Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "WebPage",
+      "headline": "Linkarooie - Simplify Your Online Presence",
+      "description": "Manage all your links in one place with Linkarooie. Create a central hub for your social and professional profiles.",
+      "url": "<%= root_url %>",
+      "image": "<%= image_url('default_og_image.png') %>",
+      "datePublished": "2024-08-08T12:00:19Z",
+      "creator": "Loftwah"
+    }
+    </script>
   </head>
 
   <body class="bg-gray-900 text-white">
