@@ -67,14 +67,14 @@ jobs:
           # Remove unused images and containers
           docker system prune -af
 
-    - name: Get current date
+    - name: Get current datetime
       id: date
-      run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+      run: echo "DATETIME=$(date +'%Y-%m-%d-%H-%M-%S')" >> $GITHUB_OUTPUT
 
     - name: Create Release
       uses: elgohr/Github-Release-Action@v5
       env:
         GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       with:
-        title: Release ${{ steps.date.outputs.DATE }}
-        tag: release-${{ steps.date.outputs.DATE }}
+        title: Release ${{ steps.date.outputs.DATETIME }}
+        tag: release-${{ steps.date.outputs.DATETIME }}
