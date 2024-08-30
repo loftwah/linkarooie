@@ -24,7 +24,7 @@
     <%= tag.meta property: 'og:url', content: root_url %>
 
     <!-- Generic Twitter Card Meta Tags (for general application pages) -->
-    <%= tag.meta name: 'twitter:card', content: 'summary_large_image' %>
+    <%= tag.meta name: 'twitter:card', content: content_for?(:og_image) ? content_for(:og_image) : image_url('default_og_image.png') %>
     <%= tag.meta name: 'twitter:title', content: 'Linkarooie - Simplify Your Online Presence' %>
     <%= tag.meta name: 'twitter:description', content: 'Manage all your links in one place with Linkarooie. Create a central hub for your social and professional profiles.' %>
     <%= tag.meta name: 'twitter:image', content: image_url('default_og_image.png') %>
