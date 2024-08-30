@@ -1,0 +1,27 @@
+<p>Backup Report for <strong>Linkarooie Project</strong></p>
+
+<p>We have successfully completed a database backup for the Linkarooie project. Below are the details of the backup:</p>
+
+<p><strong>Environment:</strong> <%= @report[:environment] %></p>
+<p><strong>Timestamp:</strong> <%= @report[:timestamp] %></p>
+
+<% if @report[:backup_url].present? %>
+  <p><strong>Backup File:</strong> <a href="<%= @report[:backup_url] %>">Download Backup</a></p>
+<% else %>
+  <p><strong>Backup File:</strong> <%= @report[:backup_file] %></p>
+<% end %>
+
+<p><strong>Backup Size:</strong> <%= @report[:backup_size] %> bytes</p>
+<p><strong>Status:</strong> <%= @report[:status] %></p>
+
+<% if @report[:error_message].present? %>
+  <p><strong>Error Message:</strong> <%= @report[:error_message] %></p>
+<% end %>
+
+<p>Backup Frequency: <strong>Daily</strong></p>
+<p>Backup Storage Location: <strong>DigitalOcean Spaces</strong></p>
+
+<p>Please review the details above and take any necessary action if the backup status indicates a failure.</p>
+
+<p>Thank you,</p>
+<p>Your Backup System</p>
