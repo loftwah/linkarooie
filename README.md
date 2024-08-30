@@ -403,6 +403,8 @@ The `gather.sh` script is a utility for collecting project information:
   -f, --file           Output file path (required if output method is file)
 ```
 
+> Note: There is also a `gather.rb` that works the same.
+
 This script is useful for quickly compiling project details for documentation or sharing.
 
 ## Contributing
