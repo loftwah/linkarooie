@@ -395,7 +395,7 @@ linkarooie/
 
 ## Gather Script
 
-[GRABIT.SH](https://grabit.sh) was inspired by this script.
+- [GRABIT.SH](https://grabit.sh) was inspired by this script.
 
 The `gather.sh` script is a utility for collecting project information:
 
