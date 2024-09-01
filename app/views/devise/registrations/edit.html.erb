@@ -34,6 +34,11 @@
   </div>
 
   <div class="mb-2">
+    <%= f.label :banner_enabled, class: 'block text-gray-300 mb-1' %>
+    <%= f.check_box :banner_enabled, class: 'rounded text-black' %>
+  </div>
+
+  <div class="mb-2">
     <%= f.label :description, class: 'block text-gray-300 mb-1' %>
     <%= f.text_area :description, class: 'w-full p-1 rounded text-black' %>
   </div>
