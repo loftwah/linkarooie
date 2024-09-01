@@ -22,8 +22,8 @@ class BackupDatabaseJob < ApplicationJob
       # Calculate backup file size before deleting it
       backup_size = File.size?(compressed_file)
   
-      # Upload to DigitalOcean Spaces and get the signed URL
-      backup_url = upload_to_spaces(compressed_file)
+      # Upload to DigitalOcean Spaces (URL not needed anymore)
+      upload_to_spaces(compressed_file)
   
       # Optionally, delete the local backup files after upload
       File.delete(backup_file) if File.exist?(backup_file)
@@ -31,8 +31,8 @@ class BackupDatabaseJob < ApplicationJob
   
       Rails.logger.info "BackupDatabaseJob: Backup created, compressed, and uploaded successfully: #{compressed_file}"
   
-      # Generate a report with the backup size
-      report = generate_backup_report(environment, compressed_file, "Success", backup_url, nil, backup_size)
+      # Generate a report without the URL
+      report = generate_backup_report(environment, compressed_file, "Success", nil, nil, backup_size)
   
       # Send an email with the report
       BackupReportMailer.backup_completed(report).deliver_now
@@ -70,10 +70,6 @@ class BackupDatabaseJob < ApplicationJob
 
     obj = S3_CLIENT.bucket(bucket_name).object("backups/#{file_name}")
     obj.upload_file(file_path)
-
-    # Generate a signed URL that expires in 24 hours
-    signed_url = obj.presigned_url(:get, expires_in: 24 * 60 * 60)
-
-    signed_url
+    
   end
 end
