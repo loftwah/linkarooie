@@ -1,3 +1,5 @@
+# app/controllers/analytics_controller.rb
+
 class AnalyticsController < ApplicationController
   before_action :set_user
   before_action :check_analytics_visibility
@@ -33,8 +35,9 @@ class AnalyticsController < ApplicationController
     Rails.cache.fetch("#{cache_key_with_version}/#{key}", expires_in: CACHE_EXPIRATION, &block)
   end
 
+  # Update this method to exclude hidden links
   def fetch_link_analytics
-    @user.links.includes(:link_clicks).map do |link|
+    @user.links.where(hidden: false).includes(:link_clicks).map do |link|
       {
         id: link.id,
         title: link.title,
