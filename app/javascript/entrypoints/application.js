@@ -5,7 +5,6 @@ import "flowbite";
 Rails.start();
 
 console.log('Vite ⚡️ Rails');
-console.log('Visit the guide for more information: ', 'https://vite-ruby.netlify.app/guide/rails');
 
 // Linkarooie console messages
 console.log('Linkarooie 🌐 Your ultimate link management tool');
@@ -79,3 +78,26 @@ console.log('© 2024 Linkarooie. All rights reserved.');
         });
     }
 })();
+
+document.addEventListener('DOMContentLoaded', () => {
+    const pathname = window.location.pathname;
+    const userPagePattern = /^\/[^/]+$/;  // Matches any path with a single segment after the root
+  
+    if (userPagePattern.test(pathname)) {
+      const hiddenLinksData = document.getElementById('hidden-links-data');
+      
+      if (hiddenLinksData) {
+        const hiddenLinks = JSON.parse(hiddenLinksData.dataset.hiddenLinks);
+  
+        if (hiddenLinks.length > 0) {
+          console.group('Hidden Links');
+          hiddenLinks.forEach((link) => {
+            console.log(`Title: ${link.title}, URL: ${link.url}`);
+          });
+          console.groupEnd();
+        } else {
+          console.log('No hidden links to display.');
+        }
+      }
+    }
+  });

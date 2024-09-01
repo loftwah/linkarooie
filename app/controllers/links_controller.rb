@@ -45,15 +45,17 @@ class LinksController < ApplicationController
   def user_links
     @user = User.find_by(username: params[:username])
     return redirect_to root_path, alert: "User not found" if @user.nil?
-
-    @links = @user.links
+  
+    @links = @user.links.where(hidden: false, visible: true)
+    @hidden_links = @user.links.where(hidden: true)
     @pinned_links = @user.links.where(pinned: true)
     @achievements = @user.achievements
     @user.tags = JSON.parse(@user.tags) if @user.tags.is_a?(String)
-
+  
     # Add debugging
     Rails.logger.debug "Theme: #{@theme.inspect}"
-
+    Rails.logger.debug "Hidden Links: #{@hidden_links.inspect}"
+  
     # Render the appropriate template based on the theme
     case @theme
     when 'retro'
@@ -84,7 +86,7 @@ class LinksController < ApplicationController
   private
 
   def link_params
-    params.require(:link).permit(:url, :title, :description, :position, :icon, :visible, :pinned)
+    params.require(:link).permit(:url, :title, :description, :position, :icon, :visible, :pinned, :hidden)
   end
 
   def set_theme

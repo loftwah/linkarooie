@@ -5,4 +5,5 @@ class Link < ApplicationRecord
   
   scope :visible, -> { where(visible: true) }
   scope :pinned, -> { where(pinned: true) }
+  scope :hidden, -> { where(hidden: true) }
 end

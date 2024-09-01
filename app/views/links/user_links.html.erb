@@ -55,6 +55,9 @@
   </ul>
 </div>
 
+<!-- Hidden data for JavaScript to access -->
+<div id="hidden-links-data" style="display: none;" data-hidden-links="<%= @hidden_links.to_json %>"></div>
+
 <% if @achievements.present? %>
   <div class="achievements-section max-w-4xl mx-auto mt-12 text-center">
     <h2 class="text-2xl font-bold pt-2 pb-2 text-white">Achievements</h2>

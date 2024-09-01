@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_24_060759) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_01_041708) do
   create_table "achievement_views", force: :cascade do |t|
     t.integer "achievement_id", null: false
     t.integer "user_id", null: false
@@ -102,6 +102,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_24_060759) do
     t.string "icon"
     t.boolean "visible", default: true
     t.boolean "pinned", default: false
+    t.boolean "hidden", default: false
     t.index ["user_id"], name: "index_links_on_user_id"
   end
 
