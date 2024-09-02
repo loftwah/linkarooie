@@ -1,4 +1,3 @@
-# spec/factories/users.rb
 FactoryBot.define do
   factory :user do
     sequence(:email) { |n| "user#{n}@example.com" }
@@ -6,6 +5,7 @@ FactoryBot.define do
     password_confirmation { "password123" }
     sequence(:username) { |n| "user#{n}" }
     full_name { "Test User" }
-    tags { ["tag1", "tag2"] }
+    tags { ["tag1", "tag2"].to_json }
+    avatar_border { ['white', 'black', 'none'].sample }
   end
 end

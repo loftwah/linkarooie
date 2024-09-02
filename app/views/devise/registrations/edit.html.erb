@@ -1,80 +1,90 @@
-<h2 class="text-2xl font-bold mb-4">Edit <%= resource_name.to_s.humanize %></h2>
+<div class="max-w-2xl mx-auto p-6 bg-gray-800 rounded-lg shadow-md">
+  <h2 class="text-2xl font-bold mb-6 text-lime-200">Edit <%= resource_name.to_s.humanize %></h2>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= devise_error_messages! %>
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "space-y-6" }) do |f| %>
+    <%= devise_error_messages! %>
 
-  <div class="mb-2">
-    <%= f.label :email, class: 'block text-gray-300 mb-1' %>
-    <%= f.email_field :email, autofocus: true, class: 'w-full p-1 rounded text-black' %>
+    <div>
+      <%= f.label :email, class: 'block text-lime-200 font-semibold mb-2' %>
+      <%= f.email_field :email, autofocus: true, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+    </div>
+
+    <div>
+      <%= f.label :username, class: 'block text-lime-200 font-semibold mb-2' %>
+      <%= f.text_field :username, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+    </div>
+
+    <div>
+      <%= f.label :full_name, class: 'block text-lime-200 font-semibold mb-2' %>
+      <%= f.text_field :full_name, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+    </div>
+
+    <div>
+      <%= f.label :tags, class: 'block text-lime-200 font-semibold mb-2' %>
+      <%= f.text_field :tags, value: @user.parsed_tags.join(', '), class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+    </div>
+
+    <div>
+      <%= f.label :avatar, class: 'block text-lime-200 font-semibold mb-2' %>
+      <%= f.text_field :avatar, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+    </div>
+
+    <div>
+      <%= f.label :avatar_border, class: 'block text-lime-200 font-semibold mb-2' %>
+      <%= f.select :avatar_border, options_for_select([['White', 'white'], ['Black', 'black'], ['None', 'none']], @user.avatar_border), {}, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+    </div>
+
+    <div>
+      <%= f.label :banner, class: 'block text-lime-200 font-semibold mb-2' %>
+      <%= f.text_field :banner, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+    </div>
+
+    <div class="flex items-center">
+      <%= f.check_box :banner_enabled, class: 'mr-2' %>
+      <%= f.label :banner_enabled, class: 'text-lime-200 font-semibold' %>
+    </div>
+
+    <div>
+      <%= f.label :description, class: 'block text-lime-200 font-semibold mb-2' %>
+      <%= f.text_area :description, rows: 3, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+    </div>
+
+    <div class="flex items-center">
+      <%= f.check_box :public_analytics, class: 'mr-2' %>
+      <%= f.label :public_analytics, class: 'text-lime-200 font-semibold' %>
+    </div>
+
+    <div>
+      <%= f.label :password, class: 'block text-lime-200 font-semibold mb-2' %>
+      <%= f.password_field :password, autocomplete: "off", class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+      <% if @minimum_password_length %>
+        <p class="text-gray-400 mt-2 text-sm"><%= @minimum_password_length %> characters minimum (leave blank if you don't want to change it)</p>
+      <% end %>
+    </div>
+
+    <div>
+      <%= f.label :password_confirmation, class: 'block text-lime-200 font-semibold mb-2' %>
+      <%= f.password_field :password_confirmation, autocomplete: "off", class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+    </div>
+
+    <div>
+      <%= f.label :current_password, class: 'block text-lime-200 font-semibold mb-2' %>
+      <%= f.password_field :current_password, autocomplete: "off", class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+      <p class="text-gray-400 mt-2 text-sm">We need your current password to confirm your changes</p>
+    </div>
+
+    <div class="actions text-center mt-8">
+      <%= f.submit "Update", class: 'bg-lime-500 hover:bg-lime-600 text-white font-bold py-2 px-4 rounded-sm text-sm uppercase tracking-wide transition duration-300 ease-in-out focus:outline-none' %>
+    </div>
+  <% end %>
+
+  <div class="mt-8 border-t border-gray-700 pt-6">
+    <h3 class="text-xl font-bold mb-4 text-lime-200">Cancel my account</h3>
+    <p class="mb-4 text-gray-300">Unhappy? You can cancel your account here.</p>
+    <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure? This action cannot be undone." }, method: :delete, class: 'bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out' %>
   </div>
 
-  <div class="mb-2">
-    <%= f.label :username, class: 'block text-gray-300 mb-1' %>
-    <%= f.text_field :username, class: 'w-full p-1 rounded text-black' %>
+  <div class="mt-6 text-center">
+    <%= link_to "Back", :back, class: 'text-lime-300 hover:text-lime-500 underline transition duration-300 ease-in-out' %>
   </div>
-
-  <div class="mb-2">
-    <%= f.label :full_name, class: 'block text-gray-300 mb-1' %>
-    <%= f.text_field :full_name, class: 'w-full p-1 rounded text-black' %>
-  </div>
-
-  <div class="mb-2">
-    <%= f.label :tags, class: 'block text-gray-300 mb-1' %>
-    <%= f.text_field :tags, value: @user.parsed_tags.join(', '), class: 'w-full p-1 rounded text-black' %>
-  </div>
-
-  <div class="mb-2">
-    <%= f.label :avatar, class: 'block text-gray-300 mb-1' %>
-    <%= f.text_field :avatar, class: 'w-full p-1 rounded text-black' %>
-  </div>
-
-  <div class="mb-2">
-    <%= f.label :banner, class: 'block text-gray-300 mb-1' %>
-    <%= f.text_field :banner, class: 'w-full p-1 rounded text-black' %>
-  </div>
-
-  <div class="mb-2">
-    <%= f.label :banner_enabled, class: 'block text-gray-300 mb-1' %>
-    <%= f.check_box :banner_enabled, class: 'rounded text-black' %>
-  </div>
-
-  <div class="mb-2">
-    <%= f.label :description, class: 'block text-gray-300 mb-1' %>
-    <%= f.text_area :description, class: 'w-full p-1 rounded text-black' %>
-  </div>
-
-  <div class="field">
-    <%= f.label :public_analytics %>
-    <%= f.check_box :public_analytics %>
-  </div>
-
-  <div class="mb-2">
-    <%= f.label :password, class: 'block text-gray-300 mb-1' %>
-    <% if @minimum_password_length %>
-      <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %>
-    <%= f.password_field :password, autocomplete: "off", class: 'w-full p-1 rounded text-black' %>
-    <i>(leave blank if you don't want to change it)</i>
-  </div>
-
-  <div class="mb-2">
-    <%= f.label :password_confirmation, class: 'block text-gray-300 mb-1' %>
-    <%= f.password_field :password_confirmation, autocomplete: "off", class: 'w-full p-1 rounded text-black' %>
-  </div>
-
-  <div class="mb-2">
-    <%= f.label :current_password, class: 'block text-gray-300 mb-1' %>
-    <%= f.password_field :current_password, autocomplete: "off", class: 'w-full p-1 rounded text-black' %>
-    <i>(we need your current password to confirm your changes)</i>
-  </div>
-
-  <div class="actions mb-2">
-    <%= f.submit "Update", class: 'bg-lime-500 hover:bg-lime-700 text-white font-bold py-1 px-2 rounded' %>
-  </div>
-<% end %>
-
-<h3 class="text-xl font-bold mb-2">Cancel my account</h3>
-
-<p>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: 'bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded' %></p>
-
-<%= link_to "Back", :back, class: 'bg-gray-500 hover:bg-gray-700 text-white font-bold py-1 px-2 rounded' %>
+</div>

@@ -7,16 +7,17 @@
     </div>
   <% end %>
   <div class="avatar-container flex flex-col items-center <%= @user.banner_enabled && @user.banner.present? ? '-mt-16' : 'mt-8' %>">
-    <div class="avatar">
-      <% local_avatar_path = "/avatars/#{@user.username}_avatar#{File.extname(@user.avatar)}" %>
-      <% if File.exist?(Rails.root.join('public' + local_avatar_path)) %>
-        <%= image_tag local_avatar_path, alt: @user.email, class: "rounded-full border-4 border-gray-900 object-cover", style: "width: 8rem; height: 8rem;" %>
-      <% elsif @user.avatar.present? %>
-        <%= image_tag @user.avatar, alt: @user.email, class: "rounded-full border-4 border-gray-900 object-cover", style: "width: 8rem; height: 8rem;" %>
-      <% else %>
-        <%= image_tag "greg.jpg", alt: @user.email, class: "rounded-full border-4 border-gray-900 object-cover", style: "width: 8rem; height: 8rem;" %>
-      <% end %>
-    </div>
+  <div class="avatar">
+    <% local_avatar_path = "/avatars/#{@user.username}_avatar#{File.extname(@user.avatar)}" %>
+    <% if File.exist?(Rails.root.join('public' + local_avatar_path)) %>
+      <%= image_tag local_avatar_path, alt: @user.email, class: "rounded-full object-cover #{avatar_border_class(@user.avatar_border)}", style: "width: 8rem; height: 8rem;" %>
+    <% elsif @user.avatar.present? %>
+      <%= image_tag @user.avatar, alt: @user.email, class: "rounded-full object-cover #{avatar_border_class(@user.avatar_border)}", style: "width: 8rem; height: 8rem;" %>
+    <% else %>
+      <%= image_tag "greg.jpg", alt: @user.email, class: "rounded-full object-cover #{avatar_border_class(@user.avatar_border)}", style: "width: 8rem; height: 8rem;" %>
+    <% end %>
+  </div>
+</div>
     <div class="user-info mt-4">
       <h1 class="text-2xl font-bold text-white text-stroke"><%= @user.full_name %></h1>
       <h2 class="text-xl font-bold text-white text-stroke"><%= @user.username %></h2>
@@ -39,7 +40,7 @@
       </div>
     </div>
   <% end %>
-  <div class="description pb-4">
+  <div class="description pb-4 text-center">
     <p class="text-lg text-white"><%= auto_link_urls(@user.description) %></p>
   </div>
 </div>
