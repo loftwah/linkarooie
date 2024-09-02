@@ -32,6 +32,10 @@ Linkarooie is a robust, open-source alternative to Linktree, built with Ruby on 
 17. [Support](#support)
 18. [Acknowledgements](#acknowledgements)
 
+## Video Demo
+
+![Video Demo](https://github.com/user-attachments/assets/d5dc1636-2a7f-4cbf-878c-516ebda6c47e)
+
 ## Features
 
 - **Custom Links Management:** 
