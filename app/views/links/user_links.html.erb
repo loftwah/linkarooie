@@ -2,45 +2,46 @@
 
 <div class="profile-header max-w-2xl mx-auto px-4 text-center">
   <% if @user.banner_enabled && @user.banner.present? %>
-    <div class="w-full h-16 md:h-20 lg:h-24 relative overflow-hidden mb-2">
-      <%= image_tag @user.banner, class: "w-full h-full object-cover object-center" %>
+    <div class="w-full h-auto md:h-auto lg:h-auto relative overflow-hidden mb-2">
+      <%= image_tag @user.banner, class: "w-full h-full object-contain object-center" %>
     </div>
   <% end %>
-  <div class="avatar-container flex flex-col items-center <%= @user.banner_enabled && @user.banner.present? ? '-mt-16' : 'mt-8' %>">
-  <div class="avatar">
-    <% local_avatar_path = "/avatars/#{@user.username}_avatar#{File.extname(@user.avatar)}" %>
-    <% if File.exist?(Rails.root.join('public' + local_avatar_path)) %>
-      <%= image_tag local_avatar_path, alt: @user.email, class: "rounded-full object-cover #{avatar_border_class(@user.avatar_border)}", style: "width: 8rem; height: 8rem;" %>
-    <% elsif @user.avatar.present? %>
-      <%= image_tag @user.avatar, alt: @user.email, class: "rounded-full object-cover #{avatar_border_class(@user.avatar_border)}", style: "width: 8rem; height: 8rem;" %>
-    <% else %>
-      <%= image_tag "greg.jpg", alt: @user.email, class: "rounded-full object-cover #{avatar_border_class(@user.avatar_border)}", style: "width: 8rem; height: 8rem;" %>
-    <% end %>
+  <div class="flex flex-col items-center <%= @user.banner_enabled && @user.banner.present? ? '-mt-16' : 'mt-8' %>">
+    <div class="relative">
+      <% local_avatar_path = "/avatars/#{@user.username}_avatar#{File.extname(@user.avatar)}" %>
+      <% if File.exist?(Rails.root.join('public' + local_avatar_path)) %>
+        <%= image_tag local_avatar_path, alt: @user.email, class: "rounded-full object-cover border-4 #{avatar_border_class(@user.avatar_border)}", style: "width: 8rem; height: 8rem;" %>
+      <% elsif @user.avatar.present? %>
+        <%= image_tag @user.avatar, alt: @user.email, class: "rounded-full object-cover border-4 #{avatar_border_class(@user.avatar_border)}", style: "width: 8rem; height: 8rem;" %>
+      <% else %>
+        <%= image_tag "greg.jpg", alt: @user.email, class: "rounded-full object-cover border-4 #{avatar_border_class(@user.avatar_border)}", style: "width: 8rem; height: 8rem;" %>
+      <% end %>
+    </div>
   </div>
-</div>
-    <div class="user-info mt-4">
-      <h1 class="text-2xl font-bold text-white text-stroke"><%= @user.full_name %></h1>
-      <h2 class="text-xl font-bold text-white text-stroke"><%= @user.username %></h2>
-      <div class="tags flex flex-wrap justify-center mt-2">
-        <% @user.tags.each do |tag| %>
-          <span class="tag bg-gray-700 text-white rounded px-2 py-1 m-1"><%= tag %></span>
-        <% end %>
-      </div>
+
+  <div class="mt-4 text-center">
+    <h1 class="text-2xl font-bold text-white"><%= @user.full_name %></h1>
+    <h2 class="text-xl font-bold text-white"><%= @user.username %></h2>
+    <div class="flex flex-wrap justify-center mt-2">
+      <% @user.tags.each do |tag| %>
+        <span class="bg-gray-700 text-white rounded px-2 py-1 m-1"><%= tag %></span>
+      <% end %>
     </div>
   </div>
 
   <% if @pinned_links.any? %>
-    <div class="pinned-links-section mt-4">
-      <div class="pinned-links flex flex-wrap justify-center">
+    <div class="mt-4">
+      <div class="flex flex-wrap justify-center">
         <% @pinned_links.each do |link| %>
-          <%= link_to track_click_link_path(link), target: "_blank", class: 'icon-link bg-gray-800 p-3 m-1' do %>
+          <%= link_to track_click_link_path(link), target: "_blank", class: 'bg-gray-800 p-3 m-1 rounded' do %>
             <i class="<%= link.icon %> text-lime-300"></i>
           <% end %>
         <% end %>
       </div>
     </div>
   <% end %>
-  <div class="description pb-4 text-center">
+
+  <div class="pb-4 text-center">
     <p class="text-lg text-white"><%= auto_link_urls(@user.description) %></p>
   </div>
 </div>
@@ -61,11 +62,10 @@
   </ul>
 </div>
 
-<!-- Hidden data for JavaScript to access -->
 <div id="hidden-links-data" style="display: none;" data-hidden-links="<%= @hidden_links.to_json %>"></div>
 
 <% if @achievements.present? %>
-  <div class="achievements-section max-w-4xl mx-auto mt-12 text-center">
+  <div class="max-w-4xl mx-auto mt-12 text-center">
     <h2 class="text-2xl font-bold pt-2 pb-2 text-white">Achievements</h2>
     <ul class="space-y-4">
       <% @achievements.each do |achievement| %>
@@ -87,13 +87,13 @@
     </ul>
   </div>
 <% else %>
-  <div class="achievements-section max-w-4xl mx-auto mt-12 text-center">
+  <div class="max-w-4xl mx-auto mt-12 text-center">
     <p class="text-gray-500">No achievements to display.</p>
   </div>
 <% end %>
 
 <% if @user.public_analytics %>
-  <div class="analytics-link text-center mt-8 mb-4">
+  <div class="text-center mt-8 mb-4">
     <%= link_to user_analytics_path(@user.username), class: 'text-gray-400 hover:text-lime-300 text-sm' do %>
       <i class="fas fa-chart-line"></i> View Analytics
     <% end %>

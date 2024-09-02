@@ -1,8 +1,8 @@
-<%= form_with(model: achievement, local: true) do |form| %>
+<%= form_with(model: achievement, local: true, class: "max-w-md mx-auto p-4 bg-gray-800 rounded-lg shadow-md") do |form| %>
   <% if achievement.errors.any? %>
-    <div id="error_explanation" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4">
-      <h2 class="font-bold"><%= pluralize(achievement.errors.count, 'error') %> prohibited this achievement from being saved:</h2>
-      <ul>
+    <div id="error_explanation" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded">
+      <h2 class="font-bold mb-2"><%= pluralize(achievement.errors.count, 'error') %> prohibited this achievement from being saved:</h2>
+      <ul class="list-disc pl-5">
         <% achievement.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
@@ -10,32 +10,32 @@
     </div>
   <% end %>
 
-  <div class="mb-4">
-    <%= form.label :title, class: 'block text-lime-200 mb-2' %>
-    <%= form.text_field :title, class: 'block w-full px-3 py-2 text-black' %>
+  <div class="mb-6">
+    <%= form.label :title, class: 'block text-lime-200 font-semibold mb-2' %>
+    <%= form.text_field :title, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
   </div>
 
-  <div class="mb-4">
-    <%= form.label :date, class: 'block text-lime-200 mb-2' %>
-    <%= form.date_field :date, class: 'block w-full px-3 py-2 text-black' %>
+  <div class="mb-6">
+    <%= form.label :date, class: 'block text-lime-200 font-semibold mb-2' %>
+    <%= form.date_field :date, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
   </div>
 
-  <div class="mb-4">
-    <%= form.label :url, class: 'block text-lime-200 mb-2' %>
-    <%= form.text_field :url, class: 'block w-full px-3 py-2 text-black' %>
+  <div class="mb-6">
+    <%= form.label :url, class: 'block text-lime-200 font-semibold mb-2' %>
+    <%= form.text_field :url, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
   </div>
 
-  <div class="mb-4">
-    <%= form.label :description, class: 'block text-lime-200 mb-2' %>
-    <%= form.text_area :description, class: 'block w-full px-3 py-2 text-black' %>
+  <div class="mb-6">
+    <%= form.label :description, class: 'block text-lime-200 font-semibold mb-2' %>
+    <%= form.text_area :description, rows: 3, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
   </div>
 
-  <div class="mb-4">
-    <%= form.label :icon, class: 'block text-lime-200 mb-2' %>
-    <%= form.text_field :icon, class: 'block w-full px-3 py-2 text-black' %>
+  <div class="mb-6">
+    <%= form.label :icon, class: 'block text-lime-200 font-semibold mb-2' %>
+    <%= form.text_field :icon, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
   </div>
 
-  <div class="actions">
-    <%= form.submit 'Save', class: 'bg-lime-500 hover:bg-lime-700 text-white font-bold py-2 px-4 rounded' %>
+  <div class="actions text-center">
+    <%= form.submit 'Save', class: 'bg-lime-500 hover:bg-lime-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out' %>
   </div>
 <% end %>
