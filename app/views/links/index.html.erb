@@ -4,25 +4,25 @@
 <% end %>
 <ul class="space-y-4">
   <% @links.each do |link| %>
-    <li class="bg-gray-800 p-4 rounded shadow-md">
+    <li class="bg-gray-800 p-4 rounded shadow-md max-w-full overflow-hidden">
       <h2 class="text-xl text-lime-300 font-bold">
         <%= link_to link, class: 'hover:underline' do %>
-        <% if link.icon.present? %>
+          <% if link.icon.present? %>
             <i class="<%= link.icon %>"></i>
           <% end %>
           <%= link.title %>
         <% end %>
       </h2>
-      <p class="text-gray-400"><%= link.description %></p>
-      <p class="text-gray-500">URL: <a href="<%= link.url %>" class="text-lime-300 hover:underline" target="_blank"><%= link.url %></a></p>
+      <p class="text-gray-400 break-words"><%= link.description %></p>
+      <p class="text-gray-500 break-all">URL: <a href="<%= link.url %>" class="text-lime-300 hover:underline" target="_blank"><%= link.url %></a></p>
       <p class="text-gray-500">Position: <%= link.position %></p>
       <p class="text-gray-500">Created at: <%= link.created_at.strftime("%d %b %Y %H:%M") %></p>
       <div class="mt-2">
         <% if user_signed_in? && link.user == current_user %>
           <%= link_to 'Edit', edit_link_path(link), class: 'text-lime-300 hover:text-lime-500' %> |
           <%= form_with(model: link, method: :delete, class: 'inline') do |form| %>
-          <%= form.submit 'Delete', class: 'text-lime-300 hover:text-lime-500 bg-transparent border-none cursor-pointer', data: { confirm: 'Are you sure?' } %>
-        <% end %>
+            <%= form.submit 'Delete', class: 'text-lime-300 hover:text-lime-500 bg-transparent border-none cursor-pointer', data: { confirm: 'Are you sure?' } %>
+          <% end %>
         <% end %>
       </div>
     </li>
