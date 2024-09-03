@@ -7,14 +7,14 @@
     </div>
   <% end %>
   <div class="flex flex-col items-center <%= @user.banner_enabled && @user.banner.present? ? '-mt-16' : 'mt-8' %>">
-    <div class="animated-border">
+    <div class="relative w-24 h-24 <%= @user.avatar_border == 'rainbow' ? 'rainbow-border' : '' %> <%= @user.avatar_border == 'rainbow2' ? 'rainbow2-border' : '' %>">
       <% local_avatar_path = "/avatars/#{@user.username}_avatar#{File.extname(@user.avatar)}" %>
       <% if File.exist?(Rails.root.join('public' + local_avatar_path)) %>
-        <%= image_tag local_avatar_path, alt: @user.email %>
+        <%= image_tag local_avatar_path, alt: @user.email, class: "rounded-full object-cover w-full h-full #{'border-4' if @user.avatar_border != 'none' && !['rainbow', 'rainbow2'].include?(@user.avatar_border)} #{@user.avatar_border == 'white' ? 'border-white' : ''} #{@user.avatar_border == 'black' ? 'border-black' : ''}" %>
       <% elsif @user.avatar.present? %>
-        <%= image_tag @user.avatar, alt: @user.email %>
+        <%= image_tag @user.avatar, alt: @user.email, class: "rounded-full object-cover w-full h-full #{'border-4' if @user.avatar_border != 'none' && !['rainbow', 'rainbow2'].include?(@user.avatar_border)} #{@user.avatar_border == 'white' ? 'border-white' : ''} #{@user.avatar_border == 'black' ? 'border-black' : ''}" %>
       <% else %>
-        <%= image_tag "greg.jpg", alt: @user.email %>
+        <%= image_tag "greg.jpg", alt: @user.email, class: "rounded-full object-cover w-full h-full #{'border-4' if @user.avatar_border != 'none' && !['rainbow', 'rainbow2'].include?(@user.avatar_border)} #{@user.avatar_border == 'white' ? 'border-white' : ''} #{@user.avatar_border == 'black' ? 'border-black' : ''}" %>
       <% end %>
     </div>
   </div>

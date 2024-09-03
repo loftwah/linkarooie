@@ -14,7 +14,7 @@ class User < ApplicationRecord
   validates :username, uniqueness: true, allow_blank: true
   validates :full_name, presence: true
   validate :ensure_username_presence
-  validates :avatar_border, inclusion: { in: ['white', 'black', 'none', 'rainbow'] }
+  validates :avatar_border, inclusion: { in: ['white', 'black', 'none', 'rainbow', 'rainbow2'] }
 
   after_save :generate_open_graph_image, unless: -> { Rails.env.test? }
   after_save :download_and_store_avatar

@@ -1,50 +1,42 @@
-@keyframes rotateHue {
-  0% {
-    filter: hue-rotate(0deg);
-  }
-  100% {
-    filter: hue-rotate(360deg);
-  }
+@keyframes rainbow-pulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
 }
 
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
+@keyframes rainbow { 
+  0% { background-position: 0% 82% }
+  50% { background-position: 100% 19% }
+  100% { background-position: 0% 82% }
 }
 
-.animated-border {
-  width: 8rem;
-  height: 8rem;
-  border-radius: 50%;
-  position: relative;
-  overflow: hidden;
-  padding: 4px;
-  background: linear-gradient(45deg, #ff00ff, #00ffff, #ff00ff);
-  background-size: 200% 200%;
-  animation: rotateHue 6s linear infinite, pulse 3s ease-in-out infinite;
+@keyframes hue-rotate {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
 }
 
-.animated-border::before {
+.rainbow-border::before, .rainbow2-border::before {
   content: '';
   position: absolute;
-  top: 4px;
-  right: 4px;
-  bottom: 4px;
-  left: 4px;
-  background-color: white;
-  border-radius: 50%;
-  z-index: 1;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  background: linear-gradient(
+    124deg,
+    #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840,
+    #1ddde8, #2b1de8, #dd00f3, #dd00f3
+  );
+  background-size: 1800% 1800%;
+  border-radius: 9999px;
+  animation: rainbow 18s ease infinite, rainbow-pulse 3s infinite;
+  z-index: 10;
 }
 
-.animated-border img {
+.rainbow-border img, .rainbow2-border img {
   position: relative;
-  z-index: 2;
-  border-radius: 50%;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  z-index: 11;
+}
+
+.rainbow2-border img {
+  animation: hue-rotate 10s linear infinite;
 }
