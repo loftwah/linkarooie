@@ -7,17 +7,18 @@
     </div>
   <% end %>
   <div class="flex flex-col items-center <%= @user.banner_enabled && @user.banner.present? ? '-mt-16' : 'mt-8' %>">
-    <div class="relative">
+    <div class="relative w-24 h-24 <%= @user.avatar_border == 'rainbow' ? 'rainbow-border' : '' %> <%= @user.avatar_border == 'rainbow2' ? 'rainbow2-border' : '' %>">
       <% local_avatar_path = "/avatars/#{@user.username}_avatar#{File.extname(@user.avatar)}" %>
       <% if File.exist?(Rails.root.join('public' + local_avatar_path)) %>
-        <%= image_tag local_avatar_path, alt: @user.email, class: "rounded-full object-cover border-4 #{avatar_border_class(@user.avatar_border)}", style: "width: 8rem; height: 8rem;" %>
+        <%= image_tag local_avatar_path, alt: @user.email, class: "rounded-full object-cover w-full h-full #{'border-4' if @user.avatar_border != 'none' && !['rainbow', 'rainbow2'].include?(@user.avatar_border)} #{@user.avatar_border == 'white' ? 'border-white' : ''} #{@user.avatar_border == 'black' ? 'border-black' : ''}" %>
       <% elsif @user.avatar.present? %>
-        <%= image_tag @user.avatar, alt: @user.email, class: "rounded-full object-cover border-4 #{avatar_border_class(@user.avatar_border)}", style: "width: 8rem; height: 8rem;" %>
+        <%= image_tag @user.avatar, alt: @user.email, class: "rounded-full object-cover w-full h-full #{'border-4' if @user.avatar_border != 'none' && !['rainbow', 'rainbow2'].include?(@user.avatar_border)} #{@user.avatar_border == 'white' ? 'border-white' : ''} #{@user.avatar_border == 'black' ? 'border-black' : ''}" %>
       <% else %>
-        <%= image_tag "greg.jpg", alt: @user.email, class: "rounded-full object-cover border-4 #{avatar_border_class(@user.avatar_border)}", style: "width: 8rem; height: 8rem;" %>
+        <%= image_tag "greg.jpg", alt: @user.email, class: "rounded-full object-cover w-full h-full #{'border-4' if @user.avatar_border != 'none' && !['rainbow', 'rainbow2'].include?(@user.avatar_border)} #{@user.avatar_border == 'white' ? 'border-white' : ''} #{@user.avatar_border == 'black' ? 'border-black' : ''}" %>
       <% end %>
     </div>
   </div>
+</div>
 
   <div class="mt-4 text-center">
     <h1 class="text-2xl font-bold text-white"><%= @user.full_name %></h1>

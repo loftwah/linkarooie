@@ -1,0 +1,42 @@
+@keyframes rainbow-pulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+@keyframes rainbow { 
+  0% { background-position: 0% 82% }
+  50% { background-position: 100% 19% }
+  100% { background-position: 0% 82% }
+}
+
+@keyframes hue-rotate {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+.rainbow-border::before, .rainbow2-border::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  background: linear-gradient(
+    124deg,
+    #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840,
+    #1ddde8, #2b1de8, #dd00f3, #dd00f3
+  );
+  background-size: 1800% 1800%;
+  border-radius: 9999px;
+  animation: rainbow 18s ease infinite, rainbow-pulse 3s infinite;
+  z-index: 10;
+}
+
+.rainbow-border img, .rainbow2-border img {
+  position: relative;
+  z-index: 11;
+}
+
+.rainbow2-border img {
+  animation: hue-rotate 10s linear infinite;
+}
