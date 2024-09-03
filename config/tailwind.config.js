@@ -1,4 +1,4 @@
-const defaultTheme = require('tailwindcss/defaultTheme');
+const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
   darkMode: 'media',
@@ -7,8 +7,7 @@ module.exports = {
     './app/helpers/**/*.rb',
     './app/javascript/**/*.js',
     './app/views/**/*.{erb,haml,html,slim}',
-    './node_modules/flowbite/**/*.js',
-    './app/assets/stylesheets/**/*.{css,scss}', // Make sure all CSS and SCSS files are included
+    './node_modules/flowbite/**/*.js'
   ],
   theme: {
     extend: {
@@ -21,6 +20,6 @@ module.exports = {
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
     require('@tailwindcss/container-queries'),
-    require('flowbite/plugin'),
-  ],
-};
+    require('flowbite/plugin')
+  ]
+}

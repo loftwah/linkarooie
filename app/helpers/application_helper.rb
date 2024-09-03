@@ -11,12 +11,10 @@ module ApplicationHelper
       'border-4 border-white'
     when 'black'
       'border-4 border-black'
-    when 'rainbow'
-      'animated-border'
     else
       ''
     end
-  end  
+  end
 
   def format_referrer(referrer)
     return 'Direct' if referrer.blank?
