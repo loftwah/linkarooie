@@ -1,3 +1,10 @@
+/*
+*= require font_awesome_import
+*= require font-awesome
+*= require_self
+*= require_tree .
+*/
+
 @keyframes rainbow-pulse {
   0%, 100% { opacity: 0.7; }
   50% { opacity: 1; }

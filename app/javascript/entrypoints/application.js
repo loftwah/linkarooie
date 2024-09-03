@@ -3,6 +3,7 @@ import "chartkick/chart.js";
 import "flowbite";
 
 import "../../assets/stylesheets/application.css";
+import '../../assets/stylesheets/application.css.scss'
 import "../../assets/stylesheets/application.tailwind.css";
 
 Rails.start();
