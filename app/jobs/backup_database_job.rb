@@ -21,6 +21,7 @@ class BackupDatabaseJob < ApplicationJob
   
       # Calculate backup file size before deleting it
       backup_size = File.size?(compressed_file)
+      human_readable_size = human_readable_size(backup_size) # Convert size to human-readable format
   
       # Upload to DigitalOcean Spaces (URL not needed anymore)
       upload_to_spaces(compressed_file)
@@ -31,15 +32,15 @@ class BackupDatabaseJob < ApplicationJob
   
       Rails.logger.info "BackupDatabaseJob: Backup created, compressed, and uploaded successfully: #{compressed_file}"
   
-      # Generate a report without the URL
-      report = generate_backup_report(environment, compressed_file, "Success", nil, nil, backup_size)
+      # Generate a report with human-readable size
+      report = generate_backup_report(environment, compressed_file, "Success", nil, nil, human_readable_size)
   
       # Send an email with the report
       BackupReportMailer.backup_completed(report).deliver_now
     rescue => e
       Rails.logger.error "BackupDatabaseJob: Failed to create, compress, or upload backup: #{e.message}"
       
-      # Generate a failure report without URL
+      # Generate a failure report
       report = generate_backup_report(environment, compressed_file, "Failed", nil, e.message)
   
       # Send an email with the failure report
@@ -48,15 +49,14 @@ class BackupDatabaseJob < ApplicationJob
       raise
     end
   end
-  
-  # Updated generate_backup_report to accept backup_size as a parameter
+
   def generate_backup_report(environment, backup_file, status, backup_url = nil, error_message = nil, backup_size = nil)
     {
       environment: environment,
       timestamp: Time.now.strftime('%Y-%m-%d %H:%M:%S'),
       backup_file: backup_file,
       backup_url: backup_url,
-      backup_size: backup_size || File.size?(backup_file),  # Fallback if size wasn't passed
+      backup_size: backup_size || human_readable_size(File.size?(backup_file)),  # Use human-readable size
       status: status,
       error_message: error_message
     }
@@ -64,12 +64,19 @@ class BackupDatabaseJob < ApplicationJob
 
   private
 
+  def human_readable_size(size)
+    # Convert bytes to a human-readable format
+    units = ['B', 'KB', 'MB', 'GB', 'TB']
+    return '0 B' if size == 0
+    exp = (Math.log(size) / Math.log(1024)).to_i
+    format('%.2f %s', size.to_f / (1024 ** exp), units[exp])
+  end
+
   def upload_to_spaces(file_path)
     bucket_name = ENV['SPACES_BUCKET_NAME'] || 'sqlite-backup-bucket'
     file_name = File.basename(file_path)
 
     obj = S3_CLIENT.bucket(bucket_name).object("backups/#{file_name}")
     obj.upload_file(file_path)
-    
   end
 end
