@@ -9,7 +9,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        application: 'app/javascript/entrypoints/application.js'
+        application: 'app/javascript/entrypoints/application.js' // Path to your main JS entry point
       }
     },
   },
@@ -17,12 +17,11 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         includePaths: [
-          path.resolve(__dirname, 'node_modules'),
-          path.resolve(__dirname, 'app/assets/stylesheets')
+          path.resolve(__dirname, 'node_modules'), // Ensure Vite looks in node_modules for styles
+          path.resolve(__dirname, 'app/assets/stylesheets') // Include your stylesheets directory
         ],
-        // Remove the additionalData line that was causing the circular import
       },
     },
   },
-  assetsInclude: ['**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.svg', '**/*.eot', '**/*.ttf', '**/*.woff', '**/*.woff2']
+  assetsInclude: ['**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.svg'] // Include any other assets you want to be processed
 });
