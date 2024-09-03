@@ -8,7 +8,7 @@ module.exports = {
     './app/javascript/**/*.js',
     './app/views/**/*.{erb,haml,html,slim}',
     './node_modules/flowbite/**/*.js',
-    './app/assets/stylesheets/**/*.{css,scss}', // Make sure all CSS and SCSS files are included
+    './app/assets/stylesheets/**/*.css',
   ],
   theme: {
     extend: {
