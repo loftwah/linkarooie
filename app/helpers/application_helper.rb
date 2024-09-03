@@ -5,6 +5,19 @@ module ApplicationHelper
     end.html_safe
   end
 
+  def avatar_border_class(border_preference)
+    case border_preference
+    when 'white'
+      'border-4 border-white'
+    when 'black'
+      'border-4 border-black'
+    when 'rainbow'
+      'animated-border'
+    else
+      ''
+    end
+  end  
+
   def format_referrer(referrer)
     return 'Direct' if referrer.blank?
 
