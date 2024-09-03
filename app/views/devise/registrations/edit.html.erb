@@ -83,8 +83,6 @@
     <p class="mb-4 text-gray-300">Unhappy? You can cancel your account here.</p>
     <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure? This action cannot be undone." }, method: :delete, class: 'bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out' %>
   </div>
-
-  <div class="mt-6 text-center">
-    <%= link_to "Back", :back, class: 'text-lime-300 hover:text-lime-500 underline transition duration-300 ease-in-out' %>
-  </div>
 </div>
+
+<%= link_to 'Back', achievements_path, class: 'text-white hover:text-lime-300' %>
