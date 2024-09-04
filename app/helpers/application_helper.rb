@@ -11,6 +11,10 @@ module ApplicationHelper
       'border-4 border-white'
     when 'black'
       'border-4 border-black'
+    when 'rainbow'
+      'border-4 border-transparent avatar-rainbow-border'
+    when 'rainbow-overlay'
+      'avatar-rainbow-overlay'
     else
       ''
     end
