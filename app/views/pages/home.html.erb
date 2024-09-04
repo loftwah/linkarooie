@@ -15,6 +15,20 @@
     </div>
   </section>
 
+ <!-- Waiting List Form Section -->
+<section class="py-16 text-white w-full">
+  <div class="text-center">
+    <h2 class="text-3xl font-bold mb-4">Join Our Waiting List</h2>
+    <p class="text-lg mb-8">
+      Be the first to know when Linkarooie is available. Enter your email to join our waiting list!
+    </p>
+    <%= form_with model: WaitingList.new, url: waiting_lists_path, local: true, class: "flex flex-col items-center w-full max-w-md mx-auto" do |form| %>
+      <%= form.email_field :email, placeholder: "Enter your email", class: "p-2 w-full rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-lime-400 mb-4" %>
+      <%= form.submit "Join Now", class: "w-full bg-lime-500 hover:bg-lime-600 text-white font-bold py-2 px-4 rounded cursor-pointer transition duration-300" %>
+    <% end %>
+  </div>
+</section>
+
   <!-- New Feature-Rich Platform Section -->
   <section class="py-8 w-full bg-gray-900 text-center">
     <div class="max-w-2xl mx-auto">

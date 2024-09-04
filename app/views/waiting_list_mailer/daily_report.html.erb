@@ -1,0 +1,63 @@
+<!-- app/views/waiting_list_mailer/daily_report.html.erb -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      h1 {
+        color: #4a5568;
+      }
+      .stats {
+        background-color: #f0fff4;
+        border: 1px solid #9ae6b4;
+        border-radius: 5px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+      ul {
+        list-style-type: none;
+        padding-left: 0;
+      }
+      li {
+        margin-bottom: 10px;
+      }
+      .footer {
+        margin-top: 30px;
+        font-size: 0.9em;
+        color: #718096;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Daily Waiting List Report - Linkarooie</h1>
+      
+      <div class="stats">
+        <p><strong>Total subscribers:</strong> <%= @total_count %></p>
+        <p><strong>New subscribers today:</strong> <%= @today_count %></p>
+      </div>
+      
+      <h2>All Subscribers:</h2>
+      <ul>
+        <% @waiting_list.each do |subscriber| %>
+          <li><%= subscriber.email %> (joined: <%= subscriber.created_at.strftime('%B %d, %Y') %>)</li>
+        <% end %>
+      </ul>
+      
+      <div class="footer">
+        <p>Visit Linkarooie at: <a href="<%= @url %>"><%= @url %></a></p>
+        <p>This is an automated message from Linkarooie. Please do not reply to this email.</p>
+      </div>
+    </div>
+  </body>
+</html>
