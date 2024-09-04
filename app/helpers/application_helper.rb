@@ -8,13 +8,13 @@ module ApplicationHelper
   def avatar_border_class(border_preference)
     case border_preference
     when 'white'
-      'border-4 border-white'
+      'avatar-border-white'
     when 'black'
-      'border-4 border-black'
+      'avatar-border-black'
     when 'rainbow'
-      'border-4 border-transparent avatar-rainbow-border'
+      'avatar-rainbow-border'
     when 'rainbow-overlay'
-      'avatar-rainbow-overlay'
+      'avatar-rainbow-border avatar-rainbow-overlay'
     else
       ''
     end

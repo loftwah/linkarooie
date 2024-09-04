@@ -1,48 +1,83 @@
-@import "font-awesome";
-
-/* Rainbow border animation */
-@keyframes rainbow-border {
-  0% { box-shadow: 0 0 0 4px red; }
-  14% { box-shadow: 0 0 0 4px orange; }
-  28% { box-shadow: 0 0 0 4px yellow; }
-  42% { box-shadow: 0 0 0 4px green; }
-  56% { box-shadow: 0 0 0 4px blue; }
-  70% { box-shadow: 0 0 0 4px indigo; }
-  84% { box-shadow: 0 0 0 4px violet; }
-  100% { box-shadow: 0 0 0 4px red; }
-}
-
-/* Rainbow overlay animation */
-@keyframes rainbow-overlay {
-  0% { filter: hue-rotate(0deg); }
-  100% { filter: hue-rotate(360deg); }
-}
-
-.avatar-rainbow-border {
-  animation: rainbow-border 5s linear infinite;
-}
-
-.avatar-rainbow-overlay {
-  position: relative;
-  display: inline-block;
-  overflow: hidden;
-  border-radius: 50%;
-  animation: rainbow-border 5s linear infinite;
-}
-
-.avatar-rainbow-overlay::before {
-  content: '';
-  position: absolute;
-  top: 0; right: 0; bottom: 0; left: 0;
-  background: linear-gradient(45deg, rgba(255,0,0,0.5), rgba(255,165,0,0.5), rgba(255,255,0,0.5), rgba(0,128,0,0.5), rgba(0,0,255,0.5), rgba(75,0,130,0.5), rgba(238,130,238,0.5));
-  z-index: 2;
-  animation: rainbow-overlay 5s linear infinite;
-  mix-blend-mode: overlay;
-  opacity: 0.7;
-}
-
-.avatar-rainbow-overlay img {
-  display: block;
-  position: relative;
-  z-index: 1;
-}
+// General avatar styles
+.avatar-container {
+    width: 8rem;
+    height: 8rem;
+    overflow: hidden;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  
+  .avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  // Enhanced rainbow border animation
+  @keyframes rainbow-border {
+    0% { box-shadow: 0 0 0 4px red, 0 0 10px red; }
+    14% { box-shadow: 0 0 0 4px orange, 0 0 10px orange; }
+    28% { box-shadow: 0 0 0 4px yellow, 0 0 10px yellow; }
+    42% { box-shadow: 0 0 0 4px green, 0 0 10px green; }
+    56% { box-shadow: 0 0 0 4px blue, 0 0 10px blue; }
+    70% { box-shadow: 0 0 0 4px indigo, 0 0 10px indigo; }
+    84% { box-shadow: 0 0 0 4px violet, 0 0 10px violet; }
+    100% { box-shadow: 0 0 0 4px red, 0 0 10px red; }
+  }
+  
+  // Enhanced rainbow overlay animation
+  @keyframes rainbow-overlay {
+    0% { filter: hue-rotate(0deg) brightness(1); }
+    50% { filter: hue-rotate(180deg) brightness(1.2); }
+    100% { filter: hue-rotate(360deg) brightness(1); }
+  }
+  
+  // Pulsing animation
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+  
+  .avatar-rainbow-border,
+  .avatar-rainbow-overlay {
+    animation: rainbow-border 5s linear infinite, pulse 2s ease-in-out infinite;
+    position: relative;
+  }
+  
+  .avatar-rainbow-overlay::before {
+    content: '';
+    position: absolute;
+    top: -5px; right: -5px; bottom: -5px; left: -5px;
+    background: linear-gradient(45deg, 
+      rgba(255,0,0,0.7), 
+      rgba(255,165,0,0.7), 
+      rgba(255,255,0,0.7), 
+      rgba(0,128,0,0.7), 
+      rgba(0,0,255,0.7), 
+      rgba(75,0,130,0.7), 
+      rgba(238,130,238,0.7)
+    );
+    border-radius: 50%;
+    z-index: 1;
+    animation: rainbow-overlay 5s linear infinite;
+    mix-blend-mode: overlay;
+    opacity: 0.8;
+  }
+  
+  // Border color styles
+  .avatar-border-white,
+  .avatar-border-black,
+  .avatar-rainbow-border,
+  .avatar-rainbow-overlay {
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  
+  .avatar-border-white {
+    box-shadow: 0 0 0 4px white, 0 0 10px rgba(255,255,255,0.5);
+  }
+  
+  .avatar-border-black {
+    box-shadow: 0 0 0 4px black, 0 0 10px rgba(0,0,0,0.5);
+  }
