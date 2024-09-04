@@ -2,6 +2,10 @@ import Rails from "@rails/ujs";
 import "chartkick/chart.js";
 import "flowbite";
 
+// Import your stylesheet
+import "../../assets/stylesheets/application.css.scss";
+import "../../assets/stylesheets/application.tailwind.css";
+
 Rails.start();
 
 console.log('Vite ⚡️ Rails');
