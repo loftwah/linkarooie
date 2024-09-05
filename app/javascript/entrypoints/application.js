@@ -3,7 +3,7 @@ import "chartkick/chart.js";
 import "flowbite";
 
 // Import your stylesheet
-import "../../assets/stylesheets/application.css.scss";
+import "../../assets/stylesheets/application.css";
 import "../../assets/stylesheets/application.tailwind.css";
 
 // Import Font Awesome JS and CSS
