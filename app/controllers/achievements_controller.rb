@@ -2,11 +2,12 @@ class AchievementsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
 
   def index
-    @achievements = Achievement.order(date: :desc)
+    # Scope achievements to the current user
+    @achievements = current_user.achievements.order(date: :desc)
   end
 
   def show
-    @achievement = Achievement.find(params[:id])
+    @achievement = current_user.achievements.find(params[:id])
     AchievementView.create(
       achievement: @achievement,
       user: @achievement.user,

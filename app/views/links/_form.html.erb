@@ -1,4 +1,4 @@
-<%= form_with(model: link, local: true, class: "max-w-md mx-auto p-4 bg-gray-800 rounded-lg shadow-md") do |form| %>
+<%= form_with(model: link, local: true, class: "max-w-2xl mx-auto p-6 bg-gray-800 rounded-lg shadow-md") do |form| %>
   <% if link.errors.any? %>
     <div id="error_explanation" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded">
       <h2 class="font-bold mb-2"><%= pluralize(link.errors.count, 'error') %> prohibited this link from being saved:</h2>
@@ -58,3 +58,7 @@
     <%= form.submit 'Save', class: 'bg-lime-500 hover:bg-lime-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out' %>
   </div>
 <% end %>
+
+<div class="mt-4 text-center">
+  <%= link_to 'Back', links_path, class: 'text-lime-300 hover:text-lime-100 transition duration-300 ease-in-out' %>
+</div>

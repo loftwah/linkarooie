@@ -54,8 +54,15 @@ class OpenGraphImageGenerator
   def download_image(url)
     tempfile = Tempfile.new(['avatar', '.jpg'])
     tempfile.binmode
-    URI.open(url) do |image|
-      tempfile.write(image.read)
+    begin
+      URI.open(url) do |image|
+        tempfile.write(image.read)
+      end
+    rescue OpenURI::HTTPError, Errno::ENOENT, SocketError => e
+      Rails.logger.error("Failed to download image from URL: #{url}. Error: #{e.message}. Using default image.")
+      # Use a default image if the download fails
+      default_image_path = Rails.root.join('app', 'assets', 'images', 'greg.jpg')
+      tempfile.write(File.read(default_image_path))
     end
     tempfile.rewind
     MiniMagick::Image.open(tempfile.path)
