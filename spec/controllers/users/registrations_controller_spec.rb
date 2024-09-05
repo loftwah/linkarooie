@@ -11,23 +11,43 @@ RSpec.describe Users::RegistrationsController, type: :controller do
         username: "testuser", full_name: "Test User", tags: "tag1,tag2", avatar_border: "white" }
     }
 
-    it "creates a new User" do
-      expect {
+    context "when sign-ups are enabled" do
+      before do
+        allow(Rails.application.config).to receive(:sign_ups_open).and_return(true)
+      end
+
+      it "creates a new User" do
+        expect {
+          post :create, params: { user: valid_attributes }
+        }.to change(User, :count).by(1)
+      end
+
+      it "correctly processes tags" do
         post :create, params: { user: valid_attributes }
-      }.to change(User, :count).by(1)
+        user = User.last
+        tags = user.tags.is_a?(String) ? JSON.parse(user.tags) : user.tags
+        expect(tags).to eq(["tag1", "tag2"])
+      end
     end
 
-    it "correctly processes tags" do
-      post :create, params: { user: valid_attributes }
-      user = User.last
-      tags = user.tags.is_a?(String) ? JSON.parse(user.tags) : user.tags
-      expect(tags).to eq(["tag1", "tag2"])
+    context "when sign-ups are disabled" do
+      before do
+        allow(Rails.application.config).to receive(:sign_ups_open).and_return(false)
+      end
+
+      it "does not create a new User and redirects to root path" do
+        expect {
+          post :create, params: { user: valid_attributes }
+        }.not_to change(User, :count)
+        expect(response).to redirect_to(root_path)
+        expect(flash[:alert]).to eq("Sign-ups are currently disabled.")
+      end
     end
   end
 
   describe "PUT #update" do
     let(:user) { create(:user, tags: ["old_tag1", "old_tag2"].to_json) }
-    
+
     before do
       sign_in user
     end
