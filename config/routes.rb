@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  # Static and more specific routes first
+
   get 'analytics/index'
 
   # Devise routes for user registration
@@ -19,10 +21,10 @@ Rails.application.routes.draw do
   # Root route
   root to: 'pages#home'
 
-  # Static routes should be defined before dynamic routes
+  # Routes for achievements
   resources :achievements, only: [:index, :show, :new, :create, :edit, :update, :destroy]
 
-  # Routes for links with standard RESTful actions - move these above the dynamic route
+  # Routes for links with standard RESTful actions
   resources :links do
     member do
       get :track_click

@@ -5,6 +5,10 @@ RSpec.describe LinksController, type: :controller do
   let(:user) { create(:user) }
   let(:link) { create(:link, user: user) }
 
+  before do
+    sign_in user  # Sign in the user before each test
+  end
+
   describe "GET #index" do
     it "returns a success response" do
       get :index
@@ -21,7 +25,6 @@ RSpec.describe LinksController, type: :controller do
 
   describe "GET #new" do
     it "returns a success response" do
-      sign_in user
       get :new
       expect(response).to be_successful
     end
@@ -30,7 +33,6 @@ RSpec.describe LinksController, type: :controller do
   describe "POST #create" do
     context "with valid params" do
       it "creates a new Link" do
-        sign_in user
         expect {
           post :create, params: { link: attributes_for(:link) }
         }.to change(Link, :count).by(1)
@@ -43,7 +45,6 @@ RSpec.describe LinksController, type: :controller do
       let(:new_attributes) { { title: "New Title" } }
 
       it "updates the requested link" do
-        sign_in user
         put :update, params: { id: link.to_param, link: new_attributes }
         link.reload
         expect(link.title).to eq("New Title")
@@ -53,7 +54,6 @@ RSpec.describe LinksController, type: :controller do
 
   describe "DELETE #destroy" do
     it "destroys the requested link" do
-      sign_in user
       link # ensure link is created before the expect block
       expect {
         delete :destroy, params: { id: link.to_param }

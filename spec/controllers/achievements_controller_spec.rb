@@ -5,6 +5,10 @@ RSpec.describe AchievementsController, type: :controller do
   let(:user) { create(:user) }
   let(:achievement) { create(:achievement, user: user) }
 
+  before do
+    sign_in user  # Sign in the user before each test
+  end
+
   describe "GET #index" do
     it "returns a success response" do
       get :index
@@ -38,7 +42,6 @@ RSpec.describe AchievementsController, type: :controller do
 
   describe "GET #new" do
     it "returns a success response" do
-      sign_in user
       get :new
       expect(response).to be_successful
     end
@@ -47,7 +50,6 @@ RSpec.describe AchievementsController, type: :controller do
   describe "POST #create" do
     context "with valid params" do
       it "creates a new Achievement" do
-        sign_in user
         expect {
           post :create, params: { achievement: attributes_for(:achievement) }
         }.to change(Achievement, :count).by(1)
@@ -60,7 +62,6 @@ RSpec.describe AchievementsController, type: :controller do
       let(:new_attributes) { { title: "New Title" } }
 
       it "updates the requested achievement" do
-        sign_in user
         put :update, params: { id: achievement.to_param, achievement: new_attributes }
         achievement.reload
         expect(achievement.title).to eq("New Title")
@@ -70,7 +71,6 @@ RSpec.describe AchievementsController, type: :controller do
 
   describe "DELETE #destroy" do
     it "destroys the requested achievement" do
-      sign_in user
       achievement # ensure achievement is created before the expect block
       expect {
         delete :destroy, params: { id: achievement.to_param }

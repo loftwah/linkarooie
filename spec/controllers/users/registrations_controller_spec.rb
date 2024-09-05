@@ -8,7 +8,7 @@ RSpec.describe Users::RegistrationsController, type: :controller do
   describe "POST #create" do
     let(:valid_attributes) {
       { email: "test@example.com", password: "password", password_confirmation: "password",
-        username: "testuser", full_name: "Test User", tags: "tag1,tag2", avatar_border: "white" }
+        username: "testuser", full_name: "Test User", tags: "tag1,tag2", avatar_border: "white", invite_code: "POWEROVERWHELMING" }
     }
 
     context "when sign-ups are enabled" do
@@ -35,12 +35,23 @@ RSpec.describe Users::RegistrationsController, type: :controller do
         allow(Rails.application.config).to receive(:sign_ups_open).and_return(false)
       end
 
-      it "does not create a new User and redirects to root path" do
+      it "does not create a new User without a valid invite code and redirects to root path" do
+        invalid_attributes = valid_attributes.merge(invite_code: "INVALIDCODE")
         expect {
-          post :create, params: { user: valid_attributes }
+          post :create, params: { user: invalid_attributes }
         }.not_to change(User, :count)
         expect(response).to redirect_to(root_path)
         expect(flash[:alert]).to eq("Sign-ups are currently disabled.")
+      end
+
+      it "creates a new User with a valid invite code" do
+        expect(controller).to receive(:after_sign_up_path_for).with(instance_of(User)).and_return("/path/to/redirect")
+
+        expect {
+          post :create, params: { user: valid_attributes }
+        }.to change(User, :count).by(1)
+        
+        expect(response).to redirect_to("/path/to/redirect")
       end
     end
   end

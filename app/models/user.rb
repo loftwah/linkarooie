@@ -1,5 +1,6 @@
 # app/models/user.rb
 class User < ApplicationRecord
+  attr_accessor :invite_code
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 

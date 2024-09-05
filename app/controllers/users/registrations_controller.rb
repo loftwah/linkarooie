@@ -1,10 +1,10 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   before_action :configure_permitted_parameters, if: :devise_controller?
-  before_action :check_signups_enabled, only: [:new, :create]
+  before_action :check_signups_enabled, only: [:create]
 
   def create
-    # Check if sign-ups are disabled
-    if !Rails.application.config.sign_ups_open
+    # Check if sign-ups are disabled and no valid invite code is provided
+    unless Rails.application.config.sign_ups_open || valid_invite_code?(params[:user][:invite_code])
       redirect_to root_path, alert: "Sign-ups are currently disabled."
       return
     end
@@ -60,15 +60,32 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  private
+
+  def check_signups_enabled
+    # Check if sign-ups are disabled and no valid invite code is provided
+    if !Rails.application.config.sign_ups_open && (params[:user].blank? || !valid_invite_code?(params[:user][:invite_code]))
+      redirect_to root_path, alert: "Sign-ups are currently disabled."
+    end
+  end
+
+  def valid_invite_code?(invite_code)
+    # List of valid invite codes
+    valid_codes = ["POWEROVERWHELMING", "SWORDFISH", "HUNTER2"]
+  
+    # Check if the provided invite code matches any of the valid codes, case-insensitive
+    valid_codes.any? { |code| code.casecmp(invite_code).zero? }
+  end  
+
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:email, :password, :password_confirmation, :username, :full_name, :tags, :avatar, :banner, :description, :banner_enabled, :avatar_border])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:email, :password, :password_confirmation, :username, :full_name, :tags, :avatar, :banner, :description, :banner_enabled, :avatar_border, :invite_code])
     devise_parameter_sanitizer.permit(:account_update, keys: [:email, :password, :password_confirmation, :username, :full_name, :tags, :avatar, :banner, :description, :banner_enabled, :avatar_border])
   end
 
   def sign_up_params
-    params.require(:user).permit(:email, :password, :password_confirmation, :username, :full_name, :tags, :avatar, :banner, :description, :banner_enabled, :avatar_border).tap do |user_params|
+    params.require(:user).permit(:email, :password, :password_confirmation, :username, :full_name, :tags, :avatar, :banner, :description, :banner_enabled, :avatar_border, :invite_code).tap do |user_params|
       user_params[:tags] = user_params[:tags].split(',').map(&:strip).to_json if user_params[:tags].present?
     end
   end
@@ -76,14 +93,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def account_update_params
     params.require(:user).permit(:email, :password, :password_confirmation, :current_password, :username, :full_name, :tags, :avatar, :banner, :description, :banner_enabled, :public_analytics, :avatar_border).tap do |user_params|
       user_params[:tags] = user_params[:tags].split(',').map(&:strip).to_json if user_params[:tags].present?
-    end
-  end
-
-  private
-
-  def check_signups_enabled
-    unless Rails.application.config.sign_ups_open
-      redirect_to root_path, alert: "Sign-ups are currently disabled."
     end
   end
 end
