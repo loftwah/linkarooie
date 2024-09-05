@@ -1,7 +1,14 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :check_signups_enabled, only: [:new, :create]
 
   def create
+    # Check if sign-ups are disabled
+    if !Rails.application.config.sign_ups_open
+      redirect_to root_path, alert: "Sign-ups are currently disabled."
+      return
+    end
+
     build_resource(sign_up_params)
 
     resource.tags = JSON.parse(resource.tags) if resource.tags.is_a?(String)
@@ -34,27 +41,24 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def update
     @user = current_user
     @user.tags = JSON.parse(@user.tags) if @user.tags.is_a?(String)
-  
-    # Check if password or email is being updated
+
     is_password_change = params[:user][:password].present? || params[:user][:password_confirmation].present?
     is_email_change = params[:user][:email].present? && params[:user][:email] != @user.email
-  
+
     if is_password_change || is_email_change
-      # Require current password for sensitive changes
       successfully_updated = @user.update_with_password(account_update_params)
     else
-      # Do not require current password for non-sensitive changes
       params[:user].delete(:current_password)
       successfully_updated = @user.update_without_password(account_update_params)
     end
-  
+
     if successfully_updated
-      bypass_sign_in(@user) # Sign in the user bypassing validation
+      bypass_sign_in(@user)
       redirect_to edit_user_registration_path, notice: 'Profile updated successfully'
     else
       render :edit
     end
-  end  
+  end
 
   protected
 
@@ -72,6 +76,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def account_update_params
     params.require(:user).permit(:email, :password, :password_confirmation, :current_password, :username, :full_name, :tags, :avatar, :banner, :description, :banner_enabled, :public_analytics, :avatar_border).tap do |user_params|
       user_params[:tags] = user_params[:tags].split(',').map(&:strip).to_json if user_params[:tags].present?
+    end
+  end
+
+  private
+
+  def check_signups_enabled
+    unless Rails.application.config.sign_ups_open
+      redirect_to root_path, alert: "Sign-ups are currently disabled."
     end
   end
 end
