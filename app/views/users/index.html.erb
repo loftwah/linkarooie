@@ -5,28 +5,24 @@
     <% @users.each do |user| %>
       <div class="bg-gray-800 rounded-lg p-6 text-center shadow-md">
         <div class="mb-4">
-          <% avatar_path = "/avatars/#{user.username}_avatar#{File.extname(user.avatar || '')}" %>
-
-          <!-- Use local avatar if it exists, otherwise use the URL -->
           <%= link_to user_links_path(user.username), target: "_blank" do %>
-            <% if File.exist?(Rails.root.join('public' + avatar_path)) %>
-              <%= image_tag avatar_path, alt: user.email, class: "rounded-full object-cover w-24 h-24 mx-auto" %>
-            <% elsif user.avatar.present? %>
+            <% if user.avatar.present? %>
               <%= image_tag user.avatar, alt: user.email, class: "rounded-full object-cover w-24 h-24 mx-auto" %>
+            <% else %>
+              <%= image_tag "greg.jpg", alt: "Default Avatar", class: "rounded-full object-cover w-24 h-24 mx-auto" %>
             <% end %>
           <% end %>
         </div>
 
-        <!-- Link the username to the user's profile -->
         <h2 class="text-xl font-bold text-lime-300">
           <%= link_to user.full_name, user_links_path(user.username), target: "_blank", class: "hover:underline" %>
         </h2>
         <p class="text-gray-400">@<%= user.username %></p>
 
         <% if user.parsed_tags.any? %>
-          <div class="flex flex-wrap justify-center mt-4 space-x-2 space-y-2">
+          <div class="flex flex-wrap justify-center mt-4 -mx-1 -my-1">
             <% user.parsed_tags.each do |tag| %>
-              <span class="bg-gray-700 text-white rounded px-2 py-1 text-xs"><%= tag %></span>
+              <span class="bg-gray-700 text-white rounded px-2 py-1 text-xs m-1 inline-block min-w-[80px]"><%= tag %></span>
             <% end %>
           </div>
         <% end %>
