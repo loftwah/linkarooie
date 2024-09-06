@@ -6,7 +6,7 @@
 
     <div>
       <%= f.label :email, class: 'block text-lime-200 font-semibold mb-2' %>
-      <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500', placeholder: 'your-email@example.com' %>
     </div>
 
     <div>
@@ -14,32 +14,34 @@
       <% if @minimum_password_length %>
         <em class="text-gray-400 text-sm">(<%= @minimum_password_length %> characters minimum)</em>
       <% end %>
-      <%= f.password_field :password, autocomplete: "new-password", class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+      <%= f.password_field :password, autocomplete: "new-password", class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500', placeholder: 'Choose a strong password' %>
     </div>
 
     <div>
       <%= f.label :password_confirmation, class: 'block text-lime-200 font-semibold mb-2' %>
-      <%= f.password_field :password_confirmation, autocomplete: "new-password", class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+      <%= f.password_field :password_confirmation, autocomplete: "new-password", class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500', placeholder: 'Confirm your password' %>
     </div>
 
     <div>
       <%= f.label :username, class: 'block text-lime-200 font-semibold mb-2' %>
-      <%= f.text_field :username, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+      <%= f.text_field :username, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500', placeholder: 'Choose a unique username' %>
     </div>
 
     <div>
       <%= f.label :full_name, class: 'block text-lime-200 font-semibold mb-2' %>
-      <%= f.text_field :full_name, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+      <%= f.text_field :full_name, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500', placeholder: 'Your full name' %>
     </div>
 
     <div>
       <%= f.label :tags, class: 'block text-lime-200 font-semibold mb-2' %>
-      <%= f.text_field :tags, value: @user.parsed_tags.join(', '), class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+      <%= f.text_field :tags, value: @user.parsed_tags.join(', '), class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500', placeholder: 'e.g., music, photography, travel (comma-separated)' %>
+      <p class="text-gray-400 text-sm mt-1">Add tags to describe your interests (comma-separated)</p>
     </div>
 
     <div>
       <%= f.label :avatar, class: 'block text-lime-200 font-semibold mb-2' %>
-      <%= f.text_field :avatar, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+      <%= f.text_field :avatar, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500', placeholder: 'https://linkarooie.com/your-avatar-image.jpg' %>
+      <p class="text-gray-400 text-sm mt-1">Enter a URL for your avatar image</p>
     </div>
 
     <div>
@@ -51,22 +53,23 @@
         ['Rainbow', 'rainbow'],
         ['Rainbow Overlay', 'rainbow-overlay']
       ], @user.avatar_border), {}, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+      <p class="text-gray-400 text-sm mt-1">Choose a border style for your avatar</p>
     </div>
 
     <div>
       <%= f.label :banner, class: 'block text-lime-200 font-semibold mb-2' %>
-      <%= f.text_field :banner, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+      <%= f.text_field :banner, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500', placeholder: 'https://linkarooie.com/your-banner-image.jpg' %>
+      <p class="text-gray-400 text-sm mt-1">Enter a URL for your profile banner image</p>
     </div>
 
     <div>
       <%= f.label :description, class: 'block text-lime-200 font-semibold mb-2' %>
-      <%= f.text_area :description, rows: 3, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+      <%= f.text_area :description, rows: 3, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500', placeholder: 'Tell us a bit about yourself...' %>
     </div>
 
-    <!-- Invite code field -->
     <div>
       <%= f.label :invite_code, "Invite Code", class: 'block text-lime-200 font-semibold mb-2' %>
-      <%= f.text_field :invite_code, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+      <%= f.text_field :invite_code, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500', placeholder: 'Enter your invite code' %>
     </div>
 
     <div class="actions text-center">
