@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
   # Static and more specific routes first
+  get 'analytics/index'
+  
+  # Routes for users directory (static)
   resources :users, only: [:index]
 
   # Devise routes for user registration
@@ -22,7 +25,7 @@ Rails.application.routes.draw do
   root to: 'pages#home'
 
   # Routes for achievements
-  resources :achievements
+  resources :achievements, only: [:index, :show, :new, :create, :edit, :update, :destroy]
 
   # Routes for links with standard RESTful actions
   resources :links do
@@ -37,7 +40,7 @@ Rails.application.routes.draw do
   # Dynamic user-specific routes must be last to avoid conflicts with static routes
   get '/:username(/:theme)', to: 'links#user_links', as: :user_links, 
       constraints: { 
-        username: /^(?!(users|analytics|achievements|links|up|sidekiq)$).+/, 
+        username: /(?!users|analytics|achievements|links|up|sidekiq)[a-zA-Z0-9_]+/, 
         theme: /retro|win95|win98/ 
       }
 end
