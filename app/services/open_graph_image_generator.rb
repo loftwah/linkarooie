@@ -1,3 +1,4 @@
+# app/services/open_graph_image_generator.rb
 class OpenGraphImageGenerator
   IMAGE_WIDTH = 1200
   IMAGE_HEIGHT = 630
@@ -12,7 +13,8 @@ class OpenGraphImageGenerator
     template_path = Rails.root.join('app', 'assets', 'images', 'og_template.png')
     output_path = Rails.root.join('public', 'uploads', 'og_images', "#{@user.username}_og.png")
     image = MiniMagick::Image.open(template_path)
-    avatar = download_image(@user.avatar)
+    
+    avatar = @user.avatar.present? ? download_image(@user.avatar) : default_avatar
 
     # Resize avatar and add a white square border
     avatar.resize "#{AVATAR_SIZE}x#{AVATAR_SIZE}"
@@ -60,11 +62,46 @@ class OpenGraphImageGenerator
       end
     rescue OpenURI::HTTPError, Errno::ENOENT, SocketError => e
       Rails.logger.error("Failed to download image from URL: #{url}. Error: #{e.message}. Using default image.")
-      # Use a default image if the download fails
-      default_image_path = Rails.root.join('app', 'assets', 'images', 'greg.jpg')
-      tempfile.write(File.read(default_image_path))
+      tempfile.write(File.read(default_avatar_path))
     end
     tempfile.rewind
     MiniMagick::Image.open(tempfile.path)
   end
+
+  def default_avatar
+    MiniMagick::Image.open(default_avatar_path)
+  end
+
+  def default_avatar_path
+    Rails.root.join('app', 'assets', 'images', 'greg.jpg')
+  end
 end
+
+# Console script to fix avatars and update open graph images
+def fix_avatars_and_update_og_images
+  User.where("avatar IS NOT NULL AND avatar != ''").each do |user|
+    puts "Processing user: #{user.username}"
+    
+    if !user.avatar.start_with?('http://', 'https://')
+      puts "  Invalid avatar URL, resetting to greg.jpg"
+      user.update_column(:avatar, 'greg.jpg')
+    end
+
+    begin
+      puts "  Downloading and storing avatar"
+      user.download_and_store_avatar
+
+      puts "  Generating open graph image"
+      OpenGraphImageGenerator.new(user).generate
+
+      puts "  Successfully processed user: #{user.username}"
+    rescue => e
+      puts "  Error processing user #{user.username}: #{e.message}"
+    end
+
+    puts "\n"  # Add a newline for readability between users
+  end
+end
+
+# Run the fix
+fix_avatars_and_update_og_images
