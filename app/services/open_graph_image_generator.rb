@@ -60,48 +60,22 @@ class OpenGraphImageGenerator
       URI.open(url) do |image|
         tempfile.write(image.read)
       end
+      tempfile.rewind
+      MiniMagick::Image.open(tempfile.path)
     rescue OpenURI::HTTPError, Errno::ENOENT, SocketError => e
-      Rails.logger.error("Failed to download image from URL: #{url}. Error: #{e.message}. Using default image.")
-      tempfile.write(File.read(default_avatar_path))
+      Rails.logger.error("Failed to download image from URL: #{url}. Error: #{e.message}. Using default avatar.")
+      MiniMagick::Image.open(default_avatar_path) # Use default avatar
+    ensure
+      tempfile.close
+      tempfile.unlink  # Unlink after we've processed the image
     end
-    tempfile.rewind
-    MiniMagick::Image.open(tempfile.path)
-  end
+  end  
 
   def default_avatar
     MiniMagick::Image.open(default_avatar_path)
   end
 
   def default_avatar_path
-    Rails.root.join('app', 'assets', 'images', 'greg.jpg')
-  end
+    ActionController::Base.helpers.asset_path('greg.jpg')
+  end  
 end
-
-# Console script to fix avatars and update open graph images
-def fix_avatars_and_update_og_images
-  User.where("avatar IS NOT NULL AND avatar != ''").each do |user|
-    puts "Processing user: #{user.username}"
-    
-    if !user.avatar.start_with?('http://', 'https://')
-      puts "  Invalid avatar URL, resetting to greg.jpg"
-      user.update_column(:avatar, 'greg.jpg')
-    end
-
-    begin
-      puts "  Downloading and storing avatar"
-      user.download_and_store_avatar
-
-      puts "  Generating open graph image"
-      OpenGraphImageGenerator.new(user).generate
-
-      puts "  Successfully processed user: #{user.username}"
-    rescue => e
-      puts "  Error processing user #{user.username}: #{e.message}"
-    end
-
-    puts "\n"  # Add a newline for readability between users
-  end
-end
-
-# Run the fix
-fix_avatars_and_update_og_images
