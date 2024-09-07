@@ -135,7 +135,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_07_115214) do
     t.string "tags", default: "[]"
     t.boolean "public_analytics", default: false
     t.boolean "banner_enabled", default: true
-    t.string "avatar_border"
+    t.string "avatar_border", default: "white"
     t.boolean "community_opt_in", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
