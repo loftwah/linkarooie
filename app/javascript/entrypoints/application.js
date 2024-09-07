@@ -10,6 +10,19 @@ import "../../assets/stylesheets/application.tailwind.css";
 import '@fortawesome/fontawesome-free/js/all.min.js';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
+// Import Stimulus
+import { Application } from "@hotwired/stimulus"
+
+// Initialize Stimulus application
+const application = Application.start()
+
+// Vite-specific: Use import.meta.glob to load all controllers
+const controllers = import.meta.glob('../controllers/**/*_controller.js', { eager: true })
+Object.entries(controllers).forEach(([path, controller]) => {
+  const name = path.match(/\/(.+)_controller\.js$/)[1]
+  application.register(name, controller.default)
+})
+
 Rails.start();
 
 console.log('Vite ⚡️ Rails');
