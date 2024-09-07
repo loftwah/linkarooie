@@ -1,38 +1,44 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
   <h1 class="text-3xl font-bold text-white mb-6 text-center">User Directory</h1>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-    <% @users.each do |user| %>
-      <div class="bg-gray-800 rounded-lg p-6 text-center shadow-md">
-        <div class="mb-4">
-          <%= link_to user_links_path(user.username), target: "_blank" do %>
-            <% if user.avatar.present? %>
-              <%= image_tag user.avatar, alt: user.email, class: "rounded-full object-cover w-24 h-24 mx-auto" %>
-            <% else %>
-              <%= image_tag "greg.jpg", alt: "Default Avatar", class: "rounded-full object-cover w-24 h-24 mx-auto" %>
+  <% if @users.any? %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+      <% @users.each do |user| %>
+        <div class="bg-gray-800 rounded-lg p-6 text-center shadow-md">
+          <div class="mb-4">
+            <%= link_to user_links_path(user.username), target: "_blank" do %>
+              <% if user.avatar.present? %>
+                <%= image_tag user.avatar, alt: user.email, class: "rounded-full object-cover w-24 h-24 mx-auto" %>
+              <% else %>
+                <%= image_tag "greg.jpg", alt: "Default Avatar", class: "rounded-full object-cover w-24 h-24 mx-auto" %>
+              <% end %>
             <% end %>
+          </div>
+
+          <h2 class="text-xl font-bold text-lime-300">
+            <%= link_to user.full_name, user_links_path(user.username), target: "_blank", class: "hover:underline" %>
+          </h2>
+          <p class="text-gray-400">@<%= user.username %></p>
+
+          <% if user.parsed_tags.any? %>
+            <div class="flex flex-wrap justify-center mt-4 -mx-1 -my-1">
+              <% user.parsed_tags.each do |tag| %>
+                <span class="bg-gray-700 text-white rounded px-2 py-1 text-xs m-1 inline-block min-w-[80px]"><%= tag %></span>
+              <% end %>
+            </div>
+          <% end %>
+
+          <% if user.description.present? %>
+            <div class="mt-4">
+              <p class="text-sm text-gray-300"><%= user.description %></p>
+            </div>
           <% end %>
         </div>
-
-        <h2 class="text-xl font-bold text-lime-300">
-          <%= link_to user.full_name, user_links_path(user.username), target: "_blank", class: "hover:underline" %>
-        </h2>
-        <p class="text-gray-400">@<%= user.username %></p>
-
-        <% if user.parsed_tags.any? %>
-          <div class="flex flex-wrap justify-center mt-4 -mx-1 -my-1">
-            <% user.parsed_tags.each do |tag| %>
-              <span class="bg-gray-700 text-white rounded px-2 py-1 text-xs m-1 inline-block min-w-[80px]"><%= tag %></span>
-            <% end %>
-          </div>
-        <% end %>
-
-        <% if user.description.present? %>
-          <div class="mt-4">
-            <p class="text-sm text-gray-300"><%= user.description %></p>
-          </div>
-        <% end %>
-      </div>
-    <% end %>
-  </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-center text-gray-300">
+      <p>No users have opted into the community features yet.</p>
+    </div>
+  <% end %>
 </div>
