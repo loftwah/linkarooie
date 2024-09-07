@@ -12,16 +12,14 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 
 // Import Stimulus
 import { Application } from "@hotwired/stimulus"
+import { registerControllers } from 'stimulus-vite-helpers'
 
 // Initialize Stimulus application
 const application = Application.start()
 
-// Vite-specific: Use import.meta.glob to load all controllers
+// Use registerControllers helper to load all controllers
 const controllers = import.meta.glob('../controllers/**/*_controller.js', { eager: true })
-Object.entries(controllers).forEach(([path, controller]) => {
-  const name = path.match(/\/(.+)_controller\.js$/)[1]
-  application.register(name, controller.default)
-})
+registerControllers(application, controllers)
 
 Rails.start();
 
