@@ -68,6 +68,12 @@
     </div>
 
     <div>
+      <%= f.label :community_opt_in, "Join the Community", class: 'block text-lime-200 font-semibold mb-2' %>
+      <%= f.check_box :community_opt_in, class: 'mr-2' %>
+      <p class="text-gray-400 text-sm">Opt in to join the user directory and leaderboard (if public analytics is enabled)</p>
+    </div>
+
+    <div>
       <%= f.label :invite_code, "Invite Code", class: 'block text-lime-200 font-semibold mb-2' %>
       <%= f.text_field :invite_code, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500', placeholder: 'Enter your invite code' %>
     </div>
