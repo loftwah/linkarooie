@@ -81,35 +81,42 @@
         </div>
         <nav>
         <ul class="flex space-x-2 md:space-x-4 text-sm md:text-base items-center">
-          <li><%= link_to 'Loftwah', user_links_path('loftwah'), class: 'bg-lime-500 hover:bg-lime-700 text-white font-bold py-1 px-2 rounded' %></li>
-          <% if user_signed_in? %>
-            <li class="relative">
-              <button id="userMenuBtn" class="text-white hover:text-lime-300 focus:outline-none flex items-center space-x-1">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
-              </button>
-              <div id="userMenu" class="absolute right-0 mt-2 w-48 bg-gray-700 rounded-md shadow-xl z-20 hidden">
-                <%= link_to 'Public Page', user_links_path(current_user.username), class: 'block px-4 py-2 text-sm text-white hover:bg-gray-600' %>
-                <%= link_to 'Analytics', user_analytics_path(current_user.username), class: 'block px-4 py-2 text-sm text-white hover:bg-gray-600' %>
-                <%= link_to 'Links', links_path, class: 'block px-4 py-2 text-sm text-white hover:bg-gray-600' %>
-                <%= link_to 'Achievements', achievements_path, class: 'block px-4 py-2 text-sm text-white hover:bg-gray-600' %>
-                <%= link_to 'Profile', edit_user_registration_path, class: 'block px-4 py-2 text-sm text-white hover:bg-gray-600' %>
-                <%= link_to 'User Directory', users_path, class: 'block px-4 py-2 text-sm text-white hover:bg-gray-600' %>
-                <%= link_to 'Logout', destroy_user_session_path, method: :delete, class: 'block px-4 py-2 text-sm text-white hover:bg-gray-600' %>
-              </div>
-            </li>
-          <% else %>
-            <li><%= link_to 'Login', new_user_session_path, class: 'text-white hover:text-lime-300' %></li>
-          <% end %>
-          <li>
-            <a href="https://github.com/loftwah/linkarooie" target="_blank" rel="noopener noreferrer" class="text-white hover:text-lime-300">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z" />
+        <!-- User Directory Button - Replacing Loftwah and Button -->
+        <li>
+          <%= link_to 'User Directory', users_path, class: 'bg-lime-500 hover:bg-lime-700 text-white font-bold py-1 px-2 rounded' %>
+        </li>
+        
+        <% if user_signed_in? %>
+          <!-- Signed-in user dropdown menu -->
+          <li class="relative">
+            <button id="userMenuBtn" class="text-white hover:text-lime-300 focus:outline-none flex items-center space-x-1">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
               </svg>
-            </a>
+            </button>
+            <div id="userMenu" class="absolute right-0 mt-2 w-48 bg-gray-700 rounded-md shadow-xl z-20 hidden">
+              <%= link_to 'Public Page', user_links_path(current_user.username), class: 'block px-4 py-2 text-sm text-white hover:bg-gray-600' %>
+              <%= link_to 'Analytics', user_analytics_path(current_user.username), class: 'block px-4 py-2 text-sm text-white hover:bg-gray-600' %>
+              <%= link_to 'Links', links_path, class: 'block px-4 py-2 text-sm text-white hover:bg-gray-600' %>
+              <%= link_to 'Achievements', achievements_path, class: 'block px-4 py-2 text-sm text-white hover:bg-gray-600' %>
+              <%= link_to 'Profile', edit_user_registration_path, class: 'block px-4 py-2 text-sm text-white hover:bg-gray-600' %>
+              <%= link_to 'Logout', destroy_user_session_path, method: :delete, class: 'block px-4 py-2 text-sm text-white hover:bg-gray-600' %>
+            </div>
           </li>
-        </ul>
+        <% else %>
+          <!-- Login link for guests -->
+          <li><%= link_to 'Login', new_user_session_path, class: 'text-white hover:text-lime-300' %></li>
+        <% end %>
+
+        <!-- GitHub link -->
+        <li>
+          <a href="https://github.com/loftwah/linkarooie" target="_blank" rel="noopener noreferrer" class="text-white hover:text-lime-300">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
+            </svg>
+          </a>
+        </li>
+      </ul>
       </nav>
       </div>
     </header>
