@@ -10,6 +10,17 @@ import "../../assets/stylesheets/application.tailwind.css";
 import '@fortawesome/fontawesome-free/js/all.min.js';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
+// Import Stimulus
+import { Application } from "@hotwired/stimulus"
+import { registerControllers } from 'stimulus-vite-helpers'
+
+// Initialize Stimulus application
+const application = Application.start()
+
+// Use registerControllers helper to load all controllers
+const controllers = import.meta.glob('../controllers/**/*_controller.js', { eager: true })
+registerControllers(application, controllers)
+
 Rails.start();
 
 console.log('Vite ⚡️ Rails');
