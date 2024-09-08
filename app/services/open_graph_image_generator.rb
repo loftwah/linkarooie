@@ -54,17 +54,22 @@ class OpenGraphImageGenerator
   private
 
   def download_image(url)
+    uri = URI.parse(url)
     tempfile = Tempfile.new(['avatar', '.jpg'])
     tempfile.binmode
     begin
-      URI.open(url) do |image|
-        tempfile.write(image.read)
+      response = Net::HTTP.get_response(uri)
+      if response.is_a?(Net::HTTPSuccess)
+        tempfile.write(response.body)
+        tempfile.rewind
+        MiniMagick::Image.open(tempfile.path)
+      else
+        Rails.logger.error("Failed to download image from URL: #{url}. HTTP Error: #{response.code} #{response.message}. Using default avatar.")
+        MiniMagick::Image.open(default_avatar_path)
       end
-      tempfile.rewind
-      MiniMagick::Image.open(tempfile.path)
-    rescue OpenURI::HTTPError, Errno::ENOENT, SocketError => e
+    rescue SocketError, Errno::ENOENT => e
       Rails.logger.error("Failed to download image from URL: #{url}. Error: #{e.message}. Using default avatar.")
-      MiniMagick::Image.open(default_avatar_path) # Use default avatar
+      MiniMagick::Image.open(default_avatar_path)
     ensure
       tempfile.close
       tempfile.unlink  # Unlink after we've processed the image
