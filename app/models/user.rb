@@ -42,26 +42,28 @@ class User < ApplicationRecord
   def download_and_store_avatar
     return if avatar.blank?
 
-    require 'open-uri'
-    require 'fileutils'
-
     begin
       avatar_dir = Rails.root.join('public', 'avatars')
       FileUtils.mkdir_p(avatar_dir) unless File.directory?(avatar_dir)
 
-      file = URI.open(avatar)
-
+      uri = URI.parse(avatar)
       filename = "#{username}_avatar#{File.extname(avatar)}"
       filepath = File.join(avatar_dir, filename)
 
-      File.open(filepath, 'wb') do |local_file|
-        local_file.write(file.read)
+      response = Net::HTTP.get_response(uri)
+      if response.is_a?(Net::HTTPSuccess)
+        File.open(filepath, 'wb') do |local_file|
+          local_file.write(response.body)
+        end
+        Rails.logger.info "Avatar downloaded for user #{username}"
+      else
+        Rails.logger.error "Failed to download avatar for user #{username}. HTTP Error: #{response.code} #{response.message}. Using default avatar."
+        self.avatar = 'greg.jpg'  # Set to default avatar
+        save(validate: false)  # Save without triggering validations
       end
-
-      Rails.logger.info "Avatar downloaded for user #{username}"
     rescue StandardError => e
       Rails.logger.error "Failed to download avatar for user #{username}: #{e.message}"
-      self.avatar = 'greg.jpg'  # Set to default avatar instead of nil
+      self.avatar = 'greg.jpg'  # Set to default avatar
       save(validate: false)  # Save without triggering validations
     end
   end
