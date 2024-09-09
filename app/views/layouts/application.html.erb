@@ -98,7 +98,7 @@
                   <%= link_to 'Links', links_path, class: 'block px-4 py-2 text-sm text-white hover:bg-gray-600' %>
                   <%= link_to 'Achievements', achievements_path, class: 'block px-4 py-2 text-sm text-white hover:bg-gray-600' %>
                   <%= link_to 'Profile', edit_user_registration_path, class: 'block px-4 py-2 text-sm text-white hover:bg-gray-600' %>
-                  <%= link_to 'Logout', destroy_user_session_path, data: { turbo_method: :delete }, class: 'block px-4 py-2 text-sm text-white hover:bg-gray-600' %>
+                  <%= link_to 'Logout', destroy_user_session_path, method: :delete, class: 'block px-4 py-2 text-sm text-white hover:bg-gray-600' %>
                 </div>
               </li>
             <% else %>
