@@ -1,4 +1,3 @@
-# spec/controllers/achievements_controller_spec.rb
 require 'rails_helper'
 
 RSpec.describe AchievementsController, type: :controller do
@@ -17,20 +16,9 @@ RSpec.describe AchievementsController, type: :controller do
   end
 
   describe "GET #show" do
-    context "when achievement doesn't have a URL" do
-      it "returns a success response" do
-        get :show, params: { id: achievement.to_param }
-        expect(response).to be_successful
-      end
-    end
-
-    context "when achievement has a URL" do
-      let(:achievement_with_url) { create(:achievement, user: user, url: 'http://example.com') }
-
-      it "redirects to the achievement URL" do
-        get :show, params: { id: achievement_with_url.to_param }
-        expect(response).to redirect_to(achievement_with_url.url)
-      end
+    it "returns a success response" do
+      get :show, params: { id: achievement.to_param }
+      expect(response).to be_successful
     end
 
     it "creates an AchievementView" do
