@@ -1,6 +1,6 @@
 # Linkarooie
 
-[![Build Status](https://github.com/loftwah/linkarooie/actions/workflows/ci.yml/badge.svg)](https://github.com/loftwah/linkarooie/actions) [![Docker Image Available](https://img.shields.io/badge/Docker%20image-available-blue?logo=docker)](https://github.com/users/loftwah/packages/container/package/linkarooie) ![HealthCheck](https://healthcheck.eddiehubcommunity.org/api/badges/report/cm0cggpxg0006p2fp0x06g7hv)
+[![Build Status](https://github.com/loftwah/linkarooie/actions/workflows/ci.yml/badge.svg)](https://github.com/loftwah/linkarooie/actions) [![Docker Image Available](https://img.shields.io/badge/Docker%20image-available-blue?logo=docker)](https://github.com/users/loftwah/packages/container/package/linkarooie) [![HealthCheck](https://healthcheck.eddiehubcommunity.org/api/badges/report/cm0cggpxg0006p2fp0x06g7hv)](https://healthcheck.eddiehubcommunity.org/api/report/latest/cm0cggpxg0006p2fp0x06g7hv)
 
 ![Judgemental Linkarooie](https://github.com/user-attachments/assets/65378fe8-d0ae-4682-9f15-64007b5b0818)
 
