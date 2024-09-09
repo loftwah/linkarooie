@@ -33,8 +33,10 @@
     <div class="mt-4">
       <div class="flex flex-wrap justify-center">
         <% @pinned_links.each do |link| %>
-          <%= link_to track_click_link_path(link), target: "_blank", class: 'bg-gray-800 p-3 m-1 rounded' do %>
-            <i class="<%= link.icon %> text-lime-300"></i>
+          <%= link_to link_path(link), target: "_blank", class: 'bg-gray-800 p-3 m-1 rounded hover:underline' do %>
+            <% if link.icon.present? %>
+              <i class="<%= link.icon %> text-lime-300"></i>
+            <% end %>
           <% end %>
         <% end %>
       </div>
@@ -52,8 +54,11 @@
     <% @links.where(pinned: false).each do |link| %>
       <li class="bg-gray-800 p-3 rounded shadow-md max-w-2xl mx-auto">
         <h2 class="text-xl text-lime-300 font-bold">
-          <%= link_to track_click_link_path(link), target: "_blank", class: 'hover:underline' do %>
-            <i class="<%= link.icon %> text-lime-300"></i> <%= link.title %>
+          <%= link_to link_path(link), target: "_blank", class: 'hover:underline' do %>
+            <% if link.icon.present? %>
+              <i class="<%= link.icon %> text-lime-300"></i>
+            <% end %>
+            <%= link.title %>
           <% end %>
         </h2>
         <p class="text-gray-400"><%= link.description %></p>
