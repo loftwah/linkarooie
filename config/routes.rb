@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   # Routes for users directory (static)
   resources :users, only: [:index]
 
-  # Devise routes for user registration
+  # Devise routes for user registration and authentication
   devise_for :users, controllers: {
     registrations: 'users/registrations'
   }
@@ -27,12 +27,8 @@ Rails.application.routes.draw do
   # Routes for achievements
   resources :achievements, only: [:index, :show, :new, :create, :edit, :update, :destroy]
 
-  # Routes for links with standard RESTful actions
-  resources :links do
-    member do
-      get :track_click
-    end
-  end
+  # Routes for links with RESTful actions (no custom click tracking anymore)
+  resources :links, only: [:index, :show, :new, :create, :edit, :update, :destroy]
 
   # Custom routes for user-specific views and analytics
   get '/:username/analytics', to: 'analytics#index', as: :user_analytics

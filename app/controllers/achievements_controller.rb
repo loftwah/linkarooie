@@ -1,5 +1,5 @@
 class AchievementsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show]
+  before_action :authenticate_user!, except: [:show]
 
   def index
     # Scope achievements to the current user
@@ -7,7 +7,9 @@ class AchievementsController < ApplicationController
   end
 
   def show
-    @achievement = current_user.achievements.find(params[:id])
+    @achievement = Achievement.find(params[:id])
+
+    # Track the achievement view before redirecting
     AchievementView.create(
       achievement: @achievement,
       user: @achievement.user,
@@ -18,8 +20,13 @@ class AchievementsController < ApplicationController
       session_id: request.session.id
     )
 
-    # Render the achievement details without redirection
-    render :show
+    # Redirect to the URL if it exists, otherwise show the details
+    if @achievement.url.present?
+      redirect_to @achievement.url, allow_other_host: true
+    else
+      # Render the achievement details
+      render :show
+    end
   end
 
   def new
