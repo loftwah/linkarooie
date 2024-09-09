@@ -8,6 +8,6 @@ class WaitingListMailer < ApplicationMailer
     @today_count = @waiting_list.where('created_at >= ?', Time.zone.now.beginning_of_day).count
     @url = 'https://linkarooie.com'
     
-    mail(to: email, subject: 'Daily Waiting List Report - Linkarooie')
+    mail(to: email, subject: 'Linkarooie - Daily Waiting List Report')
   end
 end
