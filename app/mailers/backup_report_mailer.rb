@@ -4,6 +4,6 @@ class BackupReportMailer < ApplicationMailer
 
   def backup_completed(report)
     @report = report
-    mail(subject: 'Backup Completed Successfully')
+    mail(subject: 'Linkarooie - Backup Completed Successfully')
   end
 end
