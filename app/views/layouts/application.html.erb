@@ -82,9 +82,11 @@
         <nav>
           <ul class="flex space-x-2 md:space-x-4 text-sm md:text-base items-center">
             <li>
-              <%= link_to 'User Directory', users_path, class: 'bg-lime-500 hover:bg-lime-700 text-white font-bold py-1 px-2 rounded' %>
-            </li>
-            
+            <%= link_to users_path, class: 'bg-lime-500 hover:bg-lime-700 text-white font-bold py-1 px-2 rounded inline-flex items-center space-x-2' do %>
+              <i class="fas fa-compass"></i>
+              <span>Users</span>
+            <% end %>
+          </li>
             <% if user_signed_in? %>
               <li class="relative" data-controller="dropdown">
                 <button data-action="click->dropdown#toggle click@window->dropdown#hide" class="text-white hover:text-lime-300 focus:outline-none flex items-center space-x-1">
