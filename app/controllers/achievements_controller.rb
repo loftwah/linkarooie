@@ -18,11 +18,8 @@ class AchievementsController < ApplicationController
       session_id: request.session.id
     )
 
-    if @achievement.url.present?
-      redirect_to @achievement.url, allow_other_host: true
-    else
-      render :show
-    end
+    # Render the achievement details without redirection
+    render :show
   end
 
   def new

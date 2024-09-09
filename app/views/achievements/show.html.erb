@@ -6,9 +6,11 @@
 </h1>
 <p class="text-gray-400 mb-4"><%= @achievement.description %></p>
 <p class="text-gray-500">Date: <%= @achievement.date.strftime("%d %b %Y") %></p>
+
 <% if @achievement.url.present? %>
   <p class="text-gray-500">URL: <a href="<%= @achievement.url %>" class="text-lime-300 hover:underline" target="_blank"><%= @achievement.url %></a></p>
 <% end %>
+
 <div class="mt-4">
   <% if user_signed_in? && @achievement.user == current_user %>
     <%= link_to 'Edit', edit_achievement_path(@achievement), class: 'text-lime-300 hover:text-lime-500' %> |
