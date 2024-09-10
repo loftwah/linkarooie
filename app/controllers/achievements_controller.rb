@@ -2,29 +2,29 @@ class AchievementsController < ApplicationController
   before_action :authenticate_user!, except: [:show]
 
   def index
-    # Scope achievements to the current user
     @achievements = current_user.achievements.order(date: :desc)
   end
 
   def show
     @achievement = Achievement.find(params[:id])
 
-    # Track the achievement view before redirecting
-    AchievementView.create(
-      achievement: @achievement,
-      user: @achievement.user,
-      viewed_at: Time.current,
-      referrer: request.referrer,
-      browser: request.user_agent,
-      ip_address: request.ip,
-      session_id: request.session.id
-    )
+    # Track the achievement view (only for normal view, not edit or update)
+    unless request.referer&.include?('edit') || request.patch? || request.put?
+      AchievementView.create(
+        achievement: @achievement,
+        user: @achievement.user,
+        viewed_at: Time.current,
+        referrer: request.referrer,
+        browser: request.user_agent,
+        ip_address: request.ip,
+        session_id: request.session.id
+      )
+    end
 
-    # Redirect to the URL if it exists, otherwise show the details
-    if @achievement.url.present?
+    # If there's a URL present and this is a regular view, redirect to it
+    if @achievement.url.present? && !request.referer&.include?('edit') && !request.patch?
       redirect_to @achievement.url, allow_other_host: true
     else
-      # Render the achievement details
       render :show
     end
   end
@@ -49,6 +49,7 @@ class AchievementsController < ApplicationController
   def update
     @achievement = current_user.achievements.find(params[:id])
     if @achievement.update(achievement_params)
+      # After updating, redirect to the show page, not the URL
       redirect_to @achievement, notice: 'Achievement was successfully updated.'
     else
       render :edit

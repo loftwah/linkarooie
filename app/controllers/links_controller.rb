@@ -8,17 +8,26 @@ class LinksController < ApplicationController
   def show
     @link = Link.find(params[:id])
 
-    LinkClick.create(
-      link: @link,
-      user: @link.user,
-      clicked_at: Time.current,
-      referrer: request.referrer,
-      browser: request.user_agent,
-      ip_address: request.ip,
-      session_id: request.session.id
-    )
+    # Track the link click/view (only for normal view, not edit or update)
+    unless request.referer&.include?('edit') || request.patch? || request.put?
+      LinkClick.create(
+        link: @link,
+        user: @link.user,
+        clicked_at: Time.current,
+        referrer: request.referrer,
+        browser: request.user_agent,
+        ip_address: request.ip,
+        session_id: request.session.id
+      )
+    end
 
-    redirect_to @link.url, allow_other_host: true
+    # If there's a URL present and this is a regular view, redirect to it
+    if @link.url.present? && !request.referer&.include?('edit') && !request.patch?
+      redirect_to @link.url, allow_other_host: true
+    else
+      # Otherwise render the link details
+      render :show
+    end
   end
 
   def new
@@ -41,6 +50,7 @@ class LinksController < ApplicationController
   def update
     @link = current_user.links.find(params[:id])
     if @link.update(link_params)
+      # After updating, redirect to the show page, not the URL
       redirect_to @link, notice: 'Link was successfully updated.'
     else
       render :edit
@@ -57,12 +67,13 @@ class LinksController < ApplicationController
     @user = User.find_by(username: params[:username])
     return redirect_to root_path, alert: "User not found" if @user.nil?
 
-    @links = @user.links.visible
-    @hidden_links = @user.links.hidden
-    @pinned_links = @user.links.pinned
-    @achievements = @user.achievements
+    @links = @user.links.visible.order(:position)
+    @hidden_links = @user.links.hidden.order(:position)
+    @pinned_links = @user.links.pinned.order(:position)
+    @achievements = @user.achievements.order(date: :desc)
     @user.tags = JSON.parse(@user.tags) if @user.tags.is_a?(String)
 
+    # This was restored: logging hidden links in the browser console
     Rails.logger.debug "Hidden Links: #{@hidden_links.inspect}"
 
     case params[:theme]
