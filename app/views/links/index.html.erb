@@ -1,7 +1,9 @@
 <h1 class="text-2xl font-bold mb-4">Links</h1>
+
 <% if user_signed_in? %>
   <%= link_to 'New Link', new_link_path, class: 'bg-lime-500 hover:bg-lime-700 text-white font-bold py-2 px-4 rounded mb-4 inline-block' %>
 <% end %>
+
 <ul class="space-y-4">
   <% @links.each do |link| %>
     <li class="bg-gray-800 p-4 rounded shadow-md max-w-full overflow-hidden">
@@ -13,16 +15,28 @@
           <%= link.title %>
         <% end %>
       </h2>
+
+      <!-- Description -->
       <p class="text-gray-400 break-words"><%= link.description %></p>
-      <p class="text-gray-500 break-all">URL: <a href="<%= link.url %>" class="text-lime-300 hover:underline" target="_blank"><%= link.url %></a></p>
+
+      <!-- URL -->
+      <p class="text-gray-500 break-all">
+        URL: <a href="<%= link.url %>" class="text-lime-300 hover:underline" target="_blank"><%= link.url %></a>
+      </p>
+
+      <!-- Additional Details -->
+      <p class="text-gray-500">Pinned: <%= link.pinned? ? 'Yes' : 'No' %></p>
+      <p class="text-gray-500">Visible: <%= link.visible? ? 'Yes' : 'No' %></p>
+      <p class="text-gray-500">Hidden: <%= link.hidden? ? 'Yes' : 'No' %></p>
+
+      <!-- Position Display (Not Editable) -->
       <p class="text-gray-500">Position: <%= link.position %></p>
-      <p class="text-gray-500">Created at: <%= link.created_at.strftime("%d %b %Y %H:%M") %></p>
-      <div class="mt-2">
-        <% if user_signed_in? && link.user == current_user %>
-          <%= link_to 'Edit', edit_link_path(link), class: 'text-lime-300 hover:text-lime-500' %> |
-          <%= form_with(model: link, method: :delete, class: 'inline') do |form| %>
-            <%= form.submit 'Delete', class: 'text-lime-300 hover:text-lime-500 bg-transparent border-none cursor-pointer', data: { confirm: 'Are you sure?' } %>
-          <% end %>
+
+      <!-- Edit and Delete Buttons -->
+      <div class="mt-4 flex space-x-2">
+        <%= link_to 'Edit', edit_link_path(link), class: 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded' %>
+        <%= form_with(model: link, method: :delete, class: 'inline') do |form| %>
+          <%= form.submit 'Delete', class: 'bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded cursor-pointer', data: { confirm: 'Are you sure?' } %>
         <% end %>
       </div>
     </li>
