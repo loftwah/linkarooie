@@ -1,6 +1,8 @@
 class OpenGraphImageGenerator
   # Constants for sizes and paths
   FALLBACK_AVATAR_URL = 'https://pbs.twimg.com/profile_images/1581014308397502464/NPogKMyk_400x400.jpg'
+  AVATAR_SIZE = 400
+  BORDER_SIZE = 5
 
   def initialize(user)
     @user = user
