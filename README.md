@@ -286,16 +286,6 @@ The restore process:
 2. Loads the specified backup file.
 3. Applies any pending migrations.
 
-## Geolocation
-
-Geolocation is currently a mandatory feature in Linkarooie. It uses the `geocoder` gem to provide location-based insights for link clicks and page views.
-
-To enable geolocation:
-1. Obtain a free API key from [ipapi](https://ipapi.com).
-2. Set the `GEOCODER_API_KEY` environment variable with your API key.
-
-Future plans include making geolocation optional to cater to different privacy preferences.
-
 ## Customization
 
 Linkarooie is designed to be highly customizable:
