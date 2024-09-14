@@ -26,8 +26,9 @@ class PageViewTracker
       # Extract the original IP from the Cloudflare headers if available
       real_ip = request.headers['CF-Connecting-IP'] || request.headers['X-Forwarded-For']&.split(',')&.first || request.ip
   
-      location = OFFLINE_GEOCODER.search(real_ip)
-      
+      # Use Geocoder to find the location based on the real IP
+      location = Geocoder.search(real_ip).first
+  
       PageView.create(
         user: user,
         path: request.path,
@@ -36,13 +37,13 @@ class PageViewTracker
         visited_at: Time.current,
         ip_address: real_ip,
         session_id: request.session[:session_id],
-        country: location[:country],
-        city: location[:name],
-        state: location[:admin1],
-        county: location[:admin2],
-        latitude: location[:lat],
-        longitude: location[:lon],
-        country_code: location[:cc]
+        country: location&.country,
+        city: location&.city,
+        state: location&.state,
+        county: location&.county,
+        latitude: location&.latitude,
+        longitude: location&.longitude,
+        country_code: location&.country_code
       )
     end
   rescue ActiveRecord::RecordNotUnique
