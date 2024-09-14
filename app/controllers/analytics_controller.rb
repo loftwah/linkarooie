@@ -16,6 +16,7 @@ class AnalyticsController < ApplicationController
     @daily_views = fetch_cached_data("daily_views") { fetch_daily_views }
     @daily_unique_visitors = fetch_cached_data("daily_unique_visitors") { fetch_daily_unique_visitors }
     @browser_data = fetch_cached_data("browser_data") { fetch_browser_data }
+    @location_data = fetch_cached_data("location_data") { fetch_location_data }
   end  
 
   private
@@ -33,6 +34,16 @@ class AnalyticsController < ApplicationController
 
   def fetch_cached_data(key, &block)
     Rails.cache.fetch("#{cache_key_with_version}/#{key}", expires_in: CACHE_EXPIRATION, &block)
+  end
+
+  def fetch_location_data
+    @user.page_views.group(:country, :city).count.map do |location, count|
+      {
+        country: location[0],
+        city: location[1],
+        count: count
+      }
+    end.sort_by { |location| -location[:count] }.take(10)
   end
 
   # Update this method to exclude hidden links
