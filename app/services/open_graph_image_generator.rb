@@ -1,9 +1,6 @@
-# app/services/open_graph_image_generator.rb
 class OpenGraphImageGenerator
-  IMAGE_WIDTH = 1200
-  IMAGE_HEIGHT = 630
-  AVATAR_SIZE = 200
-  BORDER_SIZE = 10
+  # Constants for sizes and paths
+  FALLBACK_AVATAR_URL = 'https://pbs.twimg.com/profile_images/1581014308397502464/NPogKMyk_400x400.jpg'
 
   def initialize(user)
     @user = user
@@ -14,7 +11,7 @@ class OpenGraphImageGenerator
     output_path = Rails.root.join('public', 'uploads', 'og_images', "#{@user.username}_og.png")
     image = MiniMagick::Image.open(template_path)
     
-    avatar = @user.avatar.present? ? download_image(@user.avatar) : default_avatar
+    avatar = @user.avatar.present? ? download_image(@user.avatar) : download_image(FALLBACK_AVATAR_URL)
 
     # Resize avatar and add a white square border
     avatar.resize "#{AVATAR_SIZE}x#{AVATAR_SIZE}"
@@ -64,23 +61,15 @@ class OpenGraphImageGenerator
         tempfile.rewind
         MiniMagick::Image.open(tempfile.path)
       else
-        Rails.logger.error("Failed to download image from URL: #{url}. HTTP Error: #{response.code} #{response.message}. Using default avatar.")
-        MiniMagick::Image.open(default_avatar_path)
+        Rails.logger.error("Failed to download image from URL: #{url}. HTTP Error: #{response.code} #{response.message}.")
+        MiniMagick::Image.open(FALLBACK_AVATAR_URL)
       end
     rescue SocketError, Errno::ENOENT => e
-      Rails.logger.error("Failed to download image from URL: #{url}. Error: #{e.message}. Using default avatar.")
-      MiniMagick::Image.open(default_avatar_path)
+      Rails.logger.error("Failed to download image from URL: #{url}. Error: #{e.message}. Using fallback URL.")
+      MiniMagick::Image.open(FALLBACK_AVATAR_URL)
     ensure
       tempfile.close
       tempfile.unlink  # Unlink after we've processed the image
     end
-  end  
-
-  def default_avatar
-    MiniMagick::Image.open(default_avatar_path)
-  end
-
-  def default_avatar_path
-    ActionController::Base.helpers.asset_path('greg.jpg')
   end  
 end

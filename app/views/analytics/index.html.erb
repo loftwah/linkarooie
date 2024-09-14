@@ -59,7 +59,7 @@
     <div class="bg-gray-800 rounded-lg shadow p-4">
       <h2 class="text-xl font-semibold mb-4">Daily Views (Last 30 Days)</h2>
       <%= line_chart @daily_views, 
-                     colors: ["#84CC16"],
+                     colors: ["#3B82F6"],
                      library: {
                        backgroundColor: 'transparent',
                        legend: { display: false },
@@ -100,30 +100,32 @@
     </div>
   </div>
 
-  <!-- Top Visitor Locations (New Section) -->
-  <div class="bg-gray-800 rounded-lg shadow p-4 mb-6">
-    <h2 class="text-xl font-semibold mb-4">Top Visitor Locations</h2>
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm text-center table-auto">
-        <thead class="text-xs uppercase bg-gray-700">
-          <tr>
-            <th scope="col" class="px-4 py-3 rounded-tl-lg">City</th>
-            <th scope="col" class="px-4 py-3">Country</th>
-            <th scope="col" class="px-4 py-3 rounded-tr-lg">Views</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @location_data.each_with_index do |location, index| %>
+ <!-- Top Visitor Locations (New Section) -->
+<div class="bg-gray-800 rounded-lg shadow p-4 mb-6">
+  <h2 class="text-xl font-semibold mb-4">Top Visitor Locations</h2>
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm text-center table-auto">
+      <thead class="text-xs uppercase bg-gray-700">
+        <tr>
+          <th scope="col" class="px-4 py-3 rounded-tl-lg">City</th>
+          <th scope="col" class="px-4 py-3">Country</th>
+          <th scope="col" class="px-4 py-3 rounded-tr-lg">Views</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @location_data.each_with_index do |location, index| %>
+          <% unless location[:city] == 'Unknown' && location[:country] == 'Unknown' %>
             <tr class="<%= index.even? ? 'bg-gray-800' : 'bg-gray-900' %> border-b border-gray-700">
-              <td class="px-4 py-3"><%= location[:city] || 'Unknown' %></td>
-              <td class="px-4 py-3"><%= location[:country] || 'Unknown' %></td>
+              <td class="px-4 py-3"><%= location[:city].present? && location[:city] != 'Unknown' ? location[:city] : '' %></td>
+              <td class="px-4 py-3"><%= location[:country].present? && location[:country] != 'Unknown' ? location[:country] : '' %></td>
               <td class="px-4 py-3"><%= number_with_delimiter(location[:count]) %></td>
             </tr>
           <% end %>
-        </tbody>
-      </table>
-    </div>
+        <% end %>
+      </tbody>
+    </table>
   </div>
+</div>
 
   <!-- Link Analytics Table -->
   <div class="bg-gray-800 rounded-lg shadow p-4 mb-6">

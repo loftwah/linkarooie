@@ -38,18 +38,18 @@ RSpec.describe User, type: :model do
   end
 
   describe 'callbacks' do
-    it 'does not generate open graph image in test environment' do
-      user = build(:user)
-      expect(OpenGraphImageGenerator).not_to receive(:new)
+    it 'uses the fallback avatar URL when no avatar is provided' do
+      user = build(:user, avatar: nil)
       user.save
+      expect(user.avatar).to eq(User::FALLBACK_AVATAR_URL)
     end
-
-    it 'downloads and stores avatar after save' do
-      user = build(:user, avatar: 'http://example.com/avatar.jpg')
-      expect(user).to receive(:download_and_store_avatar)
+  
+    it 'handles invalid avatar URLs and falls back to default' do
+      user = build(:user, avatar: 'http://invalid-url.com/avatar.jpg')
       user.save
+      expect(user.avatar).to eq(User::FALLBACK_AVATAR_URL)
     end
-  end
+  end  
 
   describe '#parsed_tags' do
     it 'returns parsed JSON when tags is a valid JSON string' do
