@@ -1,4 +1,3 @@
-# app/models/user.rb
 class User < ApplicationRecord
 
   FALLBACK_AVATAR_URL = 'https://pbs.twimg.com/profile_images/1581014308397502464/NPogKMyk_400x400.jpg'
