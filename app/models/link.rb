@@ -7,6 +7,7 @@ class Link < ApplicationRecord
   scope :hidden, -> { where(hidden: true) }
 
   before_save :ensure_unique_position
+  before_save :normalize_url
 
   private
 
@@ -15,6 +16,13 @@ class Link < ApplicationRecord
       self.position = user.links.maximum(:position).to_i + 1
     elsif user.links.where(position: position).where.not(id: id).exists?
       self.position = user.links.maximum(:position).to_i + 1
+    end
+  end
+
+  def normalize_url
+    # Ensure the URL starts with http:// or https://
+    unless url.blank? || url =~ /\Ahttps?:\/\//
+      self.url = "http://#{url}"
     end
   end
 end
