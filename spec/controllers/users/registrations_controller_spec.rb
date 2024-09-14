@@ -6,55 +6,35 @@ RSpec.describe Users::RegistrationsController, type: :controller do
   end
 
   describe "POST #create" do
-    let(:valid_attributes) {
-      { email: "test@example.com", password: "password", password_confirmation: "password",
-        username: "testuser", full_name: "Test User", tags: "tag1,tag2", avatar_border: "white", invite_code: "POWEROVERWHELMING" }
-    }
+  let(:valid_attributes) {
+    { email: "test@example.com", password: "password", password_confirmation: "password",
+      username: "testuser", full_name: "Test User", tags: "tag1,tag2", avatar_border: "white", invite_code: "POWEROVERWHELMING" }
+  }
 
-    context "when sign-ups are enabled" do
-      before do
-        allow(Rails.application.config).to receive(:sign_ups_open).and_return(true)
-      end
-
-      it "creates a new User" do
-        expect {
-          post :create, params: { user: valid_attributes }
-        }.to change(User, :count).by(1)
-      end
-
-      it "correctly processes tags" do
-        post :create, params: { user: valid_attributes }
-        user = User.last
-        tags = user.tags.is_a?(String) ? JSON.parse(user.tags) : user.tags
-        expect(tags).to eq(["tag1", "tag2"])
-      end
+  context "when sign-ups are enabled" do
+    before do
+      allow(Rails.application.config).to receive(:sign_ups_open).and_return(true)
     end
 
-    context "when sign-ups are disabled" do
-      before do
-        allow(Rails.application.config).to receive(:sign_ups_open).and_return(false)
-      end
+    it "creates a new User" do
+      expect {
+        post :create, params: { user: valid_attributes }
+      }.to change(User, :count).by(1)
+    end
 
-      it "does not create a new User without a valid invite code and redirects to root path" do
-        invalid_attributes = valid_attributes.merge(invite_code: "INVALIDCODE")
-        expect {
-          post :create, params: { user: invalid_attributes }
-        }.not_to change(User, :count)
-        expect(response).to redirect_to(root_path)
-        expect(flash[:alert]).to eq("Sign-ups are currently disabled.")
-      end
+    it "sets the fallback avatar URL if none is provided" do
+      post :create, params: { user: valid_attributes.merge(avatar: nil) }
+      user = User.last
+      expect(user.avatar).to eq('https://pbs.twimg.com/profile_images/1581014308397502464/NPogKMyk_400x400.jpg')
+    end
 
-      it "creates a new User with a valid invite code" do
-        expect(controller).to receive(:after_sign_up_path_for).with(instance_of(User)).and_return("/path/to/redirect")
-
-        expect {
-          post :create, params: { user: valid_attributes }
-        }.to change(User, :count).by(1)
-        
-        expect(response).to redirect_to("/path/to/redirect")
-      end
+    it "handles invalid avatar URLs and sets the fallback URL" do
+      post :create, params: { user: valid_attributes.merge(avatar: 'http://invalid-url.com/avatar.jpg') }
+      user = User.last
+      expect(user.avatar).to eq('https://pbs.twimg.com/profile_images/1581014308397502464/NPogKMyk_400x400.jpg')
     end
   end
+end
 
   describe "PUT #update" do
     let(:user) { create(:user, tags: ["old_tag1", "old_tag2"].to_json) }

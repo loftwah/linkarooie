@@ -34,8 +34,12 @@ RSpec.configure do |config|
     Rake::Task['assets:precompile'].invoke
   end
 
-  # Clean up uploaded files after each test
+  # Clean up uploaded files and generated avatars after each test
   config.after(:each) do
+    # Clean up the avatars generated during tests
+    FileUtils.rm_rf(Dir["#{Rails.root}/public/avatars"])
+
+    # Clean up other uploaded files
     FileUtils.rm_rf(Dir["#{Rails.root}/spec/support/uploads"])
   end
 

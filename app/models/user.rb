@@ -1,5 +1,8 @@
 # app/models/user.rb
 class User < ApplicationRecord
+
+  FALLBACK_AVATAR_URL = 'https://pbs.twimg.com/profile_images/1581014308397502464/NPogKMyk_400x400.jpg'
+
   attr_accessor :invite_code
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
@@ -40,16 +43,20 @@ class User < ApplicationRecord
   end
 
   def download_and_store_avatar
-    return if avatar.blank?
-
+    if avatar.blank?
+      self.avatar = FALLBACK_AVATAR_URL
+      save(validate: false)
+      return
+    end
+  
     begin
       avatar_dir = Rails.root.join('public', 'avatars')
       FileUtils.mkdir_p(avatar_dir) unless File.directory?(avatar_dir)
-
+  
       uri = URI.parse(avatar)
       filename = "#{username}_avatar#{File.extname(avatar)}"
       filepath = File.join(avatar_dir, filename)
-
+  
       response = Net::HTTP.get_response(uri)
       if response.is_a?(Net::HTTPSuccess)
         File.open(filepath, 'wb') do |local_file|
@@ -57,16 +64,16 @@ class User < ApplicationRecord
         end
         Rails.logger.info "Avatar downloaded for user #{username}"
       else
-        Rails.logger.error "Failed to download avatar for user #{username}. HTTP Error: #{response.code} #{response.message}. Using default avatar."
-        self.avatar = 'greg.jpg'  # Set to default avatar
-        save(validate: false)  # Save without triggering validations
+        Rails.logger.error "Failed to download avatar for user #{username}. HTTP Error: #{response.code} #{response.message}. Using fallback avatar."
+        self.avatar = FALLBACK_AVATAR_URL
+        save(validate: false)
       end
     rescue StandardError => e
-      Rails.logger.error "Failed to download avatar for user #{username}: #{e.message}"
-      self.avatar = 'greg.jpg'  # Set to default avatar
-      save(validate: false)  # Save without triggering validations
+      Rails.logger.error "Failed to download avatar for user #{username}: #{e.message}. Using fallback avatar."
+      self.avatar = FALLBACK_AVATAR_URL
+      save(validate: false)
     end
-  end
+  end  
 
   private
 
