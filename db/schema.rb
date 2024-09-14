@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_14_101600) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_14_124058) do
   create_table "achievement_views", force: :cascade do |t|
     t.integer "achievement_id", null: false
     t.integer "user_id", null: false
@@ -123,6 +123,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_14_101600) do
     t.float "latitude"
     t.float "longitude"
     t.string "country_code"
+    t.string "asn"
+    t.string "asn_org"
     t.index ["user_id"], name: "index_page_views_on_user_id"
   end
 

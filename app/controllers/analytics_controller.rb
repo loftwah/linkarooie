@@ -39,12 +39,12 @@ class AnalyticsController < ApplicationController
   def fetch_location_data
     @user.page_views.group(:country, :city).count.map do |location, count|
       {
-        country: location[0],
-        city: location[1],
+        country: location[0] || 'Unknown', # Fallback to 'Unknown' if no country
+        city: location[1] || 'Unknown',    # Fallback to 'Unknown' if no city
         count: count
       }
     end.sort_by { |location| -location[:count] }.take(10)
-  end
+  end  
 
   # Update this method to exclude hidden links
   def fetch_link_analytics
