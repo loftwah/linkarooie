@@ -23,7 +23,10 @@ class PageViewTracker
   def track_page_view(request)
     user = User.find_by(username: request.path.split('/').last)
     if user
-      location = OFFLINE_GEOCODER.search(request.ip)
+      # Extract the original IP from the Cloudflare headers if available
+      real_ip = request.headers['CF-Connecting-IP'] || request.headers['X-Forwarded-For']&.split(',')&.first || request.ip
+  
+      location = OFFLINE_GEOCODER.search(real_ip)
       
       PageView.create(
         user: user,
@@ -31,7 +34,7 @@ class PageViewTracker
         referrer: request.referrer,
         browser: request.user_agent,
         visited_at: Time.current,
-        ip_address: request.ip,
+        ip_address: real_ip,
         session_id: request.session[:session_id],
         country: location[:country],
         city: location[:name],
@@ -46,5 +49,5 @@ class PageViewTracker
     Rails.logger.info "Duplicate page view detected and ignored"
   rescue => e
     Rails.logger.error "Error tracking page view: #{e.message}"
-  end
+  end  
 end
