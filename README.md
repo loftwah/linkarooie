@@ -241,7 +241,6 @@ Create a `.env` file in the root directory with the following variables:
 ```
 SECRET_KEY_BASE=your_secret_key_base
 AXIOM_API_KEY=your_axiom_api_key
-GEOCODER_API_KEY=your_geocoder_api_key
 DO_TOKEN=your_digitalocean_token
 SPACES_ACCESS_KEY_ID=your_spaces_access_key_id
 SPACES_SECRET_ACCESS_KEY=your_spaces_secret_access_key
@@ -286,16 +285,6 @@ The restore process:
 1. Drops all existing tables in the database.
 2. Loads the specified backup file.
 3. Applies any pending migrations.
-
-## Geolocation
-
-Geolocation is currently a mandatory feature in Linkarooie. It uses the `geocoder` gem to provide location-based insights for link clicks and page views.
-
-To enable geolocation:
-1. Obtain a free API key from [ipapi](https://ipapi.com).
-2. Set the `GEOCODER_API_KEY` environment variable with your API key.
-
-Future plans include making geolocation optional to cater to different privacy preferences.
 
 ## Customization
 

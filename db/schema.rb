@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_07_115214) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_14_101600) do
   create_table "achievement_views", force: :cascade do |t|
     t.integer "achievement_id", null: false
     t.integer "user_id", null: false
@@ -116,6 +116,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_07_115214) do
     t.datetime "updated_at", null: false
     t.string "ip_address"
     t.string "session_id"
+    t.string "country"
+    t.string "city"
+    t.string "state"
+    t.string "county"
+    t.float "latitude"
+    t.float "longitude"
+    t.string "country_code"
     t.index ["user_id"], name: "index_page_views_on_user_id"
   end
 
