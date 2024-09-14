@@ -37,7 +37,7 @@ class LinksController < ApplicationController
   def create
     @link = current_user.links.build(link_params)
     if @link.save
-      redirect_to @link, notice: 'Link was successfully created.'
+      redirect_to links_path, notice: 'Link was successfully created.'
     else
       render :new
     end
@@ -50,8 +50,7 @@ class LinksController < ApplicationController
   def update
     @link = current_user.links.find(params[:id])
     if @link.update(link_params)
-      # After updating, redirect to the show page, not the URL
-      redirect_to @link, notice: 'Link was successfully updated.'
+      redirect_to links_path, notice: 'Link was successfully updated.'
     else
       render :edit
     end
