@@ -36,7 +36,7 @@ class AchievementsController < ApplicationController
   def create
     @achievement = current_user.achievements.build(achievement_params)
     if @achievement.save
-      redirect_to @achievement, notice: 'Achievement was successfully created.'
+      redirect_to achievements_path, notice: 'Achievement was successfully created.'
     else
       render :new
     end
@@ -49,8 +49,7 @@ class AchievementsController < ApplicationController
   def update
     @achievement = current_user.achievements.find(params[:id])
     if @achievement.update(achievement_params)
-      # After updating, redirect to the show page, not the URL
-      redirect_to @achievement, notice: 'Achievement was successfully updated.'
+      redirect_to achievements_path, notice: 'Achievement was successfully updated.'
     else
       render :edit
     end
