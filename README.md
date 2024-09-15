@@ -38,43 +38,52 @@ Linkarooie is a robust, open-source alternative to Linktree, built with Ruby on 
 
 ## Features
 
-- **Custom Links Management:** 
+- **Custom Links Management:**
+
   - Add, edit, and delete links with titles, URLs, descriptions, and custom icons
   - Toggle link visibility
   - Pin important links to the top of your profile
   - Organize links with custom positioning
 
-- **User Profiles:** 
+- **User Profiles:**
+
   - Customizable profiles with avatars, banners, full names, usernames, and descriptions
   - Tagging system for categorizing profiles
 
-- **User Achievements:** 
+- **User Achievements:**
+
   - Create and showcase personal or professional accomplishments
   - Include achievement titles, dates, descriptions, icons, and URLs
 
-- **Analytics:** 
+- **Analytics:**
+
   - Track page views, link clicks, and unique visitors
   - View daily metrics for user engagement
   - Geolocation tracking for visitor insights (currently mandatory)
 
-- **Open Graph Image Generation:** 
+- **Open Graph Image Generation:**
+
   - Automatic creation of social media preview images for improved sharing
 
-- **Responsive Design:** 
+- **Responsive Design:**
+
   - Ensures optimal user experience across all devices
 
-- **Background Job Processing:** 
+- **Background Job Processing:**
+
   - Utilizes Sidekiq for efficient handling of background tasks
 
-- **Asset Management:** 
+- **Asset Management:**
+
   - Implements Vite for modern, efficient frontend asset handling
 
-- **Automated Backups:** 
+- **Automated Backups:**
   - Daily backups to DigitalOcean Spaces with easy restoration process
 
 ## Tech Stack
 
 - **Backend:**
+
   - Ruby 3.3.0 (local development)
   - Ruby 3.3.4 (production Docker image)
   - Rails 7.1.3
@@ -84,17 +93,20 @@ Linkarooie is a robust, open-source alternative to Linktree, built with Ruby on 
   - Redis for Sidekiq and caching
 
 - **Frontend:**
+
   - Vite for asset compilation and management
   - Tailwind CSS for styling
   - Stimulus.js for JavaScript sprinkles
   - Chartkick for chart generation
 
 - **Testing:**
+
   - RSpec for unit and integration tests
   - Factory Bot for test data generation
   - Shoulda Matchers for additional RSpec matchers
 
 - **Deployment & Infrastructure:**
+
   - Docker and Docker Compose for containerization
   - GitHub Actions for CI/CD
   - Terraform for infrastructure as code
@@ -120,30 +132,36 @@ Linkarooie is a robust, open-source alternative to Linktree, built with Ruby on 
 ### Local Development Setup
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/loftwah/linkarooie.git
    cd linkarooie
    ```
 
 2. Install Ruby dependencies:
+
    ```bash
    bundle install
    ```
 
 3. Install JavaScript dependencies:
+
    ```bash
    npm install
    ```
 
 4. Set up the database:
+
    ```bash
    rails db:create db:migrate db:seed
    ```
 
 5. Start the development servers:
+
    ```bash
    bin/dev
    ```
+
    This command starts the Rails server, Vite dev server, and Tailwind CSS watcher.
 
 6. Visit `http://localhost:3000` in your browser to access the application.
@@ -153,6 +171,7 @@ Linkarooie is a robust, open-source alternative to Linktree, built with Ruby on 
 Linkarooie provides an interactive Ruby script for creating new users:
 
 1. Run the script:
+
    ```bash
    ruby create_user.rb
    ```
@@ -174,6 +193,7 @@ This script allows for easy user creation, especially useful for setting up init
 Linkarooie uses Docker for easy deployment and scaling. The project includes a multi-stage Dockerfile for creating a lean production image.
 
 1. Build and start the Docker containers:
+
    ```bash
    docker compose -f docker-compose.prod.yml up --build
    ```
@@ -181,11 +201,13 @@ Linkarooie uses Docker for easy deployment and scaling. The project includes a m
 2. Access the application at `http://localhost`.
 
 The production Docker setup includes:
+
 - Rails application container
 - Redis container for Sidekiq and caching
 - Sidekiq container for background job processing
 
 Key Dockerfile features:
+
 - Multi-stage build for a smaller final image
 - Precompilation of assets and bootsnap
 - Non-root user for improved security
@@ -199,11 +221,13 @@ Linkarooie is optimized for deployment on DigitalOcean using Terraform for infra
 1. Install Terraform and set up a DigitalOcean account.
 
 2. Configure your DigitalOcean API token:
+
    ```bash
    export DO_TOKEN=your_digitalocean_api_token
    ```
 
 3. Create a DigitalOcean Droplet:
+
    ```bash
    cd terraform/droplet
    terraform init
@@ -220,6 +244,7 @@ Linkarooie is optimized for deployment on DigitalOcean using Terraform for infra
 ### Configuring GitHub Actions
 
 1. Set up the following secrets in your GitHub repository:
+
    - `DROPLET_IP`: The IP address of your DigitalOcean Droplet (output from Terraform)
    - `DROPLET_SSH_PRIVATE_KEY`: The private SSH key to access your Droplet
    - `GH_PAT`: Your GitHub Personal Access Token
@@ -282,6 +307,7 @@ rake db:restore BACKUP_FILE=path/to/your_backup_file.sql.tar.gz
 ```
 
 The restore process:
+
 1. Drops all existing tables in the database.
 2. Loads the specified backup file.
 3. Applies any pending migrations.
@@ -291,14 +317,14 @@ The restore process:
 Linkarooie is designed to be highly customizable:
 
 - **Views:** Modify ERB templates in `app/views/`
-- **Styles:** 
+- **Styles:**
   - Edit Tailwind CSS classes directly in views
   - Customize Tailwind configuration in `config/tailwind.config.js`
   - Add custom styles in `app/assets/stylesheets/application.css.scss`
-- **JavaScript:** 
+- **JavaScript:**
   - Add or modify Stimulus controllers in `app/javascript/controllers/`
   - Update the main JavaScript file at `app/javascript/application.js`
-- **Backend Logic:** 
+- **Backend Logic:**
   - Controllers are located in `app/controllers/`
   - Models are in `app/models/`
 - **Background Jobs:** Add or modify Sidekiq jobs in `app/jobs/`
@@ -307,6 +333,7 @@ Linkarooie is designed to be highly customizable:
 ## Testing
 
 Linkarooie uses RSpec for testing. The test suite includes:
+
 - Model specs
 - Controller specs
 - Feature specs
@@ -331,6 +358,7 @@ bundle exec rspec spec/features
 Linkarooie utilizes GitHub Actions for continuous integration and deployment:
 
 1. **CI Workflow** (`ci.yml`):
+
    - Triggered on pull requests to `main` and pushes to feature branches
    - Sets up Ruby and Node.js environments
    - Installs dependencies
@@ -401,6 +429,161 @@ The `gather.sh` script is a utility for collecting project information:
 > Note: There is also a `gather.rb` that works the same.
 
 This script is useful for quickly compiling project details for documentation or sharing.
+
+## **Useful Rails Console Commands**
+
+### **User Management**
+
+1. **Create a User:**
+
+   ```ruby
+   User.create!(
+     email: "user@example.com",
+     password: "Password123",
+     username: "newuser",
+     full_name: "New User",
+     tags: ["Tech", "Music"].to_json,  # Tags as JSON array
+     avatar: "https://example.com/avatar.png",
+     avatar_border: "white",
+     banner: "https://example.com/banner.png",
+     description: "User description",
+     community_opt_in: true,
+     public_analytics: true
+   )
+   ```
+
+2. **List Users:**
+
+   ```ruby
+   User.pluck(:email, :username, :full_name)
+   ```
+
+3. **Find and Update a User:**
+
+   ```ruby
+   user = User.find_by(email: "user@example.com")
+   user.update!(full_name: "Updated Name")
+   ```
+
+4. **Delete a User:**
+
+   ```ruby
+   user = User.find_by(email: "user@example.com")
+   user.destroy!
+   ```
+
+### **Managing Links**
+
+1. **List All Links for a User:**
+
+   ```ruby
+   user = User.find_by(username: "newuser")
+   user.links.pluck(:title, :url, :pinned, :position)
+   ```
+
+2. **Create a Link:**
+
+   ```ruby
+   user = User.find_by(username: "newuser")
+   user.links.create!(title: "GitHub", url: "https://github.com", icon: "fa-brands fa-github")
+   ```
+
+3. **Delete a Link:**
+
+   ```ruby
+   link = Link.find_by(url: "https://github.com")
+   link.destroy!
+   ```
+
+### **Managing Achievements**
+
+1. **List Achievements for a User:**
+
+   ```ruby
+   user = User.find_by(username: "newuser")
+   user.achievements.pluck(:title, :date, :description, :url)
+   ```
+
+2. **Create an Achievement:**
+
+   ```ruby
+   user = User.find_by(username: "newuser")
+   user.achievements.create!(title: "Achievement", date: Date.today, description: "Details")
+   ```
+
+3. **Delete an Achievement:**
+
+   ```ruby
+   achievement = Achievement.find_by(title: "Achievement")
+   achievement.destroy!
+   ```
+
+### **Analytics and Metrics**
+
+1. **View Total Page Views for a User:**
+
+   ```ruby
+   user = User.find_by(username: "newuser")
+   user.page_views.count
+   ```
+
+2. **View Detailed Page Views:**
+
+   ```ruby
+   user = User.find_by(username: "newuser")
+   user.page_views.pluck(:path, :visited_at, :referrer, :browser)
+   ```
+
+3. **Get Unique Visitors for a User:**
+
+   ```ruby
+   user = User.find_by(username: "newuser")
+   user.page_views.distinct.count(:ip_address)
+   ```
+
+### **Importing and Exporting Data**
+
+1. **Export Users to CSV:**
+
+   ```ruby
+   require 'csv'
+   CSV.open("users.csv", "wb") do |csv|
+     csv << ["Email", "Username", "Full Name", "Tags"]
+     User.all.each do |user|
+       csv << [user.email, user.username, user.full_name, JSON.parse(user.tags).join(", ")]
+     end
+   end
+   ```
+
+2. **Import Users from CSV:**
+
+   ```ruby
+   require 'csv'
+   CSV.foreach("path_to_users.csv", headers: true) do |row|
+     User.create!(
+       email: row["Email"],
+       username: row["Username"],
+       full_name: row["Full Name"],
+       tags: row["Tags"].split(',').to_json,
+       password: "Password123",
+       password_confirmation: "Password123"
+     )
+   end
+   ```
+
+### **Checking User Activity**
+
+1. **Users Without Achievements:**
+
+   ```ruby
+   User.left_joins(:achievements).where(achievements: { id: nil }).pluck(:username, :email)
+   ```
+
+2. **Users with Public Analytics Enabled:**
+
+   ```ruby
+   User.where(public_analytics: true).pluck(:username, :email)
+   ```
 
 ## Contributing
 
