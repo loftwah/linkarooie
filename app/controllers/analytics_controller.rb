@@ -26,9 +26,9 @@ class AnalyticsController < ApplicationController
   end
 
   def check_analytics_visibility
-    unless @user == current_user || @user.public_analytics?
+    unless current_user == @user || @user.public_analytics?
       flash[:alert] = "This user's analytics are not public."
-      redirect_to root_path
+      redirect_to root_path and return
     end
   end
 
