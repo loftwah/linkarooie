@@ -13,7 +13,7 @@ class OpenGraphImageGenerator
     output_path = Rails.root.join('public', 'uploads', 'og_images', "#{@user.username}_og.png")
     image = MiniMagick::Image.open(template_path)
     
-    avatar = @user.avatar.present? ? download_image(@user.avatar) : download_image(FALLBACK_AVATAR_URL)
+    avatar = @user.avatar_url.present? ? download_image(@user.avatar_url) : download_image(FALLBACK_AVATAR_URL)
 
     # Resize avatar and add a white square border
     avatar.resize "#{AVATAR_SIZE}x#{AVATAR_SIZE}"

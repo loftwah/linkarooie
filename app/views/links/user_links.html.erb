@@ -1,21 +1,15 @@
 <% set_open_graph_tags(@user) if @user %>
 
 <div class="profile-header max-w-2xl mx-auto px-4 text-center">
-  <% if @user.banner_enabled && @user.banner.present? %>
+  <% if @user.banner_enabled && @user.banner_url.present? %>
     <div class="w-full h-auto md:h-auto lg:h-auto relative overflow-hidden mb-2">
-      <%= image_tag @user.banner, class: "w-full h-full object-contain object-center" %>
+      <%= image_tag @user.banner_url, class: "w-full h-full object-contain object-center" %>
     </div>
   <% end %>
-  <div class="flex flex-col items-center <%= @user.banner_enabled && @user.banner.present? ? '-mt-16' : 'mt-8' %>">
-  <div class="relative <%= avatar_border_class(@user.avatar_border.to_s.dasherize) %>">
-    <% local_avatar_path = "/avatars/#{@user.username}_avatar#{File.extname(@user.avatar)}" %>
-    <% if File.exist?(Rails.root.join('public' + local_avatar_path)) %>
-      <%= image_tag local_avatar_path, alt: @user.email, class: "rounded-full object-cover", style: "width: 8rem; height: 8rem;" %>
-    <% elsif @user.avatar.present? %>
-      <%= image_tag @user.avatar, alt: @user.email, class: "rounded-full object-cover", style: "width: 8rem; height: 8rem;" %>
-    <% else %>
-      <%= image_tag "greg.jpg", alt: @user.email, class: "rounded-full object-cover", style: "width: 8rem; height: 8rem;" %>
-    <% end %>
+  <div class="flex flex-col items-center <%= @user.banner_enabled && @user.banner_url.present? ? '-mt-16' : 'mt-8' %>">
+    <div class="relative <%= avatar_border_class(@user.avatar_border.to_s.dasherize) %>">
+      <%= image_tag @user.avatar_url, alt: @user.email, class: "rounded-full object-cover", style: "width: 8rem; height: 8rem;" %>
+    </div>
   </div>
 </div>
 
