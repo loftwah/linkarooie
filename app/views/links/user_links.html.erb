@@ -38,7 +38,7 @@
 <% end %>
 
   <div class="pb-4 text-center">
-    <p class="text-lg text-white"><%= auto_link_urls(@user.description) %></p>
+    <p class="text-lg text-white"><%= auto_link_urls(@user.description || "") %></p>
   </div>
 </div>
 
