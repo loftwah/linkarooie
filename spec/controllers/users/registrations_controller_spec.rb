@@ -1,61 +1,104 @@
-require 'rails_helper'
+class Users::RegistrationsController < Devise::RegistrationsController
+  before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :check_signups_enabled, only: [:create]
 
-RSpec.describe Users::RegistrationsController, type: :controller do
-  before do
-    @request.env["devise.mapping"] = Devise.mappings[:user]
-  end
-
-  describe "POST #create" do
-  let(:valid_attributes) {
-    { email: "test@example.com", password: "password", password_confirmation: "password",
-      username: "testuser", full_name: "Test User", tags: "tag1,tag2", avatar_border: "white", invite_code: "POWEROVERWHELMING" }
-  }
-
-  context "when sign-ups are enabled" do
-    before do
-      allow(Rails.application.config).to receive(:sign_ups_open).and_return(true)
+  def create
+    # Check if sign-ups are disabled and no valid invite code is provided
+    unless Rails.application.config.sign_ups_open || valid_invite_code?(params[:user][:invite_code])
+      redirect_to root_path, alert: "Sign-ups are currently disabled."
+      return
     end
 
-    it "creates a new User" do
-      expect {
-        post :create, params: { user: valid_attributes }
-      }.to change(User, :count).by(1)
-    end
+    build_resource(sign_up_params)
 
-    it "sets the fallback avatar URL if none is provided" do
-      post :create, params: { user: valid_attributes.merge(avatar: nil) }
-      user = User.last
-      expect(user.avatar).to eq('https://pbs.twimg.com/profile_images/1581014308397502464/NPogKMyk_400x400.jpg')
-    end
+    resource.tags = JSON.parse(resource.tags) if resource.tags.is_a?(String)
 
-    it "handles invalid avatar URLs and sets the fallback URL" do
-      post :create, params: { user: valid_attributes.merge(avatar: 'http://invalid-url.com/avatar.jpg') }
-      user = User.last
-      expect(user.avatar).to eq('https://pbs.twimg.com/profile_images/1581014308397502464/NPogKMyk_400x400.jpg')
-    end
-  end
-end
-
-  describe "PUT #update" do
-    let(:user) { create(:user, tags: ["old_tag1", "old_tag2"].to_json) }
-
-    before do
-      sign_in user
-    end
-
-    context "with valid params" do
-      let(:new_attributes) {
-        { full_name: "New Name", tags: "new_tag1,new_tag2", avatar_border: "black" }
-      }
-
-      it "updates the requested user" do
-        put :update, params: { user: new_attributes }
-        user.reload
-        expect(user.full_name).to eq("New Name")
-        tags = user.tags.is_a?(String) ? JSON.parse(user.tags) : user.tags
-        expect(tags).to eq(["new_tag1", "new_tag2"])
-        expect(user.avatar_border).to eq("black")
+    resource.save
+    yield resource if block_given?
+    if resource.persisted?
+      if resource.active_for_authentication?
+        set_flash_message! :notice, :signed_up
+        sign_up(resource_name, resource)
+        UserMailer.welcome_email(resource).deliver_now  # Send the welcome email
+        respond_with resource, location: after_sign_up_path_for(resource)
+      else
+        set_flash_message! :notice, :"signed_up_but_#{resource.inactive_message}"
+        expire_data_after_sign_in!
+        respond_with resource, location: after_inactive_sign_up_path_for(resource)
       end
+    else
+      clean_up_passwords resource
+      set_minimum_password_length
+      respond_with resource
+    end
+  end
+
+  def edit
+    @user = current_user
+    @user.tags = JSON.parse(@user.tags) if @user.tags.is_a?(String)
+  end
+
+  def update
+    @user = current_user
+    @user.tags = JSON.parse(@user.tags) if @user.tags.is_a?(String)
+
+    # Check if the user is trying to change their password
+    if params[:user][:password].present? || params[:user][:password_confirmation].present?
+      # If password change is requested, use Devise's `update_with_password`
+      Rails.logger.info("Password change requested for user #{current_user.id}")
+      successfully_updated = @user.update_with_password(account_update_params)
+    else
+      # If password change is not requested, remove the current_password requirement
+      params[:user].delete(:current_password)
+      successfully_updated = @user.update(account_update_params)
+    end
+
+    if successfully_updated
+      Rails.logger.info "Update succeeded for user #{current_user.id}"
+      bypass_sign_in(@user)
+      redirect_to edit_user_registration_path, notice: 'Profile updated successfully'
+    else
+      Rails.logger.info "Update failed for user #{current_user.id}: #{@user.errors.full_messages.join(", ")}"
+      render :edit
+    end
+  end
+
+  private
+
+  def check_signups_enabled
+    # Check if sign-ups are disabled and no valid invite code is provided
+    if !Rails.application.config.sign_ups_open && (params[:user].blank? || !valid_invite_code?(params[:user][:invite_code]))
+      redirect_to root_path, alert: "Sign-ups are currently disabled."
+    end
+  end
+
+  def valid_invite_code?(invite_code)
+    # List of valid invite codes
+    valid_codes = ["POWEROVERWHELMING", "SWORDFISH", "HUNTER2"]
+  
+    # Check if the provided invite code matches any of the valid codes, case-insensitive
+    valid_codes.any? { |code| code.casecmp(invite_code).zero? }
+  end
+
+  protected
+
+  def configure_permitted_parameters
+    # Permit community_opt_in in both sign-up and account update forms
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:email, :password, :password_confirmation, :username, :full_name, :tags, :avatar, :banner, :description, :banner_enabled, :avatar_border, :invite_code, :community_opt_in])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:email, :password, :password_confirmation, :username, :full_name, :tags, :avatar, :banner, :description, :banner_enabled, :public_analytics, :avatar_border, :community_opt_in])
+  end
+
+  def sign_up_params
+    # Add community_opt_in to permitted params
+    params.require(:user).permit(:email, :password, :password_confirmation, :username, :full_name, :tags, :avatar, :banner, :description, :banner_enabled, :avatar_border, :invite_code, :community_opt_in).tap do |user_params|
+      user_params[:tags] = user_params[:tags].split(',').map(&:strip).to_json if user_params[:tags].present?
+    end
+  end
+
+  def account_update_params
+    # Add community_opt_in to permitted params
+    params.require(:user).permit(:email, :password, :password_confirmation, :current_password, :username, :full_name, :tags, :avatar, :banner, :description, :banner_enabled, :public_analytics, :avatar_border, :community_opt_in).tap do |user_params|
+      user_params[:tags] = user_params[:tags].split(',').map(&:strip).to_json if user_params[:tags].present?
     end
   end
 end

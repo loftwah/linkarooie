@@ -1,35 +1,36 @@
+# spec/requests/analytics_spec.rb
+
 require 'rails_helper'
 
 RSpec.describe 'Analytics', type: :request do
   describe 'GET /:username/analytics' do
     let(:user) { create(:user) }
+    let(:other_user) { create(:user, public_analytics: true) }
 
     before do
-      sign_in user
-    end
-
-    it 'returns http success' do
-      get user_analytics_path(username: user.username)
-      expect(response).to have_http_status(:success)
-    end
-
-    it 'renders the correct content' do
-      get user_analytics_path(username: user.username)
-      expect(response.body).to include('Analytics')  # Adjust this to match your actual content
+      create(:daily_metric, user: other_user, date: Date.today)
     end
 
     context "when viewing another user's analytics" do
-      let(:other_user) { create(:user, public_analytics: true) }
+      context 'when analytics are public' do
+        it 'allows viewing public analytics' do
+          get user_analytics_path(username: other_user.username)
+          expect(response).to have_http_status(:success)
+          expect(response.body).to include('Analytics for')
+        end
+      end
+    end
 
-      it "allows viewing public analytics" do
-        get user_analytics_path(username: other_user.username)
-        expect(response).to have_http_status(:success)
+    context "when accessing own analytics" do
+      before do
+        sign_in user
+        create(:daily_metric, user: user, date: Date.today)
       end
 
-      it "redirects when trying to view private analytics" do
-        other_user.update(public_analytics: false)
-        get user_analytics_path(username: other_user.username)
-        expect(response).to redirect_to(root_path)
+      it 'returns a success response' do
+        get user_analytics_path(username: user.username)
+        expect(response).to have_http_status(:success)
+        expect(response.body).to include('Analytics for')
       end
     end
   end

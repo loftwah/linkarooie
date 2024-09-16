@@ -84,22 +84,25 @@ class User < ApplicationRecord
   def download_and_store_image(type, fallback_url)
     url = send(type)
   
+    Rails.logger.info "Downloading #{type} from #{url}"
+  
     if url.blank? || !valid_url?(url)
-      Rails.logger.info "#{type.capitalize} URL invalid or blank. Using local fallback."
-      update_column(type, fallback_url)
+      Rails.logger.warn "#{type.capitalize} URL invalid or blank. Using fallback."
+      update_column("#{type}_local_path", fallback_url)
       return
     end
   
     begin
       uri = URI.parse(url)
-      
+      Rails.logger.info "Attempting to download #{type} from #{uri}"
       Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
         request = Net::HTTP::Get.new(uri)
         response = http.request(request)
-  
+        
         if response.is_a?(Net::HTTPSuccess)
           content_type = response['Content-Type']
-  
+          Rails.logger.info "Downloaded #{type}, content type: #{content_type}"
+          
           unless content_type.start_with?('image/')
             raise "Invalid content type: #{content_type}"
           end
@@ -120,20 +123,16 @@ class User < ApplicationRecord
           File.open(filepath, 'wb') { |file| file.write(response.body) }
   
           update_column("#{type}_local_path", "#{type.to_s.pluralize}/#{filename}")
-  
-          Rails.logger.info "#{type.to_s.capitalize} successfully downloaded for user #{username}"
+          Rails.logger.info "#{type.capitalize} successfully downloaded for user #{username}"
   
         else
           Rails.logger.warn "Failed to download #{type} for user #{username}: HTTP Error: #{response.code} #{response.message}. Using local fallback."
           update_column(type, fallback_url)
         end
       end
-    rescue OpenSSL::SSL::SSLError => e
-      Rails.logger.error "SSL error while downloading #{type} for user #{username}: #{e.message}. Using local fallback."
-      update_column(type, fallback_url)
     rescue StandardError => e
-      Rails.logger.error "Failed to download #{type} for user #{username}: #{e.message}. Using local fallback."
+      Rails.logger.error "Failed to download #{type} for user #{username}: #{e.message}. Using fallback."
       update_column(type, fallback_url)
     end
-  end
+  end  
 end

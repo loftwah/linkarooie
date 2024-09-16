@@ -42,14 +42,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
     @user = current_user
     @user.tags = JSON.parse(@user.tags) if @user.tags.is_a?(String)
 
-    is_password_change = params[:user][:password].present? || params[:user][:password_confirmation].present?
-    is_email_change = params[:user][:email].present? && params[:user][:email] != @user.email
-
-    if is_password_change || is_email_change
+    # Check if the user is trying to change their password
+    if params[:user][:password].present? || params[:user][:password_confirmation].present?
+      # If password change is requested, use Devise's `update_with_password`
       successfully_updated = @user.update_with_password(account_update_params)
     else
+      # If password change is not requested, remove the current_password requirement
       params[:user].delete(:current_password)
-      successfully_updated = @user.update_without_password(account_update_params)
+      successfully_updated = @user.update(account_update_params)
     end
 
     if successfully_updated
@@ -75,7 +75,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   
     # Check if the provided invite code matches any of the valid codes, case-insensitive
     valid_codes.any? { |code| code.casecmp(invite_code).zero? }
-  end  
+  end
 
   protected
 
