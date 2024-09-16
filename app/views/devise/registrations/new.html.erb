@@ -33,50 +33,9 @@
     </div>
 
     <div>
-      <%= f.label :tags, class: 'block text-lime-200 font-semibold mb-2' %>
-      <%= f.text_field :tags, value: @user.parsed_tags.join(', '), class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500', placeholder: 'e.g., music, photography, travel (comma-separated)' %>
-      <p class="text-gray-400 text-sm mt-1">Add tags to describe your interests (comma-separated)</p>
-    </div>
-
-    <div>
-      <%= f.label :avatar, class: 'block text-lime-200 font-semibold mb-2' %>
-      <%= f.text_field :avatar, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500', placeholder: 'https://linkarooie.com/your-avatar-image.jpg' %>
-      <p class="text-gray-400 text-sm mt-1">Enter a URL for your avatar image</p>
-    </div>
-
-    <div>
-      <%= f.label :avatar_border, class: 'block text-lime-200 font-semibold mb-2' %>
-      <%= f.select :avatar_border, options_for_select([
-        ['White', 'white'],
-        ['Black', 'black'],
-        ['None', 'none'],
-        ['Rainbow', 'rainbow'],
-        ['Rainbow Overlay', 'rainbow-overlay']
-      ], @user.avatar_border), {}, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
-      <p class="text-gray-400 text-sm mt-1">Choose a border style for your avatar</p>
-    </div>
-
-    <div>
-      <%= f.label :banner, class: 'block text-lime-200 font-semibold mb-2' %>
-      <%= f.text_field :banner, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500', placeholder: 'https://linkarooie.com/your-banner-image.jpg' %>
-      <p class="text-gray-400 text-sm mt-1">Enter a URL for your profile banner image</p>
-    </div>
-
-    <div>
-      <%= f.label :description, class: 'block text-lime-200 font-semibold mb-2' %>
-      <%= f.text_area :description, rows: 3, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500', placeholder: 'Tell us a bit about yourself...' %>
-    </div>
-
-    <div>
       <%= f.label :community_opt_in, "Join the Community", class: 'block text-lime-200 font-semibold mb-2' %>
       <%= f.check_box :community_opt_in, class: 'mr-2' %>
       <p class="text-gray-400 text-sm">Opt in to join the user directory and leaderboard (if public analytics is enabled)</p>
-    </div>
-
-    <div class="flex items-center">
-      <%= f.check_box :public_analytics, class: 'mr-2' %>
-      <%= f.label :public_analytics, class: 'text-lime-200 font-semibold' %>
-      <p class="text-gray-400 text-sm ml-2">Make your profile analytics public</p>
     </div>
 
     <div>
