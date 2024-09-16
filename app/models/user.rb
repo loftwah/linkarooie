@@ -1,6 +1,6 @@
 class User < ApplicationRecord
-  FALLBACK_AVATAR_URL = 'https://pbs.twimg.com/profile_images/1581014308397502464/NPogKMyk_400x400.jpg'
-  FALLBACK_BANNER_URL = 'https://pbs.twimg.com/profile_banners/1192091185/1719830949/1500x500' # Replace with your actual default banner URL
+  FALLBACK_AVATAR_URL = '/avatars/default_avatar.jpg'
+  FALLBACK_BANNER_URL = '/banners/default_banner.jpg'
 
   attr_accessor :invite_code
   devise :database_authenticatable, :registerable,
@@ -23,8 +23,8 @@ class User < ApplicationRecord
 
   before_validation :ensure_username_presence
   after_save :generate_open_graph_image, unless: -> { Rails.env.test? }
-  after_save :download_and_store_avatar
-  after_save :download_and_store_banner
+  after_save :download_and_store_avatar, unless: :new_record?
+  after_save :download_and_store_banner, unless: :new_record?
 
   serialize :tags, coder: JSON
 
@@ -60,17 +60,33 @@ class User < ApplicationRecord
     banner_local_path.present? ? "/#{banner_local_path}" : banner
   end
 
+  def valid_url?(url)
+    uri = URI.parse(url)
+    uri.is_a?(URI::HTTP) && !uri.host.nil?
+  rescue URI::InvalidURIError
+    false
+  end
+
   private
+
+  def ensure_username_presence
+    if username.blank?
+      self.username = email.present? ? email.split('@').first : "user#{SecureRandom.hex(4)}"
+    end
+  end
 
   def download_and_store_image(type, fallback_url)
     url = send(type)
-    if url.blank?
+  
+    if url.blank? || !valid_url?(url)
+      Rails.logger.info "#{type.capitalize} URL invalid or blank. Using local fallback."
       update_column(type, fallback_url)
       return
     end
   
     begin
       uri = URI.parse(url)
+      
       Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
         request = Net::HTTP::Get.new(uri)
         response = http.request(request)
@@ -82,12 +98,11 @@ class User < ApplicationRecord
             raise "Invalid content type: #{content_type}"
           end
   
-          # Determine the file extension based on content type
           extension = case content_type
                       when 'image/jpeg' then '.jpg'
                       when 'image/png'  then '.png'
                       when 'image/gif'  then '.gif'
-                      else ''  # Blank if unknown
+                      else ''
                       end
   
           image_dir = Rails.root.join('public', type.to_s.pluralize)
@@ -96,27 +111,23 @@ class User < ApplicationRecord
           filename = "#{username}_#{type}#{extension}"
           filepath = File.join(image_dir, filename)
   
-          File.open(filepath, 'wb') do |file|
-            file.write(response.body)
-          end
+          File.open(filepath, 'wb') { |file| file.write(response.body) }
   
-          # Update the local path column
           update_column("#{type}_local_path", "#{type.to_s.pluralize}/#{filename}")
   
-          Rails.logger.info "#{type.to_s.capitalize} downloaded for user #{username}"
+          Rails.logger.info "#{type.to_s.capitalize} successfully downloaded for user #{username}"
+  
         else
-          raise "HTTP Error: #{response.code} #{response.message}"
+          Rails.logger.warn "Failed to download #{type} for user #{username}: HTTP Error: #{response.code} #{response.message}. Using local fallback."
+          update_column(type, fallback_url)
         end
       end
-    rescue StandardError => e
-      Rails.logger.error "Failed to download #{type} for user #{username}: #{e.message}. Using fallback #{type}."
+    rescue OpenSSL::SSL::SSLError => e
+      Rails.logger.error "SSL error while downloading #{type} for user #{username}: #{e.message}. Using local fallback."
       update_column(type, fallback_url)
-    end
-  end
-
-  def ensure_username_presence
-    if username.blank?
-      self.username = email.present? ? email.split('@').first : "user#{SecureRandom.hex(4)}"
+    rescue StandardError => e
+      Rails.logger.error "Failed to download #{type} for user #{username}: #{e.message}. Using local fallback."
+      update_column(type, fallback_url)
     end
   end
 end
