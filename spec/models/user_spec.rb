@@ -66,10 +66,14 @@ RSpec.describe User, type: :model do
     let(:user) { create(:user, username: 'testuser') }
 
     before do
-      # Clean up directories before tests
-      FileUtils.rm_rf(Rails.root.join('public', 'avatars'))
-      FileUtils.rm_rf(Rails.root.join('public', 'banners'))
-    end
+      # Clean up only test-generated files, not default ones
+      Dir.glob(Rails.root.join('public', 'avatars', '*')).each do |file|
+        File.delete(file) unless file.include?('default_avatar.jpg')
+      end
+      Dir.glob(Rails.root.join('public', 'banners', '*')).each do |file|
+        File.delete(file) unless file.include?('default_banner.jpg')
+      end
+    end    
 
     it 'downloads and stores the image' do
       # Mock the HTTP response
