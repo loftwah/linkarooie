@@ -13,6 +13,10 @@ class User < ApplicationRecord
   has_many :link_clicks, dependent: :destroy
   has_many :achievement_views, dependent: :destroy
 
+  VALID_USERNAME_REGEX = /\A[a-zA-Z0-9_]+\z/
+
+  validates :username, presence: true, uniqueness: true, format: { with: VALID_USERNAME_REGEX, message: 'can only contain letters, numbers, and underscores' }
+
   validates :username, uniqueness: true, allow_blank: true
   validates :full_name, presence: true
   validate :ensure_username_presence
