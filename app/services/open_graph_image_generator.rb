@@ -1,6 +1,5 @@
 class OpenGraphImageGenerator
   # Constants for sizes and paths
-  FALLBACK_AVATAR_URL = 'https://pbs.twimg.com/profile_images/1581014308397502464/NPogKMyk_400x400.jpg'
   AVATAR_SIZE = 400
   BORDER_SIZE = 5
 
@@ -13,7 +12,7 @@ class OpenGraphImageGenerator
     output_path = Rails.root.join('public', 'uploads', 'og_images', "#{@user.username}_og.png")
     image = MiniMagick::Image.open(template_path)
     
-    avatar = @user.avatar_url.present? ? download_image(@user.avatar_url) : download_image(FALLBACK_AVATAR_URL)
+    avatar = download_image(@user.avatar_url)
 
     # Resize avatar and add a white square border
     avatar.resize "#{AVATAR_SIZE}x#{AVATAR_SIZE}"
@@ -64,11 +63,11 @@ class OpenGraphImageGenerator
         MiniMagick::Image.open(tempfile.path)
       else
         Rails.logger.error("Failed to download image from URL: #{url}. HTTP Error: #{response.code} #{response.message}.")
-        MiniMagick::Image.open(FALLBACK_AVATAR_URL)
+        MiniMagick::Image.open(@user.avatar_url)
       end
     rescue SocketError, Errno::ENOENT => e
       Rails.logger.error("Failed to download image from URL: #{url}. Error: #{e.message}. Using fallback URL.")
-      MiniMagick::Image.open(FALLBACK_AVATAR_URL)
+      MiniMagick::Image.open(@user.avatar_url)
     ensure
       tempfile.close
       tempfile.unlink  # Unlink after we've processed the image

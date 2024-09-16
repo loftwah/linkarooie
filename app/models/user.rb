@@ -22,7 +22,8 @@ class User < ApplicationRecord
   validates :banner, format: { with: /\A(https?:\/\/).*\z/i, message: "must be a valid URL" }, allow_blank: true
 
   before_validation :ensure_username_presence
-  after_save :generate_open_graph_image, unless: -> { Rails.env.test? }
+  before_create :set_default_images
+  after_create :generate_open_graph_image, unless: -> { Rails.env.test? }
   after_save :download_and_store_avatar, if: -> { saved_change_to_avatar? && avatar.present? }
   after_save :download_and_store_banner, if: -> { saved_change_to_banner? && banner.present? }
 
@@ -36,7 +37,7 @@ class User < ApplicationRecord
         []
       end
     else
-      tags
+      tags || []
     end
   end
 
@@ -53,11 +54,11 @@ class User < ApplicationRecord
   end
 
   def avatar_url
-    avatar_local_path.present? ? "/#{avatar_local_path}" : avatar
+    avatar_local_path.present? ? "/#{avatar_local_path}" : (avatar.presence || FALLBACK_AVATAR_URL)
   end
 
   def banner_url
-    banner_local_path.present? ? "/#{banner_local_path}" : banner
+    banner_local_path.present? ? "/#{banner_local_path}" : (banner.presence || FALLBACK_BANNER_URL)
   end
 
   def valid_url?(url)
@@ -73,6 +74,11 @@ class User < ApplicationRecord
     if username.blank?
       self.username = email.present? ? email.split('@').first : "user#{SecureRandom.hex(4)}"
     end
+  end
+
+  def set_default_images
+    self.avatar ||= FALLBACK_AVATAR_URL
+    self.banner ||= FALLBACK_BANNER_URL
   end
 
   def download_and_store_image(type, fallback_url)
