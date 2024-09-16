@@ -23,8 +23,8 @@ class User < ApplicationRecord
 
   before_validation :ensure_username_presence
   after_save :generate_open_graph_image, unless: -> { Rails.env.test? }
-  after_save :download_and_store_avatar, unless: :new_record?
-  after_save :download_and_store_banner, unless: :new_record?
+  after_save :download_and_store_avatar, if: -> { saved_change_to_avatar? && avatar.present? }
+  after_save :download_and_store_banner, if: -> { saved_change_to_banner? && banner.present? }
 
   serialize :tags, coder: JSON
 
