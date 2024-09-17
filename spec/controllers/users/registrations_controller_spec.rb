@@ -1,104 +1,107 @@
-class Users::RegistrationsController < Devise::RegistrationsController
-  before_action :configure_permitted_parameters, if: :devise_controller?
-  before_action :check_signups_enabled, only: [:create]
+require 'rails_helper'
 
-  def create
-    # Check if sign-ups are disabled and no valid invite code is provided
-    unless Rails.application.config.sign_ups_open || valid_invite_code?(params[:user][:invite_code])
-      redirect_to root_path, alert: "Sign-ups are currently disabled."
-      return
-    end
+RSpec.describe Users::RegistrationsController, type: :controller do
+  before do
+    @request.env["devise.mapping"] = Devise.mappings[:user]
+  end
 
-    build_resource(sign_up_params)
-
-    resource.tags = JSON.parse(resource.tags) if resource.tags.is_a?(String)
-
-    resource.save
-    yield resource if block_given?
-    if resource.persisted?
-      if resource.active_for_authentication?
-        set_flash_message! :notice, :signed_up
-        sign_up(resource_name, resource)
-        UserMailer.welcome_email(resource).deliver_now  # Send the welcome email
-        respond_with resource, location: after_sign_up_path_for(resource)
-      else
-        set_flash_message! :notice, :"signed_up_but_#{resource.inactive_message}"
-        expire_data_after_sign_in!
-        respond_with resource, location: after_inactive_sign_up_path_for(resource)
+  describe "POST #create" do
+    context "when sign-ups are closed" do
+      before do
+        allow(Rails.application.config).to receive(:sign_ups_open).and_return(false)
       end
-    else
-      clean_up_passwords resource
-      set_minimum_password_length
-      respond_with resource
+
+      it "allows registration with valid invite code" do
+        expect {
+          post :create, params: { user: attributes_for(:user, invite_code: "POWEROVERWHELMING") }
+        }.to change(User, :count).by(1)
+      end
+
+      it "denies registration without valid invite code" do
+        expect {
+          post :create, params: { user: attributes_for(:user, invite_code: "INVALID") }
+        }.not_to change(User, :count)
+      end
+    end
+
+    context "when sign-ups are open" do
+      before do
+        allow(Rails.application.config).to receive(:sign_ups_open).and_return(true)
+      end
+
+      it "allows registration without invite code" do
+        expect {
+          post :create, params: { user: attributes_for(:user, invite_code: nil) }
+        }.to change(User, :count).by(1)
+      end
+    end
+
+    it "sends a welcome email" do
+      expect {
+        post :create, params: { user: attributes_for(:user) }
+      }.to change { ActionMailer::Base.deliveries.count }.by(1)
+    end
+
+    it "handles tags correctly" do
+      post :create, params: { user: attributes_for(:user, tags: "ruby, rails") }
+      expect(User.last.tags).to eq(["ruby", "rails"].to_json)
     end
   end
 
-  def edit
-    @user = current_user
-    @user.tags = JSON.parse(@user.tags) if @user.tags.is_a?(String)
-  end
+  describe "PUT #update" do
+    let(:user) { create(:user) }
+    before { sign_in user }
 
-  def update
-    @user = current_user
-    @user.tags = JSON.parse(@user.tags) if @user.tags.is_a?(String)
+    context "with valid parameters" do
+      it "updates non-sensitive information without password" do
+        put :update, params: { user: { full_name: "New Name" } }
+        expect(user.reload.full_name).to eq("New Name")
+      end
 
-    # Check if the user is trying to change their password
-    if params[:user][:password].present? || params[:user][:password_confirmation].present?
-      # If password change is requested, use Devise's `update_with_password`
-      Rails.logger.info("Password change requested for user #{current_user.id}")
-      successfully_updated = @user.update_with_password(account_update_params)
-    else
-      # If password change is not requested, remove the current_password requirement
-      params[:user].delete(:current_password)
-      successfully_updated = @user.update(account_update_params)
+      it "updates avatar and provides appropriate message" do
+        put :update, params: { user: { avatar: "https://example.com/new_avatar.jpg" } }
+        expect(response).to redirect_to(edit_user_registration_path)
+        expect(flash[:notice]).to include("Image processing may take a few moments")
+      end
+
+      it "updates tags" do
+        put :update, params: { user: { tags: "ruby, rails, testing" } }
+        expect(user.reload.tags).to eq(["ruby", "rails", "testing"].to_json)
+      end
     end
 
-    if successfully_updated
-      Rails.logger.info "Update succeeded for user #{current_user.id}"
-      bypass_sign_in(@user)
-      redirect_to edit_user_registration_path, notice: 'Profile updated successfully'
-    else
-      Rails.logger.info "Update failed for user #{current_user.id}: #{@user.errors.full_messages.join(", ")}"
-      render :edit
+    context "with sensitive parameters" do
+      it "requires current password to change email" do
+        put :update, params: { user: { email: "new@example.com", current_password: user.password } }
+        expect(user.reload.email).to eq("new@example.com")
+      end
+
+      it "requires current password to change username" do
+        put :update, params: { user: { username: "newusername", current_password: user.password } }
+        expect(user.reload.username).to eq("newusername")
+      end
+
+      it "fails to update email without current password" do
+        put :update, params: { user: { email: "new@example.com" } }
+        expect(user.reload.email).not_to eq("new@example.com")
+      end
     end
-  end
 
-  private
-
-  def check_signups_enabled
-    # Check if sign-ups are disabled and no valid invite code is provided
-    if !Rails.application.config.sign_ups_open && (params[:user].blank? || !valid_invite_code?(params[:user][:invite_code]))
-      redirect_to root_path, alert: "Sign-ups are currently disabled."
-    end
-  end
-
-  def valid_invite_code?(invite_code)
-    # List of valid invite codes
-    valid_codes = ["POWEROVERWHELMING", "SWORDFISH", "HUNTER2"]
-  
-    # Check if the provided invite code matches any of the valid codes, case-insensitive
-    valid_codes.any? { |code| code.casecmp(invite_code).zero? }
-  end
-
-  protected
-
-  def configure_permitted_parameters
-    # Permit community_opt_in in both sign-up and account update forms
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:email, :password, :password_confirmation, :username, :full_name, :tags, :avatar, :banner, :description, :banner_enabled, :avatar_border, :invite_code, :community_opt_in])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:email, :password, :password_confirmation, :username, :full_name, :tags, :avatar, :banner, :description, :banner_enabled, :public_analytics, :avatar_border, :community_opt_in])
-  end
-
-  def sign_up_params
-    # Add community_opt_in to permitted params
-    params.require(:user).permit(:email, :password, :password_confirmation, :username, :full_name, :tags, :avatar, :banner, :description, :banner_enabled, :avatar_border, :invite_code, :community_opt_in).tap do |user_params|
-      user_params[:tags] = user_params[:tags].split(',').map(&:strip).to_json if user_params[:tags].present?
+    context "with invalid parameters" do
+      it "does not update the user" do
+        put :update, params: { user: { email: "" } }
+        expect(response).to render_template(:edit)
+      end
     end
   end
 
-  def account_update_params
-    # Add community_opt_in to permitted params
-    params.require(:user).permit(:email, :password, :password_confirmation, :current_password, :username, :full_name, :tags, :avatar, :banner, :description, :banner_enabled, :public_analytics, :avatar_border, :community_opt_in).tap do |user_params|
-      user_params[:tags] = user_params[:tags].split(',').map(&:strip).to_json if user_params[:tags].present?
+  describe "GET #edit" do
+    let(:user) { create(:user, tags: ["ruby", "rails"].to_json) }
+    before { sign_in user }
+
+    it "assigns tags as a comma-separated string" do
+      get :edit
+      expect(assigns(:user).tags).to eq("ruby, rails")
     end
   end
 end

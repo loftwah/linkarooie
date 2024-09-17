@@ -83,21 +83,27 @@ class User < ApplicationRecord
 
   def process_image(type)
     url = self[type]
+    puts "Processing #{type} for User ID: #{id}, URL: #{url}"  # Debugging output for type and URL
     return if url.blank?
-
+  
     if url.start_with?('https://linkarooie.syd1.digitaloceanspaces.com/')
+      puts "URL already points to Spaces, skipping processing."  # Debug output
       return
     end
-
+  
     begin
       response = fetch_image(url)
-
+      puts "Image fetch response: #{response}"  # Debugging output for fetch response
+  
       case response
       when Net::HTTPSuccess
         content_type = response['Content-Type']
-
+        puts "Content type: #{content_type}"  # Debugging output for content type
+  
         if content_type.start_with?('image/')
           file_path = save_image_locally(type, response.body, content_type)
+          puts "Image saved locally at: #{file_path}"  # Debugging output for saved file path
+  
           upload_image_to_spaces(type, file_path)
           File.delete(file_path)
         else
@@ -109,9 +115,10 @@ class User < ApplicationRecord
         handle_other_error(type, response)
       end
     rescue SocketError, URI::InvalidURIError => e
+      puts "Error processing image: #{e.message}"  # Debugging output for errors
       handle_invalid_url(type, e)
     end
-  end
+  end  
 
   def save_image_locally(type, content, content_type)
     extension = extract_extension(content_type)
