@@ -14,5 +14,10 @@ export default defineConfig({
       }
     }
   },
-  assetsInclude: ['**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.svg']
+  assetsInclude: ['app/javascript/**/*.{png,jpg,jpeg,svg}'], // Only process assets in JS folder
+  server: {
+    watch: {
+      ignored: ['public/avatars/**/*', 'public/banners/**/*'] // Ignore dynamic avatar and banner folders
+    }
+  }
 });
