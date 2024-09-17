@@ -4,7 +4,6 @@ require 'aws-sdk-s3'
 RSpec.describe DigitalOceanSpacesService do
   let(:bucket_name) { 'linkarooie' }
   let(:service) { described_class.new(bucket_name) }
-  let(:s3_resource) { instance_double(Aws::S3::Resource) }
   let(:s3_bucket) { instance_double(Aws::S3::Bucket) }
   let(:s3_object) { instance_double(Aws::S3::Object) }
   let(:file_content) { 'image_content' }
@@ -12,9 +11,8 @@ RSpec.describe DigitalOceanSpacesService do
   let(:key) { 'avatars/test_image.jpg' }
 
   before do
-    # Correctly mock the S3 Resource and Bucket
-    allow(Aws::S3::Resource).to receive(:new).and_return(s3_resource)
-    allow(s3_resource).to receive(:bucket).with(bucket_name).and_return(s3_bucket)
+    # Mock S3 Client initialization and bucket
+    allow(S3_CLIENT).to receive(:bucket).with(bucket_name).and_return(s3_bucket)
     allow(s3_bucket).to receive(:object).with(key).and_return(s3_object)
   end
 
@@ -26,10 +24,10 @@ RSpec.describe DigitalOceanSpacesService do
 
       result = service.upload_file(key, file_content, content_type)
 
-      # Expect the correct methods to be called
+      # Verify that the correct methods are called
       expect(s3_bucket).to have_received(:object).with(key)
       expect(s3_object).to have_received(:put).with(body: file_content, acl: 'public-read', content_type: content_type)
-      # Check the returned URL
+      # Ensure the public URL is returned
       expect(result).to eq("https://#{bucket_name}.syd1.digitaloceanspaces.com/#{key}")
     end
 
@@ -39,23 +37,23 @@ RSpec.describe DigitalOceanSpacesService do
 
       result = service.upload_file(key, file_content, content_type)
 
-      # Expect result to be nil
+      # Verify that nil is returned on failure
       expect(result).to be_nil
     end
   end
 
   describe '#delete_file' do
-    it 'deletes the file from DigitalOcean Spaces' do
+    it 'deletes the file from DigitalOcean Spaces and returns true' do
       # Mock successful deletion
       allow(s3_object).to receive(:delete).and_return(true)
 
       result = service.delete_file(key)
 
-      # Expect the object to be deleted
+      # Verify that the correct delete method is called
       expect(s3_bucket).to have_received(:object).with(key)
       expect(s3_object).to have_received(:delete)
-      # Expect the result to be nil since it doesn’t return anything on success
-      expect(result).to be_nil
+      # Expect the result to be true on successful deletion
+      expect(result).to eq(true)
     end
 
     it 'returns nil and logs an error if deletion fails' do
@@ -64,7 +62,29 @@ RSpec.describe DigitalOceanSpacesService do
 
       result = service.delete_file(key)
 
-      # Expect result to be nil
+      # Verify that nil is returned on failure
+      expect(result).to be_nil
+    end
+  end
+
+  describe '#download_file' do
+    it 'downloads the file from DigitalOcean Spaces' do
+      # Mock successful download
+      allow(s3_object).to receive(:get).and_return(double(body: double(read: 'file_content')))
+
+      result = service.download_file(key)
+
+      # Verify that the file content is returned
+      expect(result).to eq('file_content')
+    end
+
+    it 'returns nil if the download fails' do
+      # Mock a download failure
+      allow(s3_object).to receive(:get).and_raise(Aws::S3::Errors::ServiceError.new(nil, 'Download failed'))
+
+      result = service.download_file(key)
+
+      # Verify that nil is returned on failure
       expect(result).to be_nil
     end
   end

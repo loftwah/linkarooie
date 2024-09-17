@@ -62,53 +62,54 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '#download_and_store_image' do
-    let(:user) { create(:user, username: 'testuser') }
+  describe '#process_image' do
+  let(:user) { create(:user, username: 'testuser') }
 
-    before do
-      # Clean up only test-generated files, not default ones
-      Dir.glob(Rails.root.join('public', 'avatars', '*')).each do |file|
-        File.delete(file) unless file.include?('default_avatar.jpg')
-      end
-      Dir.glob(Rails.root.join('public', 'banners', '*')).each do |file|
-        File.delete(file) unless file.include?('default_banner.jpg')
-      end
-    end    
-
-    it 'downloads and stores the image' do
-      # Mock the HTTP response
-      success_response = instance_double('Net::HTTPSuccess', body: 'image content', is_a?: true)
-      allow(success_response).to receive(:[]).with('Content-Type').and_return('image/jpeg')
-      allow(Net::HTTP).to receive(:start).and_return(success_response)
-
-      # Mock file operations
-      file_double = instance_double('File')
-      allow(File).to receive(:open).and_yield(file_double)
-      allow(file_double).to receive(:write).with('image content')
-
-      user.send(:download_and_store_image, :avatar, User::FALLBACK_AVATAR_URL)
-      user.reload
-      expect(user.avatar_local_path).to eq('/avatars/default_avatar.jpg')
-    end
-
-    it 'uses fallback URL when download fails' do
-      allow(Net::HTTP).to receive(:start).and_raise(StandardError.new('Download failed'))
-      # Removed: expect(Rails.logger).to receive(:error).with(/Failed to download avatar for user testuser/)
-
-      user.send(:download_and_store_image, :avatar, User::FALLBACK_AVATAR_URL)
-      user.reload
-      expect(user.avatar_local_path).to eq('/avatars/default_avatar.jpg')
-    end
-
-    it 'uses fallback URL when content type is not an image' do
-      non_image_response = instance_double('Net::HTTPSuccess', body: 'not an image', is_a?: true)
-      allow(non_image_response).to receive(:[]).with('Content-Type').and_return('text/plain')
-      allow(Net::HTTP).to receive(:start).and_return(non_image_response)
-      # Removed: expect(Rails.logger).to receive(:error).with(/Failed to download avatar for user testuser/)
-
-      user.send(:download_and_store_image, :avatar, User::FALLBACK_AVATAR_URL)
-      user.reload
-      expect(user.avatar_local_path).to eq('/avatars/default_avatar.jpg')
+  before do
+    # Clean up test files (optional)
+    Dir.glob(Rails.root.join('public', 'avatars', '*')).each do |file|
+      File.delete(file) unless file.include?('default_avatar.jpg')
     end
   end
+
+  it 'uploads the image to DigitalOcean Spaces and updates avatar' do
+    # Step 1: Mock HTTP response for downloading image
+    success_response = instance_double('Net::HTTPSuccess', body: 'image content', is_a?: true)
+    allow(success_response).to receive(:[]).with('Content-Type').and_return('image/jpeg')
+    allow(Net::HTTP).to receive(:start).and_return(success_response)
+
+    # Step 2: Mock DigitalOceanSpacesService
+    service_instance = instance_double(DigitalOceanSpacesService)
+    allow(DigitalOceanSpacesService).to receive(:new).and_return(service_instance)
+    allow(service_instance).to receive(:upload_file_from_path)
+      .and_return("https://linkarooie.syd1.digitaloceanspaces.com/avatars/testuser_avatar.jpg")
+
+    # Step 3: Run the method
+    user.send(:process_image, :avatar)
+    user.reload
+
+    # Ensure that the avatar field is updated correctly
+    expect(user.avatar).to eq("https://linkarooie.syd1.digitaloceanspaces.com/avatars/testuser_avatar.jpg")
+
+    # Step 4: Ensure that upload_file_from_path was called
+    expect(service_instance).to have_received(:upload_file_from_path).with("avatars/#{user.id}_avatar.jpg", anything)
+  end
+
+  it 'uses fallback avatar URL when download fails' do
+    allow(Net::HTTP).to receive(:start).and_raise(StandardError.new('Download failed'))
+    user.send(:process_image, :avatar)
+    user.reload
+    expect(user.avatar).to eq(User::FALLBACK_AVATAR_URL)
+  end
+
+  it 'uses fallback avatar URL when content type is not an image' do
+    non_image_response = instance_double('Net::HTTPSuccess', body: 'not an image', is_a?: true)
+    allow(non_image_response).to receive(:[]).with('Content-Type').and_return('text/plain')
+    allow(Net::HTTP).to receive(:start).and_return(non_image_response)
+
+    user.send(:process_image, :avatar)
+    user.reload
+    expect(user.avatar).to eq(User::FALLBACK_AVATAR_URL)
+  end
+end
 end

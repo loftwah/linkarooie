@@ -86,19 +86,20 @@ class User < ApplicationRecord
     return if url.blank?
 
     if url.start_with?('https://linkarooie.syd1.digitaloceanspaces.com/')
-      # URL is already a Spaces URL, no need to process
       return
     end
 
     begin
       response = fetch_image(url)
-      
+
       case response
       when Net::HTTPSuccess
         content_type = response['Content-Type']
-        
+
         if content_type.start_with?('image/')
-          upload_image_to_spaces(type, response.body, content_type)
+          file_path = save_image_locally(type, response.body, content_type)
+          upload_image_to_spaces(type, file_path)
+          File.delete(file_path)
         else
           handle_non_image_content(type)
         end
@@ -112,6 +113,21 @@ class User < ApplicationRecord
     end
   end
 
+  def save_image_locally(type, content, content_type)
+    extension = extract_extension(content_type)
+    filename = "#{id}_#{type}#{extension}"
+    file_path = Rails.root.join('tmp', filename)
+    File.open(file_path, 'wb') { |file| file.write(content) }
+    file_path
+  end
+
+  def upload_image_to_spaces(type, file_path)
+    key = "#{type.to_s.pluralize}/#{id}_#{type}.jpg"
+    service = DigitalOceanSpacesService.new
+    spaces_url = service.upload_file_from_path(key, file_path)
+    self[type] = spaces_url if spaces_url
+  end
+
   def fetch_image(url)
     uri = URI.parse(url)
     Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
@@ -119,33 +135,12 @@ class User < ApplicationRecord
     end
   end
 
-  def upload_image_to_spaces(type, content, content_type)
-    extension = extract_extension(content_type)
-    filename = "#{id}_#{type}#{extension}"
-    key = "#{type.to_s.pluralize}/#{filename}"
-
-    spaces_url = upload_to_spaces(content, key)
-    self[type] = spaces_url if spaces_url
-  end
-
-  def upload_to_spaces(content, key)
-    bucket = S3_CLIENT.bucket(ENV['SPACES_BUCKET_IMAGES'])
-    obj = bucket.object(key)
-    
-    obj.put(body: content, acl: 'public-read')
-    
-    "https://#{ENV['SPACES_BUCKET_IMAGES']}.syd1.digitaloceanspaces.com/#{key}"
-  rescue Aws::S3::Errors::ServiceError => e
-    Rails.logger.error "Failed to upload to Spaces: #{e.message}"
-    nil
-  end
-
   def extract_extension(content_type)
     case content_type
     when 'image/jpeg' then '.jpg'
     when 'image/png'  then '.png'
     when 'image/gif'  then '.gif'
-    else '.jpg'  # Default to jpg if unknown
+    else '.jpg'
     end
   end
 
