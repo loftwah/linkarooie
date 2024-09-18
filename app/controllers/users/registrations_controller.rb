@@ -3,14 +3,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
   before_action :check_signups_enabled, only: [:create]
 
   def create
-    # Check if sign-ups are disabled and no valid invite code is provided
-    unless Rails.application.config.sign_ups_open || valid_invite_code?(params[:user][:invite_code])
-      redirect_to root_path, alert: "Sign-ups are currently disabled."
+    unless valid_invite_code?(params[:user][:invite_code])
+      redirect_to root_path, alert: "Sign-ups are currently disabled or invalid invite code."
       return
     end
 
     build_resource(sign_up_params)
-
     resource.tags = JSON.parse(resource.tags) if resource.tags.is_a?(String)
 
     resource.save
@@ -19,7 +17,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       if resource.active_for_authentication?
         set_flash_message! :notice, :signed_up
         sign_up(resource_name, resource)
-        UserMailer.welcome_email(resource).deliver_now  # Send the welcome email
+        UserMailer.welcome_email(resource).deliver_now
         respond_with resource, location: after_sign_up_path_for(resource)
       else
         set_flash_message! :notice, :"signed_up_but_#{resource.inactive_message}"
@@ -35,65 +33,91 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def edit
     @user = current_user
-    @user.tags = JSON.parse(@user.tags) if @user.tags.is_a?(String)
   end
 
   def update
     @user = current_user
-    @user.tags = JSON.parse(@user.tags) if @user.tags.is_a?(String)
-
-    # Check if the user is trying to change their password
-    if params[:user][:password].present? || params[:user][:password_confirmation].present?
-      # If password change is requested, use Devise's `update_with_password`
-      successfully_updated = @user.update_with_password(account_update_params)
+  
+    # Convert comma-separated tags into an array
+    if params[:user][:tags].present?
+      Rails.logger.info "Processing tags: #{params[:user][:tags]}"
+      @user.tags = params[:user][:tags].split(',').map(&:strip)
+      Rails.logger.info "Tags after splitting: #{@user.tags.inspect}"
+    end
+  
+    # Log user state before save
+    Rails.logger.info "User object before save: #{@user.inspect}"
+  
+    # Handle sensitive and non-sensitive updates
+    if sensitive_params_changed?
+      if @user.valid_password?(params[:user][:current_password])
+        if @user.update_with_password(account_update_params)
+          bypass_sign_in(@user)
+          Rails.logger.info "User successfully updated with sensitive params: #{@user.inspect}"
+          redirect_to edit_user_registration_path, notice: update_success_message
+        else
+          Rails.logger.error "User update failed: #{@user.errors.full_messages.join(', ')}"
+          render :edit
+        end
+      else
+        Rails.logger.error "Invalid current password for sensitive update"
+        @user.errors.add(:current_password, "is required to change email, username, or password")
+        render :edit
+      end
     else
-      # If password change is not requested, remove the current_password requirement
       params[:user].delete(:current_password)
-      successfully_updated = @user.update(account_update_params)
+  
+      if @user.update(account_update_params.except(:password, :password_confirmation))
+        Rails.logger.info "User successfully updated with non-sensitive params: #{@user.inspect}"
+        redirect_to edit_user_registration_path, notice: update_success_message
+      else
+        Rails.logger.error "User update failed: #{@user.errors.full_messages.join(', ')}"
+        render :edit
+      end
     end
-
-    if successfully_updated
-      bypass_sign_in(@user)
-      redirect_to edit_user_registration_path, notice: 'Profile updated successfully'
-    else
-      render :edit
-    end
-  end
+  end  
 
   private
 
   def check_signups_enabled
-    # Check if sign-ups are disabled and no valid invite code is provided
-    if !Rails.application.config.sign_ups_open && (params[:user].blank? || !valid_invite_code?(params[:user][:invite_code]))
-      redirect_to root_path, alert: "Sign-ups are currently disabled."
+    unless valid_invite_code?(params[:user][:invite_code])
+      redirect_to root_path, alert: "Sign-ups are currently disabled or invalid invite code."
     end
   end
 
   def valid_invite_code?(invite_code)
-    # List of valid invite codes
     valid_codes = ["POWEROVERWHELMING", "SWORDFISH", "HUNTER2"]
-  
-    # Check if the provided invite code matches any of the valid codes, case-insensitive
-    valid_codes.any? { |code| code.casecmp(invite_code).zero? }
+    valid_codes.any? { |code| code.casecmp(invite_code.to_s).zero? }
+  end
+
+  def sensitive_params_changed?
+    params[:user][:password].present? ||
+    params[:user][:email] != @user.email ||
+    params[:user][:username] != @user.username
+  end
+
+  def update_success_message
+    if @user.previous_changes.key?('avatar') || @user.previous_changes.key?('banner')
+      'Profile updated successfully. Image processing may take a few moments.'
+    else
+      'Profile updated successfully.'
+    end
   end
 
   protected
 
   def configure_permitted_parameters
-    # Permit community_opt_in in both sign-up and account update forms
     devise_parameter_sanitizer.permit(:sign_up, keys: [:email, :password, :password_confirmation, :username, :full_name, :tags, :avatar, :banner, :description, :banner_enabled, :avatar_border, :invite_code, :community_opt_in])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:email, :password, :password_confirmation, :username, :full_name, :tags, :avatar, :banner, :description, :banner_enabled, :public_analytics, :avatar_border, :community_opt_in])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:email, :password, :password_confirmation, :current_password, :username, :full_name, :tags, :avatar, :banner, :description, :banner_enabled, :public_analytics, :avatar_border, :community_opt_in])
   end
 
   def sign_up_params
-    # Add community_opt_in to permitted params
     params.require(:user).permit(:email, :password, :password_confirmation, :username, :full_name, :tags, :avatar, :banner, :description, :banner_enabled, :avatar_border, :invite_code, :community_opt_in).tap do |user_params|
       user_params[:tags] = user_params[:tags].split(',').map(&:strip).to_json if user_params[:tags].present?
     end
   end
 
   def account_update_params
-    # Add community_opt_in to permitted params
     params.require(:user).permit(:email, :password, :password_confirmation, :current_password, :username, :full_name, :tags, :avatar, :banner, :description, :banner_enabled, :public_analytics, :avatar_border, :community_opt_in).tap do |user_params|
       user_params[:tags] = user_params[:tags].split(',').map(&:strip).to_json if user_params[:tags].present?
     end

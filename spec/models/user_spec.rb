@@ -62,53 +62,58 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '#download_and_store_image' do
+  describe '#process_image' do
     let(:user) { create(:user, username: 'testuser') }
 
     before do
-      # Clean up only test-generated files, not default ones
-      Dir.glob(Rails.root.join('public', 'avatars', '*')).each do |file|
-        File.delete(file) unless file.include?('default_avatar.jpg')
+      # Clean up test files
+      Dir.glob(Rails.root.join('tmp', '*')).each do |file|
+        File.delete(file) unless File.directory?(file)
       end
-      Dir.glob(Rails.root.join('public', 'banners', '*')).each do |file|
-        File.delete(file) unless file.include?('default_banner.jpg')
-      end
-    end    
-
-    it 'downloads and stores the image' do
-      # Mock the HTTP response
-      success_response = instance_double('Net::HTTPSuccess', body: 'image content', is_a?: true)
-      allow(success_response).to receive(:[]).with('Content-Type').and_return('image/jpeg')
-      allow(Net::HTTP).to receive(:start).and_return(success_response)
-
-      # Mock file operations
-      file_double = instance_double('File')
-      allow(File).to receive(:open).and_yield(file_double)
-      allow(file_double).to receive(:write).with('image content')
-
-      user.send(:download_and_store_image, :avatar, User::FALLBACK_AVATAR_URL)
-      user.reload
-      expect(user.avatar_local_path).to eq('/avatars/default_avatar.jpg')
     end
 
-    it 'uses fallback URL when download fails' do
-      allow(Net::HTTP).to receive(:start).and_raise(StandardError.new('Download failed'))
-      # Removed: expect(Rails.logger).to receive(:error).with(/Failed to download avatar for user testuser/)
+    context 'when image download fails' do
+      it 'keeps the default avatar URL' do
+        not_found_response = instance_double(Net::HTTPNotFound)
+        allow(not_found_response).to receive(:body).and_return('')
+        allow(not_found_response).to receive(:code).and_return('404')
+        allow(not_found_response).to receive(:message).and_return('Not Found')
+        allow(not_found_response).to receive(:[]).with('Content-Type').and_return('text/html')
+        allow(Net::HTTP).to receive(:get_response).and_return(not_found_response)
 
-      user.send(:download_and_store_image, :avatar, User::FALLBACK_AVATAR_URL)
-      user.reload
-      expect(user.avatar_local_path).to eq('/avatars/default_avatar.jpg')
+        expect {
+          user.send(:process_image, :avatar)
+        }.not_to change { user.avatar }
+
+        expect(user.avatar).to eq(User::FALLBACK_AVATAR_URL)
+      end
     end
 
-    it 'uses fallback URL when content type is not an image' do
-      non_image_response = instance_double('Net::HTTPSuccess', body: 'not an image', is_a?: true)
-      allow(non_image_response).to receive(:[]).with('Content-Type').and_return('text/plain')
-      allow(Net::HTTP).to receive(:start).and_return(non_image_response)
-      # Removed: expect(Rails.logger).to receive(:error).with(/Failed to download avatar for user testuser/)
+    context 'when content type is not an image' do
+      it 'keeps the default avatar URL' do
+        success_response = instance_double(Net::HTTPSuccess)
+        allow(success_response).to receive(:body).and_return('not an image')
+        allow(success_response).to receive(:code).and_return('200')
+        allow(success_response).to receive(:message).and_return('OK')
+        allow(success_response).to receive(:[]).with('Content-Type').and_return('text/plain')
+        allow(Net::HTTP).to receive(:get_response).and_return(success_response)
 
-      user.send(:download_and_store_image, :avatar, User::FALLBACK_AVATAR_URL)
-      user.reload
-      expect(user.avatar_local_path).to eq('/avatars/default_avatar.jpg')
+        expect {
+          user.send(:process_image, :avatar)
+        }.not_to change { user.avatar }
+
+        expect(user.avatar).to eq(User::FALLBACK_AVATAR_URL)
+      end
+    end
+
+    context 'when image is already on DigitalOcean Spaces' do
+      it 'does not change the avatar URL' do
+        user.avatar = "https://linkarooie.syd1.digitaloceanspaces.com/avatars/existing_avatar.jpg"
+
+        expect {
+          user.send(:process_image, :avatar)
+        }.not_to change { user.avatar }
+      end
     end
   end
 end

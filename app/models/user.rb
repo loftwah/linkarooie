@@ -1,6 +1,6 @@
 class User < ApplicationRecord
-  FALLBACK_AVATAR_URL = '/avatars/default_avatar.jpg'
-  FALLBACK_BANNER_URL = '/banners/default_banner.jpg'
+  FALLBACK_AVATAR_URL = 'https://linkarooie.syd1.digitaloceanspaces.com/defaults/default_avatar.jpg'
+  FALLBACK_BANNER_URL = 'https://linkarooie.syd1.digitaloceanspaces.com/defaults/default_banner.jpg'
 
   attr_accessor :invite_code
   devise :database_authenticatable, :registerable,
@@ -24,8 +24,8 @@ class User < ApplicationRecord
   before_validation :ensure_username_presence
   before_create :set_default_images
   after_create :generate_open_graph_image, unless: -> { Rails.env.test? }
-  after_save :download_and_store_avatar, if: -> { saved_change_to_avatar? && avatar.present? }
-  after_save :download_and_store_banner, if: -> { saved_change_to_banner? && banner.present? }
+  before_save :process_avatar, if: :will_save_change_to_avatar?
+  before_save :process_banner, if: :will_save_change_to_banner?
 
   serialize :tags, coder: JSON
 
@@ -39,26 +39,18 @@ class User < ApplicationRecord
     else
       tags || []
     end
-  end
+  end  
 
   def generate_open_graph_image
     OpenGraphImageGenerator.new(self).generate
   end
 
-  def download_and_store_avatar
-    download_and_store_image(:avatar, FALLBACK_AVATAR_URL)
-  end
-
-  def download_and_store_banner
-    download_and_store_image(:banner, FALLBACK_BANNER_URL)
-  end
-
   def avatar_url
-    avatar_local_path.present? ? "/#{avatar_local_path}" : (avatar.presence || FALLBACK_AVATAR_URL)
+    avatar.presence || FALLBACK_AVATAR_URL
   end
 
   def banner_url
-    banner_local_path.present? ? "/#{banner_local_path}" : (banner.presence || FALLBACK_BANNER_URL)
+    banner.presence || FALLBACK_BANNER_URL
   end
 
   def valid_url?(url)
@@ -81,58 +73,101 @@ class User < ApplicationRecord
     self.banner ||= FALLBACK_BANNER_URL
   end
 
-  def download_and_store_image(type, fallback_url)
-    url = send(type)
+  def process_avatar
+    process_image(:avatar)
+  end
+
+  def process_banner
+    process_image(:banner)
+  end
+
+  def process_image(type)
+    url = self[type]
+    puts "Processing #{type} for User ID: #{id}, URL: #{url}"  # Debugging output for type and URL
+    return if url.blank?
   
-    Rails.logger.info "Downloading #{type} from #{url}"
-  
-    if url.blank? || !valid_url?(url)
-      Rails.logger.warn "#{type.capitalize} URL invalid or blank. Using fallback."
-      update_column("#{type}_local_path", fallback_url)
+    if url.start_with?('https://linkarooie.syd1.digitaloceanspaces.com/')
+      puts "URL already points to Spaces, skipping processing."  # Debug output
       return
     end
   
     begin
-      uri = URI.parse(url)
-      Rails.logger.info "Attempting to download #{type} from #{uri}"
-      Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
-        request = Net::HTTP::Get.new(uri)
-        response = http.request(request)
-        
-        if response.is_a?(Net::HTTPSuccess)
-          content_type = response['Content-Type']
-          Rails.logger.info "Downloaded #{type}, content type: #{content_type}"
-          
-          unless content_type.start_with?('image/')
-            raise "Invalid content type: #{content_type}"
-          end
+      response = fetch_image(url)
+      puts "Image fetch response: #{response}"  # Debugging output for fetch response
   
-          extension = case content_type
-                      when 'image/jpeg' then '.jpg'
-                      when 'image/png'  then '.png'
-                      when 'image/gif'  then '.gif'
-                      else ''
-                      end
+      case response
+      when Net::HTTPSuccess
+        content_type = response['Content-Type']
+        puts "Content type: #{content_type}"  # Debugging output for content type
   
-          image_dir = Rails.root.join('public', type.to_s.pluralize)
-          FileUtils.mkdir_p(image_dir) unless File.directory?(image_dir)
+        if content_type.start_with?('image/')
+          file_path = save_image_locally(type, response.body, content_type)
+          puts "Image saved locally at: #{file_path}"  # Debugging output for saved file path
   
-          filename = "#{username}_#{type}#{extension}"
-          filepath = File.join(image_dir, filename)
-  
-          File.open(filepath, 'wb') { |file| file.write(response.body) }
-  
-          update_column("#{type}_local_path", "#{type.to_s.pluralize}/#{filename}")
-          Rails.logger.info "#{type.capitalize} successfully downloaded for user #{username}"
-  
+          upload_image_to_spaces(type, file_path)
+          File.delete(file_path)
         else
-          Rails.logger.warn "Failed to download #{type} for user #{username}: HTTP Error: #{response.code} #{response.message}. Using local fallback."
-          update_column(type, fallback_url)
+          handle_non_image_content(type)
         end
+      when Net::HTTPNotFound
+        handle_404_error(type)
+      else
+        handle_other_error(type, response)
       end
-    rescue StandardError => e
-      Rails.logger.error "Failed to download #{type} for user #{username}: #{e.message}. Using fallback."
-      update_column(type, fallback_url)
+    rescue SocketError, URI::InvalidURIError => e
+      puts "Error processing image: #{e.message}"  # Debugging output for errors
+      handle_invalid_url(type, e)
     end
   end  
+
+  def save_image_locally(type, content, content_type)
+    extension = extract_extension(content_type)
+    filename = "#{id}_#{type}#{extension}"
+    file_path = Rails.root.join('tmp', filename)
+    File.open(file_path, 'wb') { |file| file.write(content) }
+    file_path
+  end
+
+  def upload_image_to_spaces(type, file_path)
+    key = "#{type.to_s.pluralize}/#{id}_#{type}.jpg"
+    service = DigitalOceanSpacesService.new
+    spaces_url = service.upload_file_from_path(key, file_path)
+    self[type] = spaces_url if spaces_url
+  end
+
+  def fetch_image(url)
+    uri = URI.parse(url)
+    Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
+      http.request(Net::HTTP::Get.new(uri))
+    end
+  end
+
+  def extract_extension(content_type)
+    case content_type
+    when 'image/jpeg' then '.jpg'
+    when 'image/png'  then '.png'
+    when 'image/gif'  then '.gif'
+    else '.jpg'
+    end
+  end
+
+  def handle_non_image_content(type)
+    Rails.logger.warn "Invalid content type for #{type} upload: #{self[type]}"
+    self[type] = type == :avatar ? FALLBACK_AVATAR_URL : FALLBACK_BANNER_URL
+  end
+
+  def handle_404_error(type)
+    Rails.logger.warn "404 error for #{type} upload: #{self[type]}"
+    self[type] = type == :avatar ? FALLBACK_AVATAR_URL : FALLBACK_BANNER_URL
+  end
+
+  def handle_other_error(type, response)
+    Rails.logger.error "Error downloading #{type}: #{response.code} #{response.message}"
+    self[type] = type == :avatar ? FALLBACK_AVATAR_URL : FALLBACK_BANNER_URL
+  end
+
+  def handle_invalid_url(type, error)
+    Rails.logger.error "Invalid URL for #{type}: #{error.message}"
+    self[type] = type == :avatar ? FALLBACK_AVATAR_URL : FALLBACK_BANNER_URL
+  end
 end

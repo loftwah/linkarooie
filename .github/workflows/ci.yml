@@ -13,6 +13,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+      RAILS_ENV: test
+      SPACES_BUCKET_CONTENT: ${{ secrets.SPACES_BUCKET_CONTENT }}  # Use the secret for bucket content
+      SPACES_ACCESS_KEY_ID: ${{ secrets.SPACES_ACCESS_KEY_ID }}    # Add secret for Spaces access key
+      SPACES_SECRET_ACCESS_KEY: ${{ secrets.SPACES_SECRET_ACCESS_KEY }}  # Add secret for Spaces secret access key
+      SPACES_REGION: ${{ secrets.SPACES_REGION }}                  # Add secret for region (e.g., syd1)
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -44,13 +51,9 @@ jobs:
           bundle exec rails db:create
           bundle exec rails db:schema:load
           bundle exec rails db:seed
-        env:
-          RAILS_ENV: test
 
       - name: Run tests
         run: bundle exec rspec
-        env:
-          RAILS_ENV: test
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
