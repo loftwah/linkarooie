@@ -7,8 +7,8 @@ namespace :images do
     puts "\n#{'DRY RUN: ' if dry_run}Starting image migration to DigitalOcean Spaces"
     puts "=========================================================\n\n"
 
-    unless ENV['SPACES_BUCKET_IMAGES']
-      puts "Error: SPACES_BUCKET_IMAGES environment variable is not set."
+    unless ENV['SPACES_BUCKET_CONTENT']
+      puts "Error: SPACES_BUCKET_CONTENT environment variable is not set."
       exit
     end
 
@@ -16,9 +16,9 @@ namespace :images do
       if dry_run
         puts "  Would upload: #{file_path}"
         puts "           To: #{key}"
-        "https://#{ENV['SPACES_BUCKET_IMAGES']}.syd1.digitaloceanspaces.com/#{key}"
+        "https://#{ENV['SPACES_BUCKET_CONTENT']}.syd1.digitaloceanspaces.com/#{key}"
       else
-        bucket = S3_CLIENT.bucket(ENV['SPACES_BUCKET_IMAGES'])
+        bucket = S3_CLIENT.bucket(ENV['SPACES_BUCKET_CONTENT'])
         obj = bucket.object(key)
         
         begin
@@ -26,7 +26,7 @@ namespace :images do
             obj.put(body: file, acl: 'public-read')
           end
           puts "  Uploaded: #{key}"
-          "https://#{ENV['SPACES_BUCKET_IMAGES']}.syd1.digitaloceanspaces.com/#{key}"
+          "https://#{ENV['SPACES_BUCKET_CONTENT']}.syd1.digitaloceanspaces.com/#{key}"
         rescue Aws::S3::Errors::ServiceError => e
           puts "  Failed to upload #{key}: #{e.message}"
           nil
