@@ -1,0 +1,31 @@
+version: 2
+updates:
+  # Ruby Bundler (for Gemfile and Gemfile.lock)
+  - package-ecosystem: "bundler"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+  
+  # GitHub Actions (for updating GitHub Actions workflow dependencies)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+  
+  # JavaScript (for package.json and yarn.lock or package-lock.json)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  # Docker (for Dockerfile updates)
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  # Terraform (for .tf files in the terraform/ directory)
+  - package-ecosystem: "terraform"
+    directory: "/terraform"
+    schedule:
+      interval: "weekly"
