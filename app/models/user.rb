@@ -39,7 +39,7 @@ class User < ApplicationRecord
     else
       tags || []
     end
-  end
+  end  
 
   def generate_open_graph_image
     OpenGraphImageGenerator.new(self).generate

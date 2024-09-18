@@ -33,38 +33,49 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def edit
     @user = current_user
-    @user.tags = @user.parsed_tags.join(', ')
   end
 
   def update
     @user = current_user
-    @user.tags = JSON.parse(@user.tags) if @user.tags.is_a?(String)
-
+  
+    # Convert comma-separated tags into an array
+    if params[:user][:tags].present?
+      Rails.logger.info "Processing tags: #{params[:user][:tags]}"
+      @user.tags = params[:user][:tags].split(',').map(&:strip)
+      Rails.logger.info "Tags after splitting: #{@user.tags.inspect}"
+    end
+  
+    # Log user state before save
+    Rails.logger.info "User object before save: #{@user.inspect}"
+  
+    # Handle sensitive and non-sensitive updates
     if sensitive_params_changed?
       if @user.valid_password?(params[:user][:current_password])
         if @user.update_with_password(account_update_params)
           bypass_sign_in(@user)
+          Rails.logger.info "User successfully updated with sensitive params: #{@user.inspect}"
           redirect_to edit_user_registration_path, notice: update_success_message
         else
+          Rails.logger.error "User update failed: #{@user.errors.full_messages.join(', ')}"
           render :edit
         end
       else
+        Rails.logger.error "Invalid current password for sensitive update"
         @user.errors.add(:current_password, "is required to change email, username, or password")
         render :edit
       end
     else
       params[:user].delete(:current_password)
-      if @user.update(account_update_params)
+  
+      if @user.update(account_update_params.except(:password, :password_confirmation))
+        Rails.logger.info "User successfully updated with non-sensitive params: #{@user.inspect}"
         redirect_to edit_user_registration_path, notice: update_success_message
       else
+        Rails.logger.error "User update failed: #{@user.errors.full_messages.join(', ')}"
         render :edit
       end
     end
-  rescue StandardError => e
-    Rails.logger.error "Error updating user profile: #{e.message}\n#{e.backtrace.join("\n")}"
-    @user.errors.add(:base, "An error occurred while updating your profile. Please try again.")
-    render :edit
-  end
+  end  
 
   private
 
