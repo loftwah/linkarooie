@@ -1,6 +1,6 @@
 class Achievement < ApplicationRecord
   belongs_to :user
-  has_many :achievement_views
+  has_many :achievement_views, dependent: :destroy
 
   validates :title, presence: true
   validates :date, presence: true

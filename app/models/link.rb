@@ -1,6 +1,6 @@
 class Link < ApplicationRecord
   belongs_to :user
-  has_many :link_clicks
+  has_many :link_clicks, dependent: :destroy
 
   scope :visible, -> { where(visible: true) }
   scope :pinned, -> { where(pinned: true) }
