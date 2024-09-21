@@ -23,7 +23,7 @@ class User < ApplicationRecord
 
   before_validation :ensure_username_presence
   before_create :set_default_images
-  after_create :generate_open_graph_image, unless: -> { Rails.env.test? }
+  after_create :generate_open_graph_image_async, unless: -> { Rails.env.test? }
   before_save :process_avatar, if: :will_save_change_to_avatar?
   before_save :process_banner, if: :will_save_change_to_banner?
 
@@ -61,6 +61,10 @@ class User < ApplicationRecord
   end
 
   private
+
+  def generate_open_graph_image_async
+    GenerateOpenGraphImageJob.perform_later(self.id)
+  end
 
   def ensure_username_presence
     if username.blank?

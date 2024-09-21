@@ -70,10 +70,10 @@ RSpec.describe Users::RegistrationsController, type: :controller do
       end
     end
 
-    it "sends a welcome email after successful registration" do
+    it "enqueues a welcome email after successful registration" do
       expect {
         post :create, params: { user: attributes_for(:user, invite_code: "POWEROVERWHELMING") }
-      }.to change { ActionMailer::Base.deliveries.count }.by(1)
+      }.to have_enqueued_mail(UserMailer, :welcome_email)
     end
 
     it "handles tags correctly" do

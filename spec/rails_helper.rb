@@ -28,6 +28,9 @@ RSpec.configure do |config|
 
   config.include FactoryBot::Syntax::Methods
 
+  # Add this line to include ActiveJob test helpers
+  config.include ActiveJob::TestHelper
+
   # Precompile assets before running tests
   config.before(:suite) do
     Rails.application.load_tasks

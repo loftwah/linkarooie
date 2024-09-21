@@ -17,7 +17,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
       if resource.active_for_authentication?
         set_flash_message! :notice, :signed_up
         sign_up(resource_name, resource)
-        UserMailer.welcome_email(resource).deliver_now
+        begin
+          UserMailer.welcome_email(resource).deliver_later
+        rescue => e
+          Rails.logger.error("Failed to enqueue welcome email for user #{resource.id}: #{e.message}")
+        end
         respond_with resource, location: after_sign_up_path_for(resource)
       else
         set_flash_message! :notice, :"signed_up_but_#{resource.inactive_message}"
@@ -29,6 +33,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
       set_minimum_password_length
       respond_with resource
     end
+  rescue => e
+    Rails.logger.error("Error during user registration: #{e.message}")
+    flash[:error] = "An error occurred during registration. Please try again."
+    redirect_to new_user_registration_path
   end
 
   def edit
@@ -75,6 +83,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
         render :edit
       end
     end
+  rescue => e
+    Rails.logger.error("Error during user update: #{e.message}")
+    flash[:error] = "An error occurred while updating your profile. Please try again."
+    render :edit
   end  
 
   private
