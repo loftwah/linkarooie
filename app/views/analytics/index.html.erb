@@ -100,23 +100,23 @@
     </div>
   </div>
 
- <!-- Top Visitor Locations (New Section) -->
+ <!-- Top Visitor Locations (Updated Section) -->
 <div class="bg-gray-800 rounded-lg shadow p-4 mb-6">
   <h2 class="text-xl font-semibold mb-4">Top Visitor Locations</h2>
   <div class="overflow-x-auto">
     <table class="w-full text-sm text-center table-auto">
       <thead class="text-xs uppercase bg-gray-700">
         <tr>
-          <th scope="col" class="px-4 py-3 rounded-tl-lg">City</th>
+          <th scope="col" class="px-4 py-3 rounded-tl-lg">State</th>
           <th scope="col" class="px-4 py-3">Country</th>
           <th scope="col" class="px-4 py-3 rounded-tr-lg">Views</th>
         </tr>
       </thead>
       <tbody>
         <% @location_data.each_with_index do |location, index| %>
-          <% unless location[:city] == 'Unknown' && location[:country] == 'Unknown' %>
+          <% unless location[:state] == 'Unknown' && location[:country] == 'Unknown' %>
             <tr class="<%= index.even? ? 'bg-gray-800' : 'bg-gray-900' %> border-b border-gray-700">
-              <td class="px-4 py-3"><%= location[:city].present? && location[:city] != 'Unknown' ? location[:city] : '' %></td>
+              <td class="px-4 py-3"><%= location[:state].present? && location[:state] != 'Unknown' ? location[:state] : '' %></td>
               <td class="px-4 py-3"><%= location[:country].present? && location[:country] != 'Unknown' ? location[:country] : '' %></td>
               <td class="px-4 py-3"><%= number_with_delimiter(location[:count]) %></td>
             </tr>
