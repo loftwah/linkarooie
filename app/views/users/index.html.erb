@@ -2,7 +2,7 @@
   <h1 class="text-3xl font-bold text-white mb-6 text-center">User Directory</h1>
 
   <% if @users.any? %>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8">
       <% @users.each do |user| %>
         <div class="bg-gray-800 rounded-lg p-6 text-center shadow-md">
           <div class="mb-4">
