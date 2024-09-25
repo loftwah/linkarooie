@@ -15,11 +15,11 @@ jobs:
 
     env:
       RAILS_ENV: test
-      SPACES_BUCKET_CONTENT: ${{ secrets.SPACES_BUCKET_CONTENT }}  # Use the secret for bucket content
-      SPACES_ACCESS_KEY_ID: ${{ secrets.SPACES_ACCESS_KEY_ID }}    # Add secret for Spaces access key
-      SPACES_SECRET_ACCESS_KEY: ${{ secrets.SPACES_SECRET_ACCESS_KEY }}  # Add secret for Spaces secret access key
-      SPACES_REGION: ${{ secrets.SPACES_REGION }}                  # Add secret for region (e.g., syd1)
-
+      SPACES_BUCKET_CONTENT: ${{ secrets.SPACES_BUCKET_CONTENT }} # Use the secret for bucket content
+      SPACES_ACCESS_KEY_ID: ${{ secrets.SPACES_ACCESS_KEY_ID }} # Add secret for Spaces access key
+      SPACES_SECRET_ACCESS_KEY: ${{ secrets.SPACES_SECRET_ACCESS_KEY }} # Add secret for Spaces secret access key
+      SPACES_REGION: ${{ secrets.SPACES_REGION }} # Add secret for region (e.g., syd1)
+      AWS_REGION: 'ap-southeast-2' # Dummy value for occasional failing tests              
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
