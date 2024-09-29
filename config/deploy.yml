@@ -1,0 +1,86 @@
+service: linkarooie
+image: loftwah/linkarooie:latest
+
+# Servers for deployment
+servers:
+  web:
+    - <%= ENV['KAMAL_HOST'] %>  # Set the KAMAL_HOST as an environment variable
+
+# SSL and proxy configuration
+proxy:
+  ssl: true  # Enable SSL via Let's Encrypt
+  host: staging.linkarooie.com  # Domain for the app, you can adjust this as necessary
+
+# Docker registry credentials
+registry:
+  server: ghcr.io
+  username: loftwah
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+# Specify the builder architecture
+builder:
+  arch: amd64
+
+# Environment variables
+env:
+  clear:
+    KAMAL_HOST: <%= ENV['KAMAL_HOST'] %>  # Use KAMAL_HOST as clear env var
+  secret:
+    - KAMAL_REGISTRY_USERNAME
+    - KAMAL_REGISTRY_PASSWORD
+    - SECRET_KEY_BASE
+    - AXIOM_API_KEY
+    - GEOCODER_API_KEY
+    - DO_TOKEN
+    - SPACES_REGION
+    - SPACES_BUCKET_NAME
+    - SPACES_BUCKET_CONTENT
+    - SPACES_ACCESS_KEY_ID
+    - SPACES_SECRET_ACCESS_KEY
+    - RAILS_MASTER_KEY
+
+# Volumes for persistent storage
+volumes:
+  - /rails/storage:/rails/storage
+
+# Accessories for additional services
+accessories:
+  redis:
+    image: redis:6-alpine
+    host: <%= ENV['KAMAL_HOST'] %>
+    port: 6379
+    volumes:
+      - redis_data:/data
+
+  sidekiq:
+    image: loftwah/linkarooie:latest
+    host: <%= ENV['KAMAL_HOST'] %>
+    cmd: bundle exec sidekiq
+    env:
+      secret:
+        - KAMAL_REGISTRY_USERNAME
+        - KAMAL_REGISTRY_PASSWORD
+        - SECRET_KEY_BASE
+        - AXIOM_API_KEY
+        - GEOCODER_API_KEY
+        - DO_TOKEN
+        - SPACES_REGION
+        - SPACES_BUCKET_NAME
+        - SPACES_BUCKET_CONTENT
+        - SPACES_ACCESS_KEY_ID
+        - SPACES_SECRET_ACCESS_KEY
+    volumes:
+      - /rails/storage:/rails/storage
+
+# Optional: Asset path for fingerprinted assets between deployments
+asset_path: /app/public/assets
+
+# Optional: Rolling deploys
+boot:
+  limit: 10  # Number of servers to restart at once (can also be percentage)
+  wait: 2    # Seconds to wait between batches of restarts
+
+# Optional: Aliases for common commands
+aliases:
+  shell: app exec --interactive --reuse "bash"
