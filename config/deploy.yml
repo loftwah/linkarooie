@@ -1,5 +1,5 @@
 service: linkarooie
-image: loftwah/linkarooie:latest
+image: loftwah/linkarooie
 
 # Servers for deployment
 servers:
@@ -54,7 +54,7 @@ accessories:
       - redis_data:/data
 
   sidekiq:
-    image: loftwah/linkarooie:latest
+    image: ghcr.io/loftwah/linkarooie:latest
     host: <%= ENV['KAMAL_HOST'] %>
     cmd: bundle exec sidekiq
     env:
