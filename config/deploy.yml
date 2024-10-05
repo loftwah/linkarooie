@@ -43,7 +43,7 @@ env:
 
 # Volumes for persistent storage
 volumes:
-  - /rails/storage:/rails/storage
+  - data_storage:/rails/storage
 
 # Accessories for additional services
 accessories:
@@ -79,7 +79,7 @@ accessories:
         - SPACES_ACCESS_KEY_ID
         - SPACES_SECRET_ACCESS_KEY
     volumes:
-      - /rails/storage:/rails/storage
+      - data_storage:/rails/storage
     # Updated container name to avoid conflict
     options:
       name: sidekiq-linkarooie
