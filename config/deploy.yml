@@ -26,6 +26,7 @@ builder:
 env:
   clear:
     KAMAL_HOST: <%= ENV['KAMAL_HOST'] %>  # Use KAMAL_HOST as clear env var
+    REDIS_URL: redis://redis-linkarooie:6379/0  # Updated to match the correct Redis service name
   secret:
     - KAMAL_REGISTRY_USERNAME
     - KAMAL_REGISTRY_PASSWORD
@@ -47,17 +48,24 @@ volumes:
 # Accessories for additional services
 accessories:
   redis:
+    service: linkarooie
     image: redis:6-alpine
     host: <%= ENV['KAMAL_HOST'] %>
     port: 6379
     volumes:
       - redis_data:/data
+    # Updated container name to avoid conflict
+    options:
+      name: redis-linkarooie
 
   sidekiq:
+    service: linkarooie
     image: ghcr.io/loftwah/linkarooie:latest
     host: <%= ENV['KAMAL_HOST'] %>
     cmd: bundle exec sidekiq
     env:
+      clear:
+        REDIS_URL: redis://redis-linkarooie:6379/0  # Updated to match the correct Redis service name
       secret:
         - KAMAL_REGISTRY_USERNAME
         - KAMAL_REGISTRY_PASSWORD
@@ -72,9 +80,12 @@ accessories:
         - SPACES_SECRET_ACCESS_KEY
     volumes:
       - /rails/storage:/rails/storage
+    # Updated container name to avoid conflict
+    options:
+      name: sidekiq-linkarooie
 
 # Optional: Asset path for fingerprinted assets between deployments
-asset_path: /app/public/assets
+# asset_path: /app/public/assets
 
 # Optional: Rolling deploys
 boot:
