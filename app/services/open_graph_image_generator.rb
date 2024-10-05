@@ -105,9 +105,8 @@ class OpenGraphImageGenerator
     end
   end
 
-  private
-
   def valid_image_url?(url)
+    return true if url.start_with?('https://linkarooie.syd1.digitaloceanspaces.com/')
     return false if url.blank?
 
     begin
@@ -115,37 +114,46 @@ class OpenGraphImageGenerator
       return false unless uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
       return false if uri.host.nil?
 
-      # Check if the response is an image
-      response = Net::HTTP.get_response(uri)
-      response.is_a?(Net::HTTPSuccess) && response['Content-Type'].start_with?('image/')
-    rescue URI::InvalidURIError, SocketError, Errno::ECONNREFUSED => e
+      response = fetch_head(uri)
+      return response.is_a?(Net::HTTPSuccess) && response['Content-Type'].to_s.start_with?('image/')
+    rescue URI::InvalidURIError, SocketError, Errno::ECONNREFUSED, Net::OpenTimeout, OpenSSL::SSL::SSLError => e
       Rails.logger.error("Invalid or unreachable URL: #{url}. Error: #{e.message}.")
       false
     end
   end
 
   def download_image(url)
-    uri = URI.parse(url)
-    begin
-      response = Net::HTTP.get_response(uri)
-      if response.is_a?(Net::HTTPSuccess)
-        content_type = response['Content-Type']
+    return MiniMagick::Image.open(url) if url.start_with?('https://linkarooie.syd1.digitaloceanspaces.com/')
 
-        # Only proceed if the content-type is an image
-        if content_type.start_with?('image/')
-          MiniMagick::Image.read(response.body)
-        else
-          Rails.logger.error("URL does not point to an image: #{url}. Content-Type: #{content_type}. Using fallback.")
-          MiniMagick::Image.open(Rails.root.join('public', 'avatars', 'default_avatar.jpg'))
-        end
+    uri = URI.parse(url)
+    response = Net::HTTP.get_response(uri)
+
+    if response.is_a?(Net::HTTPSuccess)
+      content_type = response['Content-Type']
+
+      if content_type.to_s.start_with?('image/')
+        MiniMagick::Image.read(response.body)
       else
-        Rails.logger.error("Failed to download image from URL: #{url}. HTTP Error: #{response.code} #{response.message}. Using fallback.")
-        MiniMagick::Image.open(Rails.root.join('public', 'avatars', 'default_avatar.jpg'))
+        handle_invalid_image("URL does not point to an image: #{url}. Content-Type: #{content_type}.")
       end
-    rescue StandardError => e
-      Rails.logger.error("Failed to download image from URL: #{url}. Error: #{e.message}. Using fallback.")
-      MiniMagick::Image.open(Rails.root.join('public', 'avatars', 'default_avatar.jpg'))
+    else
+      handle_invalid_image("Failed to download image from URL: #{url}. HTTP Error: #{response.code} #{response.message}.")
     end
+  rescue StandardError => e
+    handle_invalid_image("Failed to download image from URL: #{url}. Error: #{e.message}.")
+  end
+
+  private
+
+  def fetch_head(uri)
+    Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https', open_timeout: 5, read_timeout: 5) do |http|
+      http.request_head(uri.path)
+    end
+  end
+
+  def handle_invalid_image(error_message)
+    Rails.logger.error(error_message)
+    MiniMagick::Image.open(Rails.root.join('public', 'avatars', 'default_avatar.jpg'))
   end
 
   def escape_text(text)
