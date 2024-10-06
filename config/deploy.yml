@@ -10,6 +10,8 @@ servers:
 proxy:
   ssl: true  # Enable SSL via Let's Encrypt
   host: staging.linkarooie.com  # Domain for the app, you can adjust this as necessary
+  # kamal-proxy connects to your container over port 80, use `app_port` to specify a different port.
+  app_port: 3000
 
 # Docker registry credentials
 registry:
