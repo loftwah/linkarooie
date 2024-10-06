@@ -42,6 +42,7 @@ gem 'sidekiq'
 gem 'sidekiq-scheduler'
 gem 'vite_rails'
 gem 'aws-sdk-s3'
+gem 'kamal'
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
