@@ -6,12 +6,17 @@ servers:
   web:
     - <%= ENV['KAMAL_HOST'] %>  # Set the KAMAL_HOST as an environment variable
 
+  # Sidekiq server
+  job:
+    hosts:
+      - <%= ENV['KAMAL_HOST'] %>  # Use the same or a different server for Sidekiq
+    cmd: bundle exec sidekiq  # Command to start Sidekiq
+
 # SSL and proxy configuration
 proxy:
   ssl: true  # Enable SSL via Let's Encrypt
-  host: staging.linkarooie.com  # Domain for the app, you can adjust this as necessary
-  # kamal-proxy connects to your container over port 80, use `app_port` to specify a different port.
-  app_port: 3000
+  host: staging.linkarooie.com  # Domain for the app
+  app_port: 3000  # The port your app listens to inside the container
 
 # Docker registry credentials
 registry:
@@ -56,38 +61,8 @@ accessories:
     port: 6379
     volumes:
       - redis_data:/data
-    # Updated container name to avoid conflict
     options:
       name: redis-linkarooie
-
-  sidekiq:
-    service: linkarooie
-    image: ghcr.io/loftwah/linkarooie:latest
-    host: <%= ENV['KAMAL_HOST'] %>
-    cmd: bundle exec sidekiq
-    env:
-      clear:
-        REDIS_URL: redis://redis-linkarooie:6379/0  # Updated to match the correct Redis service name
-      secret:
-        - KAMAL_REGISTRY_USERNAME
-        - KAMAL_REGISTRY_PASSWORD
-        - SECRET_KEY_BASE
-        - AXIOM_API_KEY
-        - GEOCODER_API_KEY
-        - DO_TOKEN
-        - SPACES_REGION
-        - SPACES_BUCKET_NAME
-        - SPACES_BUCKET_CONTENT
-        - SPACES_ACCESS_KEY_ID
-        - SPACES_SECRET_ACCESS_KEY
-    volumes:
-      - data_storage:/rails/storage
-    # Updated container name to avoid conflict
-    options:
-      name: sidekiq-linkarooie
-
-# Optional: Asset path for fingerprinted assets between deployments
-# asset_path: /app/public/assets
 
 # Optional: Rolling deploys
 boot:
