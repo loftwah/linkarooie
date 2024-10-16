@@ -58,7 +58,7 @@ accessories:
     service: linkarooie
     image: redis:6-alpine
     host: <%= ENV['KAMAL_HOST'] %>
-    port: 6379
+    # port: 6379
     volumes:
       - redis_data:/data
     options:
