@@ -15,7 +15,7 @@ servers:
 # SSL and proxy configuration
 proxy:
   ssl: true  # Enable SSL via Let's Encrypt
-  host: staging.linkarooie.com  # Domain for the app
+  host: linkarooie.com  # Domain for the app
   app_port: 3000  # The port your app listens to inside the container
 
 # Docker registry credentials
