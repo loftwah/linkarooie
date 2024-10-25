@@ -9,14 +9,23 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - dl/kamal-2-test
+      - dl/kamal-2-test  # Change to 'main' branch
+
+  # Trigger deployment only after the CI workflow completes successfully
+  workflow_run:
+    workflows: ["CI"]  # Ensure this matches the name of your CI workflow
+    types:
+      - completed
 
 jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-    environment: staging
+    environment: production  # Adjust to 'production'
     timeout-minutes: 20
+
+    # Only run if CI was successful
+    if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
 
     steps:
       - uses: actions/checkout@v4
