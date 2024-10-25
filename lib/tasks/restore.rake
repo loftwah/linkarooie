@@ -37,13 +37,19 @@ namespace :db do
   def restore_from_file(backup_file)
     puts "Restoring database from #{backup_file}..."
   
+    # Disable foreign key checks
+    ActiveRecord::Base.connection.execute("PRAGMA foreign_keys = OFF;")
+  
     # Drop each table individually
     ActiveRecord::Base.connection.tables.each do |table|
-      next if ['schema_migrations', 'ar_internal_metadata'].include?(table) # Avoid dropping system tables
+      next if ['schema_migrations', 'ar_internal_metadata'].include?(table)
       ActiveRecord::Base.connection.execute("DROP TABLE IF EXISTS #{table}")
     end
   
-    # Load the backup SQL file
+    # Restore from the backup file
     system("sqlite3 #{Rails.configuration.database_configuration[Rails.env]['database']} < #{backup_file}")
+  
+    # Re-enable foreign key checks
+    ActiveRecord::Base.connection.execute("PRAGMA foreign_keys = ON;")
   end  
 end
