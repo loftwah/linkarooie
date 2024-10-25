@@ -6,7 +6,7 @@ permissions:
   packages: write
 
 on:
-  workflow_dispatch:  # This lets you run it manually from GitHub UI
+  workflow_dispatch:
   push:
     branches:
       - dl/kamal-2-test
@@ -41,9 +41,9 @@ jobs:
 
       - name: Deploy with Kamal
         env:
-          KAMAL_HOST: ${{ secrets.DROPLET_IP }}
-          KAMAL_REGISTRY_USERNAME: ${{ github.actor }}
-          KAMAL_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          KAMAL_HOST: ${{ secrets.KAMAL_HOST }}
+          KAMAL_REGISTRY_USERNAME: ${{ secrets.KAMAL_REGISTRY_USERNAME }}
+          KAMAL_REGISTRY_PASSWORD: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
           SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
           AXIOM_API_KEY: ${{ secrets.AXIOM_API_KEY }}
           DO_TOKEN: ${{ secrets.DO_TOKEN }}
