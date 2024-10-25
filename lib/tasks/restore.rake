@@ -9,20 +9,24 @@ namespace :db do
       exit 1
     end
 
-    begin
-      # Ensure the backup directory exists
-      FileUtils.mkdir_p("db/backups")
+    unless File.exist?(backup_file)
+      puts "ERROR: Backup file not found: #{backup_file}"
+      exit 1
+    end
 
+    begin
       # Check if the file is compressed
       if backup_file.end_with?('.tar.gz')
         # Extract the .sqlite3 file from the .tar.gz archive
         puts "Extracting #{backup_file}..."
-        extracted_file = `tar -xzvf #{backup_file} -C db/backups`.lines.first.strip
-        extracted_file_path = File.join("db/backups", extracted_file)
+        extracted_file = `tar -xzvf #{backup_file} -C /rails/storage`.lines.first&.strip
 
-        unless File.exist?(extracted_file_path)
-          raise "Extracted file not found: #{extracted_file_path}"
+        # Handle the case where the extraction fails
+        if extracted_file.nil? || extracted_file.empty?
+          raise "File extraction failed: #{backup_file}"
         end
+
+        extracted_file_path = "/rails/storage/#{extracted_file}"
 
         # Restore from the extracted .sqlite3 file
         restore_from_file(extracted_file_path)
