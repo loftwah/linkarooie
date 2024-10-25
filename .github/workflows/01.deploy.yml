@@ -3,7 +3,13 @@ name: Deploy to Digital Ocean
 permissions:
   id-token: write
   contents: read
-  packages: write  # Added this permission for ghcr.io access
+  packages: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dl/kamal-2-test
 
 jobs:
   deploy:
