@@ -36,11 +36,14 @@ namespace :db do
 
   def restore_from_file(backup_file)
     puts "Restoring database from #{backup_file}..."
-
-    # Drop the current database tables
-    ActiveRecord::Base.connection.execute("DROP TABLE IF EXISTS #{ActiveRecord::Base.connection.tables.join(', ')}")
-
+  
+    # Drop each table individually
+    ActiveRecord::Base.connection.tables.each do |table|
+      next if ['schema_migrations', 'ar_internal_metadata'].include?(table) # Avoid dropping system tables
+      ActiveRecord::Base.connection.execute("DROP TABLE IF EXISTS #{table}")
+    end
+  
     # Load the backup SQL file
     system("sqlite3 #{Rails.configuration.database_configuration[Rails.env]['database']} < #{backup_file}")
-  end
+  end  
 end
