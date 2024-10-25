@@ -1,80 +1,67 @@
-name: Deploy and Release
+name: Deploy to Digital Ocean
+
+permissions:
+  id-token: write
+  contents: read
+  packages: write
 
 on:
-  pull_request:
-    types: [closed]
-    branches:
-      - main
   workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Branch to deploy'
-        required: true
-        default: 'main'
+  push:
+    branches:
+      - dl/kamal-2-test  # Change to 'main' branch
+
+  # Trigger deployment only after the CI workflow completes successfully
+  workflow_run:
+    workflows: ["CI"]  # Ensure this matches the name of your CI workflow
+    types:
+      - completed
 
 jobs:
-  deploy_and_release:
+  deploy:
+    name: Deploy
     runs-on: ubuntu-latest
-    if: |
-      github.event_name == 'workflow_dispatch' ||
-      (github.event.pull_request.merged == true &&
-       github.event.pull_request.base.ref == 'main')
+    environment: production  # Adjust to 'production'
+    timeout-minutes: 20
+
+    # Only run if CI was successful
+    if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        ref: ${{ github.event.inputs.branch || 'main' }}
+      - uses: actions/checkout@v4
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
+      - uses: ruby/setup-ruby@v1
+        env:
+          BUNDLE_GEMFILE: ./Gemfile
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GH_PAT }}
+      - name: Install kamal and create binstub
+        run: |
+          bundle install
+          bundle binstub kamal
 
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v6
-      with:
-        context: .
-        push: true
-        tags: ghcr.io/loftwah/linkarooie:${{ github.event.inputs.branch || 'latest' }}
+      - uses: docker/setup-buildx-action@v3
 
-    - name: Deploy to droplet
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.DROPLET_IP }}
-        username: root
-        key: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}
-        script: |
-          echo "${{ secrets.GH_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-          
-          # Stop the running containers
-          docker compose -f docker-compose.prod.yml down
-          
-          # Pull the latest images
-          docker compose -f docker-compose.prod.yml pull
-          
-          # Run database migrations (if necessary)
-          docker compose -f docker-compose.prod.yml run --rm app rails db:migrate
-          
-          # Start the new containers
-          docker compose -f docker-compose.prod.yml up -d
-          
-          # Remove unused images and containers
-          docker system prune -af
+      - uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}
 
-    - name: Get current datetime
-      id: date
-      run: echo "DATETIME=$(date +'%Y-%m-%d-%H-%M-%S')" >> $GITHUB_OUTPUT
-
-    - name: Create Release
-      uses: elgohr/Github-Release-Action@v5
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-      with:
-        title: Release ${{ steps.date.outputs.DATETIME }}
-        tag: release-${{ steps.date.outputs.DATETIME }}
+      - name: Deploy with Kamal
+        env:
+          KAMAL_HOST: ${{ secrets.KAMAL_HOST }}
+          KAMAL_REGISTRY_USERNAME: ${{ secrets.KAMAL_REGISTRY_USERNAME }}
+          KAMAL_REGISTRY_PASSWORD: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
+          SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+          AXIOM_API_KEY: ${{ secrets.AXIOM_API_KEY }}
+          DO_TOKEN: ${{ secrets.DO_TOKEN }}
+          SPACES_REGION: ${{ secrets.SPACES_REGION }}
+          SPACES_BUCKET_NAME: ${{ secrets.SPACES_BUCKET_NAME }}
+          SPACES_BUCKET_CONTENT: ${{ secrets.SPACES_BUCKET_CONTENT }}
+          SPACES_ACCESS_KEY_ID: ${{ secrets.SPACES_ACCESS_KEY_ID }}
+          SPACES_SECRET_ACCESS_KEY: ${{ secrets.SPACES_SECRET_ACCESS_KEY }}
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+          DOCKER_BUILDKIT: 1
+        run: |
+          ./bin/kamal deploy
