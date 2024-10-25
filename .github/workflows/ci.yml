@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
     branches:
-      - dl/kamal-2-test
+      - main
   push:
     branches:
       - 'feature/**'

@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - dl/kamal-2-test  # Change to 'main' branch
+      - main  # Change to 'main' branch
 
   # Trigger deployment only after the CI workflow completes successfully
   workflow_run:
