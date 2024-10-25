@@ -6,7 +6,7 @@ permissions:
   packages: write
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # This lets you run it manually from GitHub UI
   push:
     branches:
       - dl/kamal-2-test
