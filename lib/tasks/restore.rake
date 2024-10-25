@@ -9,19 +9,30 @@ namespace :db do
       exit 1
     end
 
+    unless File.exist?(backup_file)
+      puts "ERROR: Backup file not found: #{backup_file}"
+      exit 1
+    end
+
     begin
       # Check if the file is compressed
       if backup_file.end_with?('.tar.gz')
         # Extract the .sqlite3 file from the .tar.gz archive
         puts "Extracting #{backup_file}..."
-        extracted_file = `tar -xzvf #{backup_file} -C db/backups`.strip
-        extracted_file = "db/backups/#{extracted_file}"
+        extracted_file = `tar -xzvf #{backup_file} -C /rails/storage`.lines.first&.strip
+
+        # Handle the case where the extraction fails
+        if extracted_file.nil? || extracted_file.empty?
+          raise "File extraction failed: #{backup_file}"
+        end
+
+        extracted_file_path = "/rails/storage/#{extracted_file}"
 
         # Restore from the extracted .sqlite3 file
-        restore_from_file(extracted_file)
+        restore_from_file(extracted_file_path)
 
         # Optionally, delete the extracted file after restoration
-        File.delete(extracted_file) if File.exist?(extracted_file)
+        File.delete(extracted_file_path) if File.exist?(extracted_file_path)
       else
         # Restore from the uncompressed .sqlite3 file
         restore_from_file(backup_file)
@@ -37,10 +48,19 @@ namespace :db do
   def restore_from_file(backup_file)
     puts "Restoring database from #{backup_file}..."
 
-    # Drop the current database tables
-    ActiveRecord::Base.connection.execute("DROP TABLE IF EXISTS #{ActiveRecord::Base.connection.tables.join(', ')}")
+    # Disable foreign key checks
+    ActiveRecord::Base.connection.execute("PRAGMA foreign_keys = OFF;")
 
-    # Load the backup SQL file
+    # Drop each table individually
+    ActiveRecord::Base.connection.tables.each do |table|
+      next if ['schema_migrations', 'ar_internal_metadata'].include?(table)
+      ActiveRecord::Base.connection.execute("DROP TABLE IF EXISTS #{table}")
+    end
+
+    # Restore the backup into the database
     system("sqlite3 #{Rails.configuration.database_configuration[Rails.env]['database']} < #{backup_file}")
-  end
+
+    # Re-enable foreign key checks
+    ActiveRecord::Base.connection.execute("PRAGMA foreign_keys = ON;")
+  end  
 end
