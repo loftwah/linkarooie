@@ -1,0 +1,59 @@
+name: 03. Kamal Run Command
+
+permissions:
+  id-token: write
+  contents: read
+  packages: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: 'Commands'
+        required: true
+        type: choice
+        options:
+          - proxy reboot --rolling -y
+          - upgrade --rolling -y
+      environment:
+        description: 'Environment'
+        required: true
+        type: choice
+        options:
+          - production
+
+jobs:
+  kamal_run_command:
+    name: Kamal run command
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency:
+      group: ${{ github.event.inputs.environment }}_environment
+      cancel-in-progress: false
+    environment:
+      name: ${{ github.event.inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/workflows/setup
+        name: Setup
+        with:
+          ssh-private-key: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}
+
+      - name: kamal ${{ github.event.inputs.command }} --destination=${{ github.event.inputs.environment }}
+        env:
+          KAMAL_HOST: ${{ secrets.KAMAL_HOST }}
+          KAMAL_REGISTRY_USERNAME: ${{ secrets.KAMAL_REGISTRY_USERNAME }}
+          KAMAL_REGISTRY_PASSWORD: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
+          SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+          AXIOM_API_KEY: ${{ secrets.AXIOM_API_KEY }}
+          DO_TOKEN: ${{ secrets.DO_TOKEN }}
+          SPACES_REGION: ${{ secrets.SPACES_REGION }}
+          SPACES_BUCKET_NAME: ${{ secrets.SPACES_BUCKET_NAME }}
+          SPACES_BUCKET_CONTENT: ${{ secrets.SPACES_BUCKET_CONTENT }}
+          SPACES_ACCESS_KEY_ID: ${{ secrets.SPACES_ACCESS_KEY_ID }}
+          SPACES_SECRET_ACCESS_KEY: ${{ secrets.SPACES_SECRET_ACCESS_KEY }}
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+          DOCKER_BUILDKIT: 1
+        run: |
+          ./bin/kamal ${{ github.event.inputs.command }} --destination=${{ github.event.inputs.environment }}
