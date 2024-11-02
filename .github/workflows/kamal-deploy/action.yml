@@ -1,0 +1,70 @@
+name: Kamal Deploy
+
+inputs:
+  environment:
+    description: 'Environment'
+    required: true
+  kamal-host:
+    description: 'Kamal Host'
+    required: true
+  kamal-registry-username:
+    description: 'Kamal Registry Username'
+    required: true
+  kamal-registry-password:
+    description: 'Kamal Registry Password'
+    required: true
+  secret-key-base:
+    description: 'Secret Key Base'
+    required: true
+  axiom-api-key:
+    description: 'Axiom API Key'
+    required: true
+  do-token:
+    description: 'Digital Ocean Token'
+    required: true
+  spaces-region:
+    description: 'Spaces Region'
+    required: true
+  spaces-bucket-name:
+    description: 'Spaces Bucket Name'
+    required: true
+  spaces-bucket-content:
+    description: 'Spaces Bucket Content'
+    required: true
+  spaces-access-key-id:
+    description: 'Spaces Access Key ID'
+    required: true
+  spaces-secret-access-key:
+    description: 'Spaces Secret Access Key'
+    required: true
+  rails-master-key:
+    description: 'Rails Master Key'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Kamal Deploy
+      shell: bash
+      env:
+        KAMAL_HOST: ${{ inputs.kamal-host }}
+        KAMAL_REGISTRY_USERNAME: ${{ inputs.kamal-registry-username }}
+        KAMAL_REGISTRY_PASSWORD: ${{ inputs.kamal-registry-password }}
+        SECRET_KEY_BASE: ${{ inputs.secret-key-base }}
+        AXIOM_API_KEY: ${{ inputs.axiom-api-key }}
+        DO_TOKEN: ${{ inputs.do-token }}
+        SPACES_REGION: ${{ inputs.spaces-region }}
+        SPACES_BUCKET_NAME: ${{ inputs.spaces-bucket-name }}
+        SPACES_BUCKET_CONTENT: ${{ inputs.spaces-bucket-content }}
+        SPACES_ACCESS_KEY_ID: ${{ inputs.spaces-access-key-id }}
+        SPACES_SECRET_ACCESS_KEY: ${{ inputs.spaces-secret-access-key }}
+        RAILS_MASTER_KEY: ${{ inputs.rails-master-key }}
+        DOCKER_BUILDKIT: 1
+      run: |
+        ./bin/kamal deploy --destination=${{ inputs.environment }}
+
+    - name: Kamal release on cancel
+      shell: bash
+      if: ${{ cancelled() }}
+      run: |
+        ./bin/kamal lock release --destination=${{ inputs.environment }}

@@ -1,0 +1,54 @@
+name: 01. Deploy to Production
+
+permissions:
+  id-token: write
+  contents: read
+  packages: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+
+jobs:
+  deploy-production:
+    name: Deploy to production
+    if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
+    concurrency:
+      group: production_environment
+      cancel-in-progress: true
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+
+      - uses: ./.github/workflows/setup
+        name: Setup
+        with:
+          ssh-private-key: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}
+
+      - name: Kamal Deploy
+        uses: ./.github/workflows/kamal-deploy
+        with:
+          kamal-host: ${{ secrets.KAMAL_HOST }}
+          kamal-registry-username: ${{ secrets.KAMAL_REGISTRY_USERNAME }}
+          kamal-registry-password: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
+          secret-key-base: ${{ secrets.SECRET_KEY_BASE }}
+          axiom-api-key: ${{ secrets.AXIOM_API_KEY }}
+          do-token: ${{ secrets.DO_TOKEN }}
+          spaces-region: ${{ secrets.SPACES_REGION }}
+          spaces-bucket-name: ${{ secrets.SPACES_BUCKET_NAME }}
+          spaces-bucket-content: ${{ secrets.SPACES_BUCKET_CONTENT }}
+          spaces-access-key-id: ${{ secrets.SPACES_ACCESS_KEY_ID }}
+          spaces-secret-access-key: ${{ secrets.SPACES_SECRET_ACCESS_KEY }}
+          rails-master-key: ${{ secrets.RAILS_MASTER_KEY }}
+          environment: production
