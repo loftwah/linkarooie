@@ -1,0 +1,73 @@
+service: linkarooie
+image: loftwah/linkarooie
+
+# Servers for deployment
+servers:
+  web:
+    - <%= ENV['KAMAL_HOST'] %>  # Set the KAMAL_HOST as an environment variable
+
+  # Sidekiq server
+  job:
+    hosts:
+      - <%= ENV['KAMAL_HOST'] %>  # Use the same or a different server for Sidekiq
+    cmd: bundle exec sidekiq  # Command to start Sidekiq
+
+# SSL and proxy configuration
+proxy:
+  ssl: true  # Enable SSL via Let's Encrypt
+  host: linkarooie.com  # Domain for the app
+  app_port: 3000  # The port your app listens to inside the container
+
+# Docker registry credentials
+registry:
+  server: ghcr.io
+  username: loftwah
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+# Specify the builder architecture
+builder:
+  arch: amd64
+
+# Environment variables
+env:
+  clear:
+    KAMAL_HOST: <%= ENV['KAMAL_HOST'] %>  # Use KAMAL_HOST as clear env var
+    REDIS_URL: redis://redis-linkarooie:6379/0  # Updated to match the correct Redis service name
+  secret:
+    - KAMAL_REGISTRY_USERNAME
+    - KAMAL_REGISTRY_PASSWORD
+    - SECRET_KEY_BASE
+    - AXIOM_API_KEY
+    - DO_TOKEN
+    - SPACES_REGION
+    - SPACES_BUCKET_NAME
+    - SPACES_BUCKET_CONTENT
+    - SPACES_ACCESS_KEY_ID
+    - SPACES_SECRET_ACCESS_KEY
+    - RAILS_MASTER_KEY
+
+# Volumes for persistent storage
+volumes:
+  - data_storage:/rails/storage
+
+# Accessories for additional services
+accessories:
+  redis:
+    service: linkarooie
+    image: redis:6-alpine
+    host: <%= ENV['KAMAL_HOST'] %>
+    # port: 6379
+    volumes:
+      - redis_data:/data
+    options:
+      name: redis-linkarooie
+
+# Optional: Rolling deploys
+boot:
+  limit: 10  # Number of servers to restart at once (can also be percentage)
+  wait: 2    # Seconds to wait between batches of restarts
+
+# Optional: Aliases for common commands
+aliases:
+  shell: app exec --interactive --reuse "bash"
