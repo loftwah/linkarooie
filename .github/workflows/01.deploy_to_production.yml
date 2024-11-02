@@ -28,8 +28,6 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.workflow_run.head_branch }}
 
       - uses: ./.github/workflows/setup
         name: Setup
