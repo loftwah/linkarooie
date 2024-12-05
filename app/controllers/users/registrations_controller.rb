@@ -9,6 +9,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
 
     build_resource(sign_up_params)
+    resource.tags = ['linkarooie'].to_json if resource.tags.blank?
     resource.tags = JSON.parse(resource.tags) if resource.tags.is_a?(String)
 
     resource.save

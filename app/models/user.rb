@@ -31,6 +31,7 @@ class User < ApplicationRecord
   after_create :generate_open_graph_image_async, unless: -> { Rails.env.test? }
   before_save :process_avatar, if: :will_save_change_to_avatar?
   before_save :process_banner, if: :will_save_change_to_banner?
+  before_save :ensure_tags_present
 
   serialize :tags, coder: JSON
 
@@ -115,6 +116,10 @@ class User < ApplicationRecord
     if username.blank?
       self.username = email.present? ? email.split('@').first : "user#{SecureRandom.hex(4)}"
     end
+  end
+
+  def ensure_tags_present
+    self.tags = ['linkarooie'].to_json if tags.blank?
   end
 
   def set_default_images
