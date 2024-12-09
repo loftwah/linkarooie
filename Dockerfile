@@ -2,7 +2,7 @@
 
 # Make sure RUBY_VERSION matches the Ruby version in .ruby-version and Gemfile
 ARG RUBY_VERSION=3.3.4
-FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim as base
+FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim AS base
 
 # Rails app lives here
 WORKDIR /rails
@@ -14,11 +14,22 @@ ENV RAILS_ENV="production" \
     BUNDLE_WITHOUT="development test"
 
 # Throw-away build stage to reduce size of final image
-FROM base as build
+FROM base AS build
 
 # Install packages needed to build gems and node modules
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libvips pkg-config nodejs npm
+    apt-get install --no-install-recommends -y \
+        build-essential \
+        git \
+        libvips \
+        pkg-config \
+        nodejs \
+        npm \
+        imagemagick \
+        fonts-liberation \
+        fonts-freefont-ttf \
+        fonts-dejavu \
+        fontconfig
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./
@@ -45,8 +56,17 @@ FROM base
 
 # Install packages needed for deployment
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libsqlite3-0 libvips imagemagick fonts-liberation sqlite3 libsqlite3-dev \
-    fonts-freefont-ttf fonts-dejavu fontconfig && \
+    apt-get install --no-install-recommends -y \
+        curl \
+        libsqlite3-0 \
+        libvips \
+        imagemagick \
+        fonts-liberation \
+        sqlite3 \
+        libsqlite3-dev \
+        fonts-freefont-ttf \
+        fonts-dejavu \
+        fontconfig && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Copy built artifacts: gems, application, and node modules

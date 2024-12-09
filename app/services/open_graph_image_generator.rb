@@ -5,18 +5,19 @@ class OpenGraphImageGenerator
 
   def initialize(user)
     @user = user
+    @spaces_service = DigitalOceanSpacesService.new
   end
 
   def generate
-    template_path = Rails.root.join('app', 'assets', 'images', 'og_template.png')
-    output_dir = Rails.root.join('public', 'uploads', 'og_images')
-    FileUtils.mkdir_p(output_dir) unless File.directory?(output_dir)
-    output_path = output_dir.join("#{@user.username}_og.png")
-
     begin
+      # Create a temporary working directory
+      temp_dir = Dir.mktmpdir
+      output_path = File.join(temp_dir, "#{@user.username}_og.png")
+      
+      template_path = Rails.root.join('app', 'assets', 'images', 'og_template.png')
       image = MiniMagick::Image.open(template_path)
 
-      # Determine whether to use fallback avatar or download the provided one
+      # Download and process avatar
       if @user.avatar.blank? || !valid_image_url?(@user.avatar_url)
         avatar = MiniMagick::Image.open(Rails.root.join('public', 'avatars', 'default_avatar.jpg'))
       else
@@ -43,17 +44,11 @@ class OpenGraphImageGenerator
       # Spacing between elements
       spacing = 10
 
-      # Estimate text heights (approximated as 1.2 times point size)
-      name_text_height = name_pointsize * 1.2
-      username_text_height = username_pointsize * 1.2
-      tag_text_height = tag_pointsize * 1.2 if tag_text.present?
-
       # Total content height calculation
       total_height = (AVATAR_SIZE + 2 * BORDER_SIZE) + spacing +
-                     name_text_height + spacing +
-                     username_text_height
-
-      total_height += spacing + tag_text_height if tag_text.present?
+                     name_pointsize * 1.2 + spacing +
+                     username_pointsize * 1.2
+      total_height += spacing + tag_pointsize * 1.2 if tag_text.present?
 
       # Calculate starting y-position to center content vertically
       template_height = image.height
@@ -64,7 +59,7 @@ class OpenGraphImageGenerator
 
       # Add avatar to the image, centered horizontally
       image = image.composite(avatar) do |c|
-        c.gravity 'North'  # Align from the top
+        c.gravity 'North'
         c.geometry "+0+#{current_y}"
       end
 
@@ -72,21 +67,21 @@ class OpenGraphImageGenerator
 
       # Add text to the image
       image.combine_options do |c|
-        c.gravity 'North'  # Align from the top
-        c.font 'Arial'  # Use a common system font
+        c.gravity 'North'
+        c.font '/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf'
 
         # Add full name
         c.fill '#BEF264'
         c.pointsize name_pointsize.to_s
         c.draw "text 0,#{current_y} '#{escape_text(full_name)}'"
 
-        current_y += name_text_height + spacing
+        current_y += name_pointsize * 1.2 + spacing
 
         # Add username
         c.pointsize username_pointsize.to_s
         c.draw "text 0,#{current_y} '#{escape_text(username)}'"
 
-        current_y += username_text_height + spacing
+        current_y += username_pointsize * 1.2 + spacing
 
         # Add tags if present
         if tag_text.present?
@@ -96,67 +91,60 @@ class OpenGraphImageGenerator
         end
       end
 
-      # Save the generated image
+      # Save the image to temp directory
       image.write(output_path)
-      output_path
+
+      # Upload to DigitalOcean Spaces
+      og_image_key = "og_images/#{@user.username}_og.png"
+      spaces_url = @spaces_service.upload_file_from_path(og_image_key, output_path)
+
+      # Update user's og_image_url
+      @user.update_column(:og_image_url, spaces_url) if spaces_url
+
+      spaces_url
     rescue StandardError => e
       Rails.logger.error("Failed to generate OG image for user #{@user.id}: #{e.message}")
-      nil  # Return nil to indicate failure without raising an exception
+      nil
+    ensure
+      FileUtils.remove_entry(temp_dir) if temp_dir && File.exist?(temp_dir)
     end
   end
+
+  private
 
   def valid_image_url?(url)
     return true if url.start_with?('https://linkarooie.syd1.digitaloceanspaces.com/')
     return false if url.blank?
 
-    begin
-      uri = URI.parse(url)
-      return false unless uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
-      return false if uri.host.nil?
-
-      response = fetch_head(uri)
-      return response.is_a?(Net::HTTPSuccess) && response['Content-Type'].to_s.start_with?('image/')
-    rescue URI::InvalidURIError, SocketError, Errno::ECONNREFUSED, Net::OpenTimeout, OpenSSL::SSL::SSLError => e
-      Rails.logger.error("Invalid or unreachable URL: #{url}. Error: #{e.message}.")
-      false
+    uri = URI.parse(url)
+    response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
+      http.head(uri.path)
     end
+    
+    response.is_a?(Net::HTTPSuccess) && response['Content-Type'].to_s.start_with?('image/')
+  rescue StandardError => e
+    Rails.logger.error("Error validating image URL: #{e.message}")
+    false
   end
 
   def download_image(url)
-    return MiniMagick::Image.open(url) if url.start_with?('https://linkarooie.syd1.digitaloceanspaces.com/')
-
-    uri = URI.parse(url)
-    response = Net::HTTP.get_response(uri)
-
-    if response.is_a?(Net::HTTPSuccess)
-      content_type = response['Content-Type']
-
-      if content_type.to_s.start_with?('image/')
+    if url.start_with?('https://linkarooie.syd1.digitaloceanspaces.com/')
+      MiniMagick::Image.open(url)
+    else
+      response = Net::HTTP.get_response(URI.parse(url))
+      
+      if response.is_a?(Net::HTTPSuccess) && response['Content-Type'].to_s.start_with?('image/')
         MiniMagick::Image.read(response.body)
       else
-        handle_invalid_image("URL does not point to an image: #{url}. Content-Type: #{content_type}.")
+        MiniMagick::Image.open(Rails.root.join('public', 'avatars', 'default_avatar.jpg'))
       end
-    else
-      handle_invalid_image("Failed to download image from URL: #{url}. HTTP Error: #{response.code} #{response.message}.")
     end
   rescue StandardError => e
-    handle_invalid_image("Failed to download image from URL: #{url}. Error: #{e.message}.")
-  end
-
-  private
-
-  def fetch_head(uri)
-    Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https', open_timeout: 5, read_timeout: 5) do |http|
-      http.request_head(uri.path)
-    end
-  end
-
-  def handle_invalid_image(error_message)
-    Rails.logger.error(error_message)
+    Rails.logger.error("Failed to download image: #{e.message}")
     MiniMagick::Image.open(Rails.root.join('public', 'avatars', 'default_avatar.jpg'))
   end
 
   def escape_text(text)
-    text.gsub("'", "\\\\'")
+    text.gsub("\\", "\\\\\\").gsub("'", "\\\\'")
   end
 end
