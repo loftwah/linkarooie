@@ -5,7 +5,7 @@ module OpenGraphHelper
   def set_open_graph_tags(user)
     default_title = 'Linkarooie - Simplify Your Online Presence'
     default_description = 'Manage all your links in one place with Linkarooie.'
-    default_image = image_url('default_og_image.png')
+    default_image = 'https://linkarooie.syd1.digitaloceanspaces.com/defaults/default_og_image.png'
     
     content_for :og_title, user.full_name.presence || default_title
     content_for :og_description, user.description.presence&.truncate(160) || default_description
