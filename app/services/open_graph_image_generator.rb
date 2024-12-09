@@ -145,6 +145,6 @@ class OpenGraphImageGenerator
   end
 
   def escape_text(text)
-    text.gsub("'", "\\'")
+    text.gsub("\\", "\\\\\\").gsub("'", "\\\\'")
   end
 end
