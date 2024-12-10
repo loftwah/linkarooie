@@ -44,6 +44,25 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Release Kamal Lock
+      shell: bash
+      env:
+        KAMAL_HOST: ${{ inputs.kamal-host }}
+        KAMAL_REGISTRY_USERNAME: ${{ inputs.kamal-registry-username }}
+        KAMAL_REGISTRY_PASSWORD: ${{ inputs.kamal-registry-password }}
+        SECRET_KEY_BASE: ${{ inputs.secret-key-base }}
+        AXIOM_API_KEY: ${{ inputs.axiom-api-key }}
+        DO_TOKEN: ${{ inputs.do-token }}
+        SPACES_REGION: ${{ inputs.spaces-region }}
+        SPACES_BUCKET_NAME: ${{ inputs.spaces-bucket-name }}
+        SPACES_BUCKET_CONTENT: ${{ inputs.spaces-bucket-content }}
+        SPACES_ACCESS_KEY_ID: ${{ inputs.spaces-access-key-id }}
+        SPACES_SECRET_ACCESS_KEY: ${{ inputs.spaces-secret-access-key }}
+        RAILS_MASTER_KEY: ${{ inputs.rails-master-key }}
+        DOCKER_BUILDKIT: 1
+      run: |
+        ./bin/kamal lock release --destination=${{ inputs.environment }} || true
+
     - name: Kamal Deploy
       shell: bash
       env:
@@ -66,5 +85,19 @@ runs:
     - name: Kamal release on cancel
       shell: bash
       if: ${{ cancelled() }}
+      env:
+        KAMAL_HOST: ${{ inputs.kamal-host }}
+        KAMAL_REGISTRY_USERNAME: ${{ inputs.kamal-registry-username }}
+        KAMAL_REGISTRY_PASSWORD: ${{ inputs.kamal-registry-password }}
+        SECRET_KEY_BASE: ${{ inputs.secret-key-base }}
+        AXIOM_API_KEY: ${{ inputs.axiom-api-key }}
+        DO_TOKEN: ${{ inputs.do-token }}
+        SPACES_REGION: ${{ inputs.spaces-region }}
+        SPACES_BUCKET_NAME: ${{ inputs.spaces-bucket-name }}
+        SPACES_BUCKET_CONTENT: ${{ inputs.spaces-bucket-content }}
+        SPACES_ACCESS_KEY_ID: ${{ inputs.spaces-access-key-id }}
+        SPACES_SECRET_ACCESS_KEY: ${{ inputs.spaces-secret-access-key }}
+        RAILS_MASTER_KEY: ${{ inputs.rails-master-key }}
+        DOCKER_BUILDKIT: 1
       run: |
         ./bin/kamal lock release --destination=${{ inputs.environment }}
