@@ -43,6 +43,7 @@ gem 'sidekiq-scheduler', '>= 5.0'
 gem 'vite_rails', '>= 3.0'
 gem 'aws-sdk-s3', '>= 1.135'
 gem 'kamal', '>= 2.0'
+gem 'sqlite3', '>= 2.1'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: %i[windows jruby]
