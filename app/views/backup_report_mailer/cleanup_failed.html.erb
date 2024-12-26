@@ -1,0 +1,11 @@
+<!-- app/views/backup_report_mailer/cleanup_failed.html.erb -->
+<h1>Backup Cleanup Failed</h1>
+
+<p>The backup cleanup process has failed to complete.</p>
+
+<h2>Error Details:</h2>
+<p><%= @result[:error] %></p>
+
+<p>Timestamp: <%= @result[:timestamp] %></p>
+
+<p>Please check the application logs for more details.</p>

@@ -11,30 +11,19 @@ Linkarooie is a robust, open-source alternative to Linktree, built with Ruby on 
 1. [Features](#features)
 2. [Tech Stack](#tech-stack)
 3. [Getting Started](#getting-started)
-   - [Prerequisites](#prerequisites)
-   - [Local Development Setup](#local-development-setup)
-   - [Creating a New User](#creating-a-new-user)
-4. [Docker Deployment](#docker-deployment)
-5. [DigitalOcean Deployment](#digitalocean-deployment)
-6. [Configuration](#configuration)
-   - [Environment Variables](#environment-variables)
-   - [Database Configuration](#database-configuration)
-7. [Backup and Restore Process](#backup-and-restore-process)
-8. [Geolocation](#geolocation)
-9. [Customization](#customization)
-10. [Testing](#testing)
-11. [CI/CD](#cicd)
-12. [Project Structure](#project-structure)
-13. [Key Components](#key-components)
-14. [Gather Script](#gather-script)
-15. [Contributing](#contributing)
-16. [License](#license)
-17. [Support](#support)
-18. [Acknowledgements](#acknowledgements)
-
-## Video Demo
-
-[Video Demo](https://github.com/user-attachments/assets/d5dc1636-2a7f-4cbf-878c-516ebda6c47e)
+4. [Deployment](#deployment)
+5. [Configuration](#configuration)
+6. [Backup and Restore Process](#backup-and-restore-process)
+7. [Customization](#customization)
+8. [Testing](#testing)
+9. [CI/CD Pipeline](#cicd-pipeline)
+10. [Project Structure](#project-structure)
+11. [Key Components](#key-components)
+12. [Rails Console Commands](#rails-console-commands)
+13. [Contributing](#contributing)
+14. [License](#license)
+15. [Support](#support)
+16. [Acknowledgements](#acknowledgements)
 
 ## Features
 
@@ -59,7 +48,7 @@ Linkarooie is a robust, open-source alternative to Linktree, built with Ruby on 
 
   - Track page views, link clicks, and unique visitors
   - View daily metrics for user engagement
-  - Geolocation tracking for visitor insights (currently mandatory)
+  - Geolocation tracking for visitor insights
 
 - **Open Graph Image Generation:**
 
@@ -78,7 +67,8 @@ Linkarooie is a robust, open-source alternative to Linktree, built with Ruby on 
   - Implements Vite for modern, efficient frontend asset handling
 
 - **Automated Backups:**
-  - Daily backups to DigitalOcean Spaces with easy restoration process
+  - Daily backups to DigitalOcean Spaces with automatic 30-day cleanup
+  - Easy restoration process
 
 ## Tech Stack
 
@@ -86,9 +76,8 @@ Linkarooie is a robust, open-source alternative to Linktree, built with Ruby on 
 
   - Ruby 3.3.0 (local development)
   - Ruby 3.3.4 (production Docker image)
-  - Rails 7.1.3
+  - Rails 8.0.1
   - SQLite3 (development)
-  - PostgreSQL/MySQL (recommended for production)
   - Sidekiq for background job processing
   - Redis for Sidekiq and caching
 
@@ -108,6 +97,7 @@ Linkarooie is a robust, open-source alternative to Linktree, built with Ruby on 
 - **Deployment & Infrastructure:**
 
   - Docker and Docker Compose for containerization
+  - Kamal for zero-downtime deployments
   - GitHub Actions for CI/CD
   - Terraform for infrastructure as code
   - DigitalOcean for hosting (Droplets and Spaces)
@@ -123,10 +113,10 @@ Linkarooie is a robust, open-source alternative to Linktree, built with Ruby on 
 ### Prerequisites
 
 - Ruby 3.3.0 or higher
-- Rails 7.1.3 or higher
+- Rails 8.0.1 or higher
 - SQLite3
 - Node.js (v20 or higher) and npm
-- Docker and Docker Compose (for containerized deployment)
+- Docker and Docker Compose
 - Git
 
 ### Local Development Setup
@@ -138,124 +128,102 @@ Linkarooie is a robust, open-source alternative to Linktree, built with Ruby on 
    cd linkarooie
    ```
 
-2. Install Ruby dependencies:
+2. Install dependencies:
 
    ```bash
    bundle install
-   ```
-
-3. Install JavaScript dependencies:
-
-   ```bash
    npm install
    ```
 
-4. Set up the database:
+3. Set up the database:
 
    ```bash
    rails db:create db:migrate db:seed
    ```
 
-5. Start the development servers:
+4. Start the development servers:
 
    ```bash
    bin/dev
    ```
 
-   This command starts the Rails server, Vite dev server, and Tailwind CSS watcher.
+5. Visit `http://localhost:3000` in your browser
 
-6. Visit `http://localhost:3000` in your browser to access the application.
+## Deployment
 
-### Creating a New User
+Linkarooie uses [Kamal](https://kamal-deploy.org/) for zero-downtime deployments to DigitalOcean:
 
-Linkarooie provides an interactive Ruby script for creating new users:
+### Environment Setup
 
-1. Run the script:
-
-   ```bash
-   ruby create_user.rb
-   ```
-
-2. Follow the prompts to enter user details, including:
-   - Email
-   - Password
-   - Username (optional)
-   - Full name
-   - Tags (comma-separated)
-   - Avatar URL
-   - Banner URL
-   - Description
-
-This script allows for easy user creation, especially useful for setting up initial accounts or testing.
-
-## Docker Deployment
-
-Linkarooie uses Docker for easy deployment and scaling. The project includes a multi-stage Dockerfile for creating a lean production image.
-
-1. Build and start the Docker containers:
+1. Configure your environment variables in GitHub Secrets:
 
    ```bash
-   docker compose -f docker-compose.prod.yml up --build
+   KAMAL_REGISTRY_PASSWORD=your_registry_password
+   KAMAL_REGISTRY_USERNAME=your_registry_username
+   SECRET_KEY_BASE=your_secret_key_base
+   AXIOM_API_KEY=your_axiom_api_key
+   DO_TOKEN=your_digitalocean_token
+   SPACES_REGION=your_spaces_region
+   SPACES_BUCKET_NAME=your_spaces_bucket_name
+   SPACES_BUCKET_CONTENT=your_spaces_bucket_content
+   SPACES_ACCESS_KEY_ID=your_spaces_access_key_id
+   SPACES_SECRET_ACCESS_KEY=your_spaces_secret_access_key
+   RAILS_MASTER_KEY=your_rails_master_key
+   DROPLET_SSH_PRIVATE_KEY=your_ssh_private_key
    ```
 
-2. Access the application at `http://localhost`.
+2. Set up your deployment configuration in `config/deploy.yml` and `config/deploy.production.yml`
 
-The production Docker setup includes:
+### Deployment Methods
 
-- Rails application container
-- Redis container for Sidekiq and caching
-- Sidekiq container for background job processing
+#### 1. Automated Deployment
 
-Key Dockerfile features:
+Changes pushed to the `main` branch trigger automatic deployment through GitHub Actions:
 
-- Multi-stage build for a smaller final image
-- Precompilation of assets and bootsnap
-- Non-root user for improved security
+```bash
+# .github/workflows/01.deploy_to_production.yml
+# Deploys automatically when:
+# 1. Direct push to main
+# 2. CI workflow completed successfully on main branch
+```
 
-## DigitalOcean Deployment
+#### 2. Manual Deployment
 
-Linkarooie is optimized for deployment on DigitalOcean using Terraform for infrastructure management and GitHub Actions for continuous deployment.
+Use the GitHub Actions interface to trigger manual deployments:
 
-### Setting up DigitalOcean Infrastructure
+```bash
+# .github/workflows/02.deploy_manually.yml
+# Allows manual deployment to production through GitHub UI
+```
 
-1. Install Terraform and set up a DigitalOcean account.
+#### 3. Server Management
 
-2. Configure your DigitalOcean API token:
+Run Kamal commands through GitHub Actions:
 
-   ```bash
-   export DO_TOKEN=your_digitalocean_api_token
-   ```
+```bash
+# .github/workflows/03.kamal_run_command.yml
+# Supports commands like:
+# - proxy reboot --rolling -y
+# - upgrade --rolling -y
+```
 
-3. Create a DigitalOcean Droplet:
+### Infrastructure Management
 
-   ```bash
-   cd terraform/droplet
-   terraform init
-   terraform apply -var="do_token=$DO_TOKEN"
-   ```
+Terraform is used to manage DigitalOcean infrastructure:
 
-4. Set up DigitalOcean Spaces for backups:
-   ```bash
-   cd ../spaces
-   terraform init
-   terraform apply
-   ```
+```bash
+# Create DigitalOcean Droplet
+cd terraform/droplet
+terraform init
+terraform apply -var="do_token=$DO_TOKEN"
 
-### Configuring GitHub Actions
-
-1. Set up the following secrets in your GitHub repository:
-
-   - `DROPLET_IP`: The IP address of your DigitalOcean Droplet (output from Terraform)
-   - `DROPLET_SSH_PRIVATE_KEY`: The private SSH key to access your Droplet
-   - `GH_PAT`: Your GitHub Personal Access Token
-
-2. The GitHub Actions workflows will automatically:
-   - Run tests and build Docker images on pull requests and pushes to feature branches
-   - Deploy to your DigitalOcean Droplet when changes are merged to the main branch
-
-### Manual Deployment
-
-You can also trigger a manual deployment using the GitHub Actions workflow dispatch event.
+# Set up DigitalOcean Spaces
+cd ../spaces
+terraform init
+terraform apply -var="do_token=$DO_TOKEN" \
+                -var="spaces_access_id=$SPACES_ACCESS_KEY_ID" \
+                -var="spaces_secret_key=$SPACES_SECRET_ACCESS_KEY"
+```
 
 ## Configuration
 
@@ -263,7 +231,7 @@ You can also trigger a manual deployment using the GitHub Actions workflow dispa
 
 Create a `.env` file in the root directory with the following variables:
 
-```
+```bash
 SECRET_KEY_BASE=your_secret_key_base
 AXIOM_API_KEY=your_axiom_api_key
 DO_TOKEN=your_digitalocean_token
@@ -271,16 +239,14 @@ SPACES_ACCESS_KEY_ID=your_spaces_access_key_id
 SPACES_SECRET_ACCESS_KEY=your_spaces_secret_access_key
 SPACES_REGION=your_spaces_region
 SPACES_BUCKET_NAME=your_spaces_bucket_name
+SPACES_BUCKET_CONTENT=your_spaces_bucket_content
 RAILS_ENV=production
 CACHE_EXPIRATION=30
 ```
 
-Ensure all placeholder values are replaced with your actual API keys and tokens.
-
 ### Database Configuration
 
-- Development and test environments use SQLite3.
-- For production, configure your preferred database (PostgreSQL recommended) in `config/database.yml`.
+Development and test environments use SQLite3. The database configuration is in `config/database.yml`.
 
 ## Backup and Restore Process
 
@@ -288,90 +254,96 @@ Linkarooie includes an automated backup system utilizing DigitalOcean Spaces:
 
 ### Automated Backups
 
-- The `BackupDatabaseJob` runs daily at 2 AM.
-- It creates a dump of the SQLite database and uploads it to a DigitalOcean Spaces bucket.
-- Backups are versioned for easy point-in-time recovery.
+- The `BackupDatabaseJob` runs daily at 2 AM
+- Creates a dump of the SQLite database and uploads it to DigitalOcean Spaces
+- `CleanupOldBackupsJob` runs daily at 3 AM to remove backups older than 30 days
+- Email notifications for backup creation and cleanup
 
 ### Restoring from a Backup
 
-Use the provided Rake task to restore from a backup:
+Use the provided Rake task:
 
 ```bash
+# For uncompressed backups
 rake db:restore BACKUP_FILE=path/to/your_backup_file.sql
-```
 
-For compressed backups:
-
-```bash
+# For compressed backups
 rake db:restore BACKUP_FILE=path/to/your_backup_file.sql.tar.gz
 ```
 
-The restore process:
-
-1. Drops all existing tables in the database.
-2. Loads the specified backup file.
-3. Applies any pending migrations.
-
 ## Customization
-
-Linkarooie is designed to be highly customizable:
 
 - **Views:** Modify ERB templates in `app/views/`
 - **Styles:**
   - Edit Tailwind CSS classes directly in views
   - Customize Tailwind configuration in `config/tailwind.config.js`
-  - Add custom styles in `app/assets/stylesheets/application.css.scss`
 - **JavaScript:**
   - Add or modify Stimulus controllers in `app/javascript/controllers/`
   - Update the main JavaScript file at `app/javascript/application.js`
 - **Backend Logic:**
-  - Controllers are located in `app/controllers/`
+  - Controllers are in `app/controllers/`
   - Models are in `app/models/`
 - **Background Jobs:** Add or modify Sidekiq jobs in `app/jobs/`
-- **Localization:** Update language files in `config/locales/`
 
 ## Testing
 
-Linkarooie uses RSpec for testing. The test suite includes:
-
-- Model specs
-- Controller specs
-- Feature specs
-- Helper specs
-
-To run the entire test suite:
+Run the test suite:
 
 ```bash
+# Run all tests
 bundle exec rspec
-```
 
-To run specific tests:
-
-```bash
+# Run specific test directories
 bundle exec rspec spec/models
 bundle exec rspec spec/controllers
 bundle exec rspec spec/features
 ```
 
-## CI/CD
+## CI/CD Pipeline
 
-Linkarooie utilizes GitHub Actions for continuous integration and deployment:
+### 1. Continuous Integration (`ci.yml`)
 
-1. **CI Workflow** (`ci.yml`):
+- Triggered on:
+  - Pull requests to `main`
+  - Pushes to feature branches
+- Actions:
+  - Sets up Ruby and Node.js
+  - Installs dependencies
+  - Builds Vite assets
+  - Compiles Tailwind CSS
+  - Sets up database
+  - Runs RSpec tests
+  - Builds Docker image
 
-   - Triggered on pull requests to `main` and pushes to feature branches
-   - Sets up Ruby and Node.js environments
-   - Installs dependencies
-   - Runs tests
-   - Builds and pushes Docker image to GitHub Container Registry
+### 2. Production Deployment (`01.deploy_to_production.yml`)
 
-2. **Deployment Workflow** (`deploy.yml`):
-   - Triggered on merges to `main` or manual dispatch
-   - Builds and pushes Docker image
-   - SSHs into the DigitalOcean Droplet
-   - Pulls the latest Docker image
-   - Runs database migrations
-   - Restarts the application containers
+- Triggered on:
+  - Merges to `main`
+  - Successful CI workflow completion
+- Uses Kamal for:
+  - Zero-downtime deployments
+  - Docker image management
+  - Application server configuration
+  - Environment variable management
+
+### 3. Manual Deployment (`02.deploy_manually.yml`)
+
+- Allows manual deployment through GitHub Actions interface
+- Supports multiple environments (currently production only)
+- Uses the same Kamal deployment process as automated deployments
+
+### 4. Server Management (`03.kamal_run_command.yml`)
+
+- Provides interface for running Kamal commands
+- Supports operations like:
+  - Rolling proxy reboots
+  - Rolling upgrades
+  - Custom Kamal commands
+
+### Supporting Actions
+
+- `kamal-deploy/action.yml`: Reusable Kamal deployment workflow
+- `setup/action.yml`: Common setup steps for all workflows
 
 ## Project Structure
 
@@ -407,195 +379,66 @@ linkarooie/
 
 ## Key Components
 
-- **User Model:** Manages user accounts, profiles, and authentication.
-- **Link Model:** Handles the creation and management of user links.
-- **Achievement Model:** Manages user achievements and milestones.
-- **Analytics:** Tracks and stores user engagement metrics.
-- **OpenGraphImageGenerator:** Service for creating social media preview images.
-- **BackupDatabaseJob:** Manages automated database backups.
+- **User Model:** Manages user accounts, profiles, and authentication
+- **Link Model:** Handles the creation and management of user links
+- **Achievement Model:** Manages user achievements and milestones
+- **Analytics:** Tracks and stores user engagement metrics
+- **OpenGraphImageGenerator:** Creates social media preview images
+- **BackupDatabaseJob:** Manages automated database backups
 
-## Gather Script
+## Rails Console Commands
 
-- [GRABIT.SH](https://grabit.sh) was inspired by this script.
+### User Management
 
-The `gather.sh` script is a utility for collecting project information:
+```ruby
+# Create a user
+User.create!(
+  email: "user@example.com",
+  password: "Password123",
+  username: "newuser",
+  full_name: "New User",
+  tags: ["Tech", "Music"].to_json,
+  avatar: "https://example.com/avatar.png",
+  avatar_border: "white",
+  banner: "https://example.com/banner.png",
+  description: "User description",
+  community_opt_in: true,
+  public_analytics: true
+)
 
-```bash
-./gather.sh [-o output_method] [-f output_file]
-  -o, --output         Output method: stdout, clipboard, or file (default: stdout)
-  -f, --file           Output file path (required if output method is file)
+# List users
+User.pluck(:email, :username, :full_name)
+
+# Update a user
+user = User.find_by(email: "user@example.com")
+user.update!(full_name: "Updated Name")
+
+# Delete a user
+user = User.find_by(email: "user@example.com")
+user.destroy!
 ```
 
-> Note: There is also a `gather.rb` that works the same.
+### Analytics
 
-This script is useful for quickly compiling project details for documentation or sharing.
+```ruby
+# View total page views for a user
+user = User.find_by(username: "username")
+user.page_views.count
 
-## **Useful Rails Console Commands**
+# Get unique visitors
+user.page_views.distinct.count(:ip_address)
 
-### **User Management**
-
-1. **Create a User:**
-
-   ```ruby
-   User.create!(
-     email: "user@example.com",
-     password: "Password123",
-     username: "newuser",
-     full_name: "New User",
-     tags: ["Tech", "Music"].to_json,  # Tags as JSON array
-     avatar: "https://example.com/avatar.png",
-     avatar_border: "white",
-     banner: "https://example.com/banner.png",
-     description: "User description",
-     community_opt_in: true,
-     public_analytics: true
-   )
-   ```
-
-2. **List Users:**
-
-   ```ruby
-   User.pluck(:email, :username, :full_name)
-   ```
-
-3. **Find and Update a User:**
-
-   ```ruby
-   user = User.find_by(email: "user@example.com")
-   user.update!(full_name: "Updated Name")
-   ```
-
-4. **Delete a User:**
-
-   ```ruby
-   user = User.find_by(email: "user@example.com")
-   user.destroy!
-   ```
-
-### **Managing Links**
-
-1. **List All Links for a User:**
-
-   ```ruby
-   user = User.find_by(username: "newuser")
-   user.links.pluck(:title, :url, :pinned, :position)
-   ```
-
-2. **Create a Link:**
-
-   ```ruby
-   user = User.find_by(username: "newuser")
-   user.links.create!(title: "GitHub", url: "https://github.com", icon: "fa-brands fa-github")
-   ```
-
-3. **Delete a Link:**
-
-   ```ruby
-   link = Link.find_by(url: "https://github.com")
-   link.destroy!
-   ```
-
-### **Managing Achievements**
-
-1. **List Achievements for a User:**
-
-   ```ruby
-   user = User.find_by(username: "newuser")
-   user.achievements.pluck(:title, :date, :description, :url)
-   ```
-
-2. **Create an Achievement:**
-
-   ```ruby
-   user = User.find_by(username: "newuser")
-   user.achievements.create!(title: "Achievement", date: Date.today, description: "Details")
-   ```
-
-3. **Delete an Achievement:**
-
-   ```ruby
-   achievement = Achievement.find_by(title: "Achievement")
-   achievement.destroy!
-   ```
-
-### **Analytics and Metrics**
-
-1. **View Total Page Views for a User:**
-
-   ```ruby
-   user = User.find_by(username: "newuser")
-   user.page_views.count
-   ```
-
-2. **View Detailed Page Views:**
-
-   ```ruby
-   user = User.find_by(username: "newuser")
-   user.page_views.pluck(:path, :visited_at, :referrer, :browser)
-   ```
-
-3. **Get Unique Visitors for a User:**
-
-   ```ruby
-   user = User.find_by(username: "newuser")
-   user.page_views.distinct.count(:ip_address)
-   ```
-
-### **Importing and Exporting Data**
-
-1. **Export Users to CSV:**
-
-   ```ruby
-   require 'csv'
-   CSV.open("users.csv", "wb") do |csv|
-     csv << ["Email", "Username", "Full Name", "Tags"]
-     User.all.each do |user|
-       csv << [user.email, user.username, user.full_name, JSON.parse(user.tags).join(", ")]
-     end
-   end
-   ```
-
-2. **Import Users from CSV:**
-
-   ```ruby
-   require 'csv'
-   CSV.foreach("path_to_users.csv", headers: true) do |row|
-     User.create!(
-       email: row["Email"],
-       username: row["Username"],
-       full_name: row["Full Name"],
-       tags: row["Tags"].split(',').to_json,
-       password: "Password123",
-       password_confirmation: "Password123"
-     )
-   end
-   ```
-
-### **Checking User Activity**
-
-1. **Users Without Achievements:**
-
-   ```ruby
-   User.left_joins(:achievements).where(achievements: { id: nil }).pluck(:username, :email)
-   ```
-
-2. **Users with Public Analytics Enabled:**
-
-   ```ruby
-   User.where(public_analytics: true).pluck(:username, :email)
-   ```
+# View detailed page views
+user.page_views.pluck(:path, :visited_at, :referrer, :browser)
+```
 
 ## Contributing
-
-We welcome contributions to Linkarooie! Here's how you can help:
 
 1. Fork the repository
 2. Create your feature branch: `git checkout -b feature/AmazingFeature`
 3. Commit your changes: `git commit -m 'Add some AmazingFeature'`
 4. Push to the branch: `git push origin feature/AmazingFeature`
 5. Open a Pull Request
-
-Please ensure your code adheres to the existing style and passes all tests.
 
 ## License
 
@@ -619,9 +462,9 @@ If you find Linkarooie helpful, please consider:
 - [Terraform](https://www.terraform.io/)
 - [Vite](https://vitejs.dev/)
 - [Sidekiq](https://sidekiq.org/)
+- [Kamal](https://kamal-deploy.org/)
 - [Devise](https://github.com/heartcombo/devise)
 - [Chartkick](https://chartkick.com/)
-- [Geocoder](https://github.com/alexreisner/geocoder)
 
 ---
 

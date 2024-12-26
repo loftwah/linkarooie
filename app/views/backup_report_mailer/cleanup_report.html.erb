@@ -1,0 +1,21 @@
+<!-- app/views/backup_report_mailer/cleanup_report.html.erb -->
+<h1>Backup Cleanup Report</h1>
+
+<p>The backup cleanup process has completed.</p>
+
+<h2>Summary:</h2>
+<ul>
+  <li>Deleted backups: <%= @result[:deleted_count] %></li>
+  <li>Retention period: <%= @result[:retention_days] %> days</li>
+  <li>Status: <%= @result[:status] %></li>
+  <li>Timestamp: <%= @result[:timestamp] %></li>
+</ul>
+
+<% if @result[:errors].any? %>
+  <h2>Errors:</h2>
+  <ul>
+    <% @result[:errors].each do |error| %>
+      <li>File: <%= error[:key] %> - Error: <%= error[:error] %></li>
+    <% end %>
+  </ul>
+<% end %>
