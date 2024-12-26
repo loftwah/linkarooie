@@ -1,3 +1,4 @@
+# config/sidekiq_scheduler.yml
 aggregate_metrics:
   cron: '0 1 * * *'  # Run at 1 AM every day
   class: AggregateMetricsJob
@@ -7,5 +8,5 @@ backup_database:
   class: BackupDatabaseJob
 
 cleanup_old_backups:
-cron: '0 3 * * *'  # Runs daily at 3 AM (after backup job)
-class: CleanupOldBackupsJob
+  cron: '0 3 * * *'  # Runs daily at 3 AM (after backup job)
+  class: CleanupOldBackupsJob
