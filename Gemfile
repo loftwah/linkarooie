@@ -34,7 +34,7 @@ gem 'redis', '>= 4.0.1'
 
 gem 'chartkick'
 gem 'devise'
-gem 'font-awesome-sass', '~> 6.5.2'
+gem 'font-awesome-sass', '~> 6.7.2'
 gem 'maxmind-geoip2'
 gem 'groupdate'
 gem 'mini_magick'
