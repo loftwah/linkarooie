@@ -210,7 +210,9 @@ GEM
       connection_pool (~> 2.2)
       http (>= 4.3, < 6.0)
       maxmind-db (~> 1.2)
-    mini_magick (5.1.0)
+    mini_magick (5.1.2)
+      benchmark
+      logger
     mini_mime (1.1.5)
     mini_portile2 (2.8.8)
     minitest (5.25.4)
