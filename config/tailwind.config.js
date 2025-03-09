@@ -1,6 +1,6 @@
-// const defaultTheme = require('tailwindcss/defaultTheme')
+// // // // // const defaultTheme = require('tailwindcss/defaultTheme')
 
-module.exports = {
+export default {
   darkMode: 'media',
   content: [
     './public/*.html',
@@ -11,8 +11,16 @@ module.exports = {
   ],
   theme: {
     extend: {
+      // In Tailwind v4, we need to define spacing as CSS variables
+      spacing: {
+        '1': '0.25rem',
+        '2': '0.5rem',
+        '3': '0.75rem',
+        '4': '1rem',
+        // Add other spacing values as needed
+      },
       // fontFamily: {
-      //   sans: ['Inter var', ...defaultTheme.fontFamily.sans],
+// // // //       //   sans: ['Inter var', ...defaultTheme.fontFamily.sans],
       // },
     },
   },
