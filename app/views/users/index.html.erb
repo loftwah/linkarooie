@@ -23,7 +23,7 @@
           <% if user.parsed_tags.any? %>
             <div class="flex flex-wrap justify-center mt-4 -mx-1 -my-1">
               <% user.parsed_tags.each do |tag| %>
-                <span class="bg-gray-700 text-white rounded px-2 py-1 text-xs m-1 inline-block min-w-[80px]"><%= tag %></span>
+                <span class="bg-gray-700 text-white rounded-sm px-2 py-1 text-xs m-1 inline-block min-w-[80px]"><%= tag %></span>
               <% end %>
             </div>
           <% end %>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= vite_client_tag %>
     <%= vite_javascript_tag 'application' %>
@@ -72,7 +72,7 @@
   </head>
   
   <body class="bg-gray-900 text-white">
-    <header class="bg-gray-800 shadow relative">
+    <header class="bg-gray-800 shadow-sm relative">
       <div class="absolute top-0 right-0 mt-2 mr-2 z-50">
         <% if notice %>
           <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 relative" role="alert">
@@ -103,14 +103,14 @@
         <nav>
           <ul class="flex space-x-2 md:space-x-4 text-sm md:text-base items-center">
             <li>
-            <%= link_to users_path, class: 'bg-lime-500 hover:bg-lime-700 text-white font-bold py-1 px-2 rounded inline-flex items-center space-x-2' do %>
+            <%= link_to users_path, class: 'bg-lime-500 hover:bg-lime-700 text-white font-bold py-1 px-2 rounded-sm inline-flex items-center space-x-2' do %>
               <i class="fas fa-compass"></i>
               <span>Users</span>
             <% end %>
           </li>
             <% if user_signed_in? %>
               <li class="relative" data-controller="dropdown">
-                <button data-action="click->dropdown#toggle click@window->dropdown#hide" class="text-white hover:text-lime-300 focus:outline-none flex items-center space-x-1">
+                <button data-action="click->dropdown#toggle click@window->dropdown#hide" class="text-white hover:text-lime-300 focus:outline-hidden flex items-center space-x-1">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                   </svg>
@@ -142,18 +142,18 @@
     <main class="container mx-auto px-4 py-6">
       <%= yield %>
     </main>
-    <footer class="bg-gray-800 shadow mt-12">
+    <footer class="bg-gray-800 shadow-sm mt-12">
       <div class="container mx-auto px-4 py-6">
         <div class="flex flex-col md:flex-row justify-between items-center">
           <p class="text-gray-400 mb-4 md:mb-0">
             © 2024 Linkarooie. All rights reserved.
           </p>
           <div class="space-x-4">
-            <a href="https://status.linkarooie.com" target="_blank" class="bg-lime-500 hover:bg-lime-600 text-white font-bold py-1 px-3 rounded inline-flex items-center space-x-2">
+            <a href="https://status.linkarooie.com" target="_blank" class="bg-lime-500 hover:bg-lime-600 text-white font-bold py-1 px-3 rounded-sm inline-flex items-center space-x-2">
               <i class="fas fa-server"></i>
               <span>System Status</span>
             </a>
-            <a href="https://github.com/loftwah/linkarooie" target="_blank" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-1 px-3 rounded inline-flex items-center space-x-2">
+            <a href="https://github.com/loftwah/linkarooie" target="_blank" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-1 px-3 rounded-sm inline-flex items-center space-x-2">
               <i class="fab fa-github"></i>
               <span>GitHub</span>
             </a>

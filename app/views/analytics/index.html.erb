@@ -2,11 +2,11 @@
   <h1 class="text-2xl font-bold mb-6 text-center flex justify-center items-center space-x-2">
     Analytics for <%= @user.username %>
     <% if @user.public_analytics? %>
-      <span class="bg-gray-100 text-black text-sm font-medium px-3 py-1 rounded ml-2">
+      <span class="bg-gray-100 text-black text-sm font-medium px-3 py-1 rounded-sm ml-2">
         Public
       </span>
     <% else %>
-      <span class="bg-gray-100 text-black text-sm font-medium px-3 py-1 rounded ml-2">
+      <span class="bg-gray-100 text-black text-sm font-medium px-3 py-1 rounded-sm ml-2">
         Private
       </span>
     <% end %>
@@ -21,8 +21,8 @@
       { title: "Unique Visitors", value: @unique_visitors }
     ] %>
     <% metrics.each do |metric| %>
-      <div class="bg-gray-800 rounded-lg shadow p-4 flex flex-col justify-between">
-        <h2 class="text-sm font-semibold text-center mb-2 flex-grow flex items-center justify-center"><%= metric[:title] %></h2>
+      <div class="bg-gray-800 rounded-lg shadow-sm p-4 flex flex-col justify-between">
+        <h2 class="text-sm font-semibold text-center mb-2 grow flex items-center justify-center"><%= metric[:title] %></h2>
         <p class="text-2xl font-bold text-center text-lime-400"><%= number_with_delimiter(metric[:value]) %></p>
       </div>
     <% end %>
@@ -30,7 +30,7 @@
 
   <!-- Latest Daily Metrics -->
   <% if @latest_daily_metric %>
-    <div class="bg-gray-800 rounded-lg shadow p-4 mb-6">
+    <div class="bg-gray-800 rounded-lg shadow-sm p-4 mb-6">
       <h2 class="text-xl font-semibold mb-4 text-center">Latest Daily Metrics (<%= @latest_daily_metric.date.strftime('%B %d, %Y') %>)</h2>
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div class="text-center">
@@ -56,7 +56,7 @@
   <!-- Charts Section -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
     <!-- Time-based Analytics -->
-    <div class="bg-gray-800 rounded-lg shadow p-4">
+    <div class="bg-gray-800 rounded-lg shadow-sm p-4">
       <h2 class="text-xl font-semibold mb-4">Daily Views (Last 30 Days)</h2>
       <%= line_chart @daily_views, 
                      colors: ["#3B82F6"],
@@ -78,7 +78,7 @@
     </div>
 
     <!-- Unique Visitors Chart -->
-    <div class="bg-gray-800 rounded-lg shadow p-4">
+    <div class="bg-gray-800 rounded-lg shadow-sm p-4">
       <h2 class="text-xl font-semibold mb-4">Unique Visitors (Last 30 Days)</h2>
       <%= line_chart @daily_unique_visitors, 
                      colors: ["#E879F9"],
@@ -101,7 +101,7 @@
   </div>
 
  <!-- Top Visitor Locations Section -->
-<div class="bg-gray-800 rounded-lg shadow p-4 mb-6">
+<div class="bg-gray-800 rounded-lg shadow-sm p-4 mb-6">
   <h2 class="text-xl font-semibold mb-4">Top Visitor Locations</h2>
   <div class="overflow-x-auto">
     <table class="w-full text-sm text-center table-auto">
@@ -126,7 +126,7 @@
 </div>
 
   <!-- Link Analytics Table -->
-  <div class="bg-gray-800 rounded-lg shadow p-4 mb-6">
+  <div class="bg-gray-800 rounded-lg shadow-sm p-4 mb-6">
     <h2 class="text-xl font-semibold mb-4">Link Analytics</h2>
     <p class="text-sm mb-4">Performance data for links. 'Total Clicks' represents all interactions, while 'Unique Visitors' counts individual users.</p>
     <div class="overflow-x-auto">
@@ -154,7 +154,7 @@
   </div>
 
   <!-- Achievement Analytics Table -->
-  <div class="bg-gray-800 rounded-lg shadow p-4 mb-6">
+  <div class="bg-gray-800 rounded-lg shadow-sm p-4 mb-6">
     <h2 class="text-xl font-semibold mb-4">Achievement Analytics</h2>
     <p class="text-sm mb-4">Performance data for achievements. 'Total Views' represents all interactions, while 'Unique Viewers' counts individual users.</p>
     <div class="overflow-x-auto">
@@ -183,7 +183,7 @@
 
   <!-- Browser Usage -->
   <div class="grid grid-cols-1 gap-6">
-    <div class="bg-gray-800 rounded-lg shadow p-4">
+    <div class="bg-gray-800 rounded-lg shadow-sm p-4">
       <h2 class="text-xl font-semibold mb-4">Browser Usage</h2>
       <%= pie_chart @browser_data, 
                     colors: ["#84CC16", "#22D3EE", "#E879F9", "#F87171", "#A78BFA", "#F59E0B", "#14B8A6", "#3B82F6"],

@@ -1,6 +1,6 @@
 <%= form_with(model: link, local: true, class: "max-w-2xl mx-auto p-6 bg-gray-800 rounded-lg shadow-md") do |form| %>
   <% if link.errors.any? %>
-    <div id="error_explanation" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded">
+    <div id="error_explanation" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-sm">
       <h2 class="font-bold mb-2"><%= pluralize(link.errors.count, 'error') %> prohibited this link from being saved:</h2>
       <ul class="list-disc pl-5">
         <% link.errors.full_messages.each do |message| %>
@@ -12,22 +12,22 @@
 
   <div class="mb-6">
     <%= form.label :title, class: 'block text-lime-200 font-semibold mb-2' %>
-    <%= form.text_field :title, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+    <%= form.text_field :title, class: 'block w-full px-4 py-2 border border-gray-700 rounded-sm bg-gray-900 text-white focus:outline-hidden focus:border-lime-500' %>
   </div>
 
   <div class="mb-6">
     <%= form.label :url, class: 'block text-lime-200 font-semibold mb-2' %>
-    <%= form.text_field :url, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+    <%= form.text_field :url, class: 'block w-full px-4 py-2 border border-gray-700 rounded-sm bg-gray-900 text-white focus:outline-hidden focus:border-lime-500' %>
   </div>
 
   <div class="mb-6">
     <%= form.label :description, class: 'block text-lime-200 font-semibold mb-2' %>
-    <%= form.text_area :description, rows: 3, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+    <%= form.text_area :description, rows: 3, class: 'block w-full px-4 py-2 border border-gray-700 rounded-sm bg-gray-900 text-white focus:outline-hidden focus:border-lime-500' %>
   </div>
 
   <div class="mb-6">
     <%= form.label :icon, class: 'block text-lime-200 font-semibold mb-2' %>
-    <%= form.text_field :icon, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+    <%= form.text_field :icon, class: 'block w-full px-4 py-2 border border-gray-700 rounded-sm bg-gray-900 text-white focus:outline-hidden focus:border-lime-500' %>
     <p class="text-gray-400 mt-2 text-sm">
       Find icons at <a href="https://fontawesome.com/v6/icons" target="_blank" class="text-lime-300 underline">Font Awesome</a>. 
       Use the class name (e.g., <code>fas fa-home</code>) in the icon field.
@@ -36,7 +36,7 @@
 
   <div class="mb-6">
     <%= form.label :position, class: 'block text-lime-200 font-semibold mb-2' %>
-    <%= form.number_field :position, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+    <%= form.number_field :position, class: 'block w-full px-4 py-2 border border-gray-700 rounded-sm bg-gray-900 text-white focus:outline-hidden focus:border-lime-500' %>
   </div>
 
   <div class="mb-6 flex items-center">
@@ -55,7 +55,7 @@
   </div>
 
   <div class="actions text-center">
-    <%= form.submit 'Save', class: 'bg-lime-500 hover:bg-lime-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out' %>
+    <%= form.submit 'Save', class: 'bg-lime-500 hover:bg-lime-700 text-white font-bold py-2 px-4 rounded-sm transition duration-300 ease-in-out' %>
   </div>
 <% end %>
 

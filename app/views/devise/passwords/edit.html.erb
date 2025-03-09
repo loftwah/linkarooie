@@ -10,16 +10,16 @@
       <% if @minimum_password_length %>
         <em class="text-gray-400 text-sm">(<%= @minimum_password_length %> characters minimum)</em>
       <% end %>
-      <%= f.password_field :password, autofocus: true, autocomplete: "new-password", class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+      <%= f.password_field :password, autofocus: true, autocomplete: "new-password", class: 'block w-full px-4 py-2 border border-gray-700 rounded-sm bg-gray-900 text-white focus:outline-hidden focus:border-lime-500' %>
     </div>
 
     <div>
       <%= f.label :password_confirmation, "Confirm new password", class: 'block text-lime-200 font-semibold mb-2' %>
-      <%= f.password_field :password_confirmation, autocomplete: "new-password", class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+      <%= f.password_field :password_confirmation, autocomplete: "new-password", class: 'block w-full px-4 py-2 border border-gray-700 rounded-sm bg-gray-900 text-white focus:outline-hidden focus:border-lime-500' %>
     </div>
 
     <div class="actions text-center">
-      <%= f.submit "Change my password", class: 'bg-lime-500 hover:bg-lime-600 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out focus:outline-none' %>
+      <%= f.submit "Change my password", class: 'bg-lime-500 hover:bg-lime-600 text-white font-bold py-2 px-4 rounded-sm transition duration-300 ease-in-out focus:outline-hidden' %>
     </div>
   <% end %>
 

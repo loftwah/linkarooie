@@ -6,28 +6,28 @@
 
     <div>
       <%= f.label :email, class: 'block text-lime-200 font-semibold mb-2' %>
-      <%= f.email_field :email, autofocus: true, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500', placeholder: 'your-email@example.com' %>
+      <%= f.email_field :email, autofocus: true, class: 'block w-full px-4 py-2 border border-gray-700 rounded-sm bg-gray-900 text-white focus:outline-hidden focus:border-lime-500', placeholder: 'your-email@example.com' %>
     </div>
 
     <div>
       <%= f.label :username, class: 'block text-lime-200 font-semibold mb-2' %>
-      <%= f.text_field :username, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500', placeholder: 'Your unique username' %>
+      <%= f.text_field :username, class: 'block w-full px-4 py-2 border border-gray-700 rounded-sm bg-gray-900 text-white focus:outline-hidden focus:border-lime-500', placeholder: 'Your unique username' %>
     </div>
 
     <div>
       <%= f.label :full_name, class: 'block text-lime-200 font-semibold mb-2' %>
-      <%= f.text_field :full_name, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500', placeholder: 'Your full name' %>
+      <%= f.text_field :full_name, class: 'block w-full px-4 py-2 border border-gray-700 rounded-sm bg-gray-900 text-white focus:outline-hidden focus:border-lime-500', placeholder: 'Your full name' %>
     </div>
 
     <div>
       <%= f.label :tags, class: 'block text-lime-200 font-semibold mb-2' %>
-      <%= f.text_field :tags, value: @user.parsed_tags.join(', '), class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500', placeholder: 'e.g., music, photography, travel (comma-separated)' %>
+      <%= f.text_field :tags, value: @user.parsed_tags.join(', '), class: 'block w-full px-4 py-2 border border-gray-700 rounded-sm bg-gray-900 text-white focus:outline-hidden focus:border-lime-500', placeholder: 'e.g., music, photography, travel (comma-separated)' %>
       <p class="text-gray-400 text-sm mt-1">Add or edit tags to describe your interests (comma-separated)</p>
     </div>
 
     <div>
       <%= f.label :avatar, class: 'block text-lime-200 font-semibold mb-2' %>
-      <%= f.text_field :avatar, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500', placeholder: 'https://linkarooie.com/your-avatar-image.jpg' %>
+      <%= f.text_field :avatar, class: 'block w-full px-4 py-2 border border-gray-700 rounded-sm bg-gray-900 text-white focus:outline-hidden focus:border-lime-500', placeholder: 'https://linkarooie.com/your-avatar-image.jpg' %>
       <p class="text-gray-400 text-sm mt-1">Enter a URL for your avatar image</p>
     </div>
 
@@ -39,13 +39,13 @@
         ['None', 'none'],
         ['Rainbow', 'rainbow'],
         ['Rainbow Overlay', 'rainbow-overlay']
-      ], @user.avatar_border), {}, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500' %>
+      ], @user.avatar_border), {}, class: 'block w-full px-4 py-2 border border-gray-700 rounded-sm bg-gray-900 text-white focus:outline-hidden focus:border-lime-500' %>
       <p class="text-gray-400 text-sm mt-1">Choose a border style for your avatar</p>
     </div>
 
     <div>
       <%= f.label :banner, class: 'block text-lime-200 font-semibold mb-2' %>
-      <%= f.text_field :banner, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500', placeholder: 'https://linkarooie.com/your-banner-image.jpg' %>
+      <%= f.text_field :banner, class: 'block w-full px-4 py-2 border border-gray-700 rounded-sm bg-gray-900 text-white focus:outline-hidden focus:border-lime-500', placeholder: 'https://linkarooie.com/your-banner-image.jpg' %>
       <p class="text-gray-400 text-sm mt-1">Enter a URL for your profile banner image</p>
     </div>
 
@@ -57,7 +57,7 @@
 
     <div>
       <%= f.label :description, class: 'block text-lime-200 font-semibold mb-2' %>
-      <%= f.text_area :description, rows: 3, class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500', placeholder: 'Tell us about yourself...' %>
+      <%= f.text_area :description, rows: 3, class: 'block w-full px-4 py-2 border border-gray-700 rounded-sm bg-gray-900 text-white focus:outline-hidden focus:border-lime-500', placeholder: 'Tell us about yourself...' %>
     </div>
 
     <div>
@@ -74,7 +74,7 @@
 
     <div>
       <%= f.label :password, class: 'block text-lime-200 font-semibold mb-2' %>
-      <%= f.password_field :password, autocomplete: "off", class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500', placeholder: 'Leave blank if you don\'t want to change it' %>
+      <%= f.password_field :password, autocomplete: "off", class: 'block w-full px-4 py-2 border border-gray-700 rounded-sm bg-gray-900 text-white focus:outline-hidden focus:border-lime-500', placeholder: 'Leave blank if you don\'t want to change it' %>
       <% if @minimum_password_length %>
         <p class="text-gray-400 mt-2 text-sm"><%= @minimum_password_length %> characters minimum</p>
       <% end %>
@@ -82,23 +82,23 @@
 
     <div>
       <%= f.label :password_confirmation, class: 'block text-lime-200 font-semibold mb-2' %>
-      <%= f.password_field :password_confirmation, autocomplete: "off", class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500', placeholder: 'Confirm new password' %>
+      <%= f.password_field :password_confirmation, autocomplete: "off", class: 'block w-full px-4 py-2 border border-gray-700 rounded-sm bg-gray-900 text-white focus:outline-hidden focus:border-lime-500', placeholder: 'Confirm new password' %>
     </div>
 
     <div>
       <%= f.label :current_password, class: 'block text-lime-200 font-semibold mb-2' %>
-      <%= f.password_field :current_password, autocomplete: "off", class: 'block w-full px-4 py-2 border border-gray-700 rounded bg-gray-900 text-white focus:outline-none focus:border-lime-500', placeholder: 'Enter your current password' %>
+      <%= f.password_field :current_password, autocomplete: "off", class: 'block w-full px-4 py-2 border border-gray-700 rounded-sm bg-gray-900 text-white focus:outline-hidden focus:border-lime-500', placeholder: 'Enter your current password' %>
       <p class="text-gray-400 mt-2 text-sm">We need your current password to confirm your changes</p>
     </div>
 
     <div class="actions text-center mt-8">
-      <%= f.submit "Update", class: 'bg-lime-500 hover:bg-lime-600 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out focus:outline-none' %>
+      <%= f.submit "Update", class: 'bg-lime-500 hover:bg-lime-600 text-white font-bold py-2 px-4 rounded-sm transition duration-300 ease-in-out focus:outline-hidden' %>
     </div>
   <% end %>
 
   <div class="mt-8 border-t border-gray-700 pt-6">
     <h3 class="text-xl font-bold mb-4 text-lime-200">Cancel my account</h3>
     <p class="mb-4 text-gray-300">Unhappy? You can cancel your account here. This action cannot be undone.</p>
-    <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure? This action cannot be undone." }, method: :delete, class: 'bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out' %>
+    <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure? This action cannot be undone." }, method: :delete, class: 'bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-sm transition duration-300 ease-in-out' %>
   </div>
 </div>
