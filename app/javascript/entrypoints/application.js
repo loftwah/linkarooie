@@ -4,7 +4,7 @@ import "flowbite";
 
 // Import your stylesheet
 import "../../assets/stylesheets/application.css";
-import "../../assets/stylesheets/application.tailwind.css";
+import "../../assets/tailwind/application.css";
 
 // Import Font Awesome JS and CSS
 import '@fortawesome/fontawesome-free/js/all.min.js';
