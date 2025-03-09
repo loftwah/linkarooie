@@ -1,11 +1,11 @@
 <h1 class="text-2xl font-bold mb-4">Achievements</h1>
 <% if user_signed_in? %>
-  <%= link_to 'New Achievement', new_achievement_path, class: 'bg-lime-500 hover:bg-lime-700 text-white font-bold py-2 px-4 rounded mb-4 inline-block' %>
+  <%= link_to 'New Achievement', new_achievement_path, class: 'bg-lime-500 hover:bg-lime-700 text-white font-bold py-2 px-4 rounded-sm mb-4 inline-block' %>
 <% end %>
 
 <ul class="space-y-4">
   <% @achievements.each do |achievement| %>
-    <li class="bg-gray-800 p-4 rounded shadow-md">
+    <li class="bg-gray-800 p-4 rounded-sm shadow-md">
       <h2 class="text-xl text-lime-300 font-bold">
         <% if achievement.icon.present? %>
           <i class="<%= achievement.icon %>"></i>
@@ -21,8 +21,8 @@
       <!-- Edit and Delete Buttons -->
       <div class="mt-4 flex space-x-2">
         <% if user_signed_in? && achievement.user == current_user %>
-          <%= link_to 'Edit', edit_achievement_path(achievement), class: 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded' %>
-          <%= link_to 'Delete', achievement, method: :delete, data: { confirm: 'Are you sure?' }, class: 'bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded cursor-pointer' %>
+          <%= link_to 'Edit', edit_achievement_path(achievement), class: 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded-sm' %>
+          <%= link_to 'Delete', achievement, method: :delete, data: { confirm: 'Are you sure?' }, class: 'bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-sm cursor-pointer' %>
         <% end %>
       </div>
     </li>

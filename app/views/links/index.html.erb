@@ -1,12 +1,12 @@
 <h1 class="text-2xl font-bold mb-4">Links</h1>
 
 <% if user_signed_in? %>
-  <%= link_to 'New Link', new_link_path, class: 'bg-lime-500 hover:bg-lime-700 text-white font-bold py-2 px-4 rounded mb-4 inline-block' %>
+  <%= link_to 'New Link', new_link_path, class: 'bg-lime-500 hover:bg-lime-700 text-white font-bold py-2 px-4 rounded-sm mb-4 inline-block' %>
 <% end %>
 
 <ul class="space-y-4">
   <% @links.each do |link| %>
-    <li class="bg-gray-800 p-4 rounded shadow-md max-w-full overflow-hidden">
+    <li class="bg-gray-800 p-4 rounded-sm shadow-md max-w-full overflow-hidden">
       <h2 class="text-xl text-lime-300 font-bold">
         <%= link_to link, class: 'hover:underline' do %>
           <% if link.icon.present? %>
@@ -34,9 +34,9 @@
 
       <!-- Edit and Delete Buttons -->
       <div class="mt-4 flex space-x-2">
-        <%= link_to 'Edit', edit_link_path(link), class: 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded' %>
+        <%= link_to 'Edit', edit_link_path(link), class: 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded-sm' %>
         <%= form_with(model: link, method: :delete, class: 'inline') do |form| %>
-          <%= form.submit 'Delete', class: 'bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded cursor-pointer', data: { confirm: 'Are you sure?' } %>
+          <%= form.submit 'Delete', class: 'bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-sm cursor-pointer', data: { confirm: 'Are you sure?' } %>
         <% end %>
       </div>
     </li>
